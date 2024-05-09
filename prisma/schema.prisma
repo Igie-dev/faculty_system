@@ -1,0 +1,172 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Department {
+  id                     Int                      @id @default(autoincrement())
+  dep_id                  String                   @unique
+  acronym                String                   @unique
+  department             String                   @unique
+  FacultyDepartment      FacultyDepartment[]
+  DepartmentAnnouncement DepartmentAnnouncement[]
+
+  @@index([dep_id])
+}
+
+model Faculty {
+  id                Int                 @id @default(autoincrement())
+  faculty_id         String              @unique
+  name               String
+  Image             Image?
+  email             String              @unique
+  password          String
+  contact           String              @unique
+  role              String
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  FacultyDepartments FacultyDepartment[]
+  ArchiveAnnouncements  ArchiveAnnouncement[]
+  Notifications      Notification[]
+  Submissions        Submission[]
+  Tasks              Task[]
+  Announcements      Announcement[]
+  Files             File[]
+
+  @@index([faculty_id])
+}
+
+model FacultyDepartment {
+  id          Int         @id @default(autoincrement())
+  faculty_id   String?
+  dep_id       String?
+  Faculties   Faculty?    @relation(fields: [faculty_id], references: [faculty_id], onDelete: Cascade)
+  Departments Department? @relation(fields: [dep_id], references: [dep_id], onDelete: Cascade)
+
+  @@unique([faculty_id, dep_id])
+  @@index([dep_id])
+}
+
+model Announcement {
+  id                      Int                      @id @default(autoincrement())
+  announcement_id          String                   @unique
+  description             String   
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  DepartmentsAnnouncement DepartmentAnnouncement[] 
+  Faculty                 Faculty                  @relation(fields: [faculty_id], references: [faculty_id], onDelete: Cascade)
+  faculty_id               String
+  Files                   File[]
+  ArchiveAnnouncements    ArchiveAnnouncement[]
+
+  @@index([faculty_id])
+}
+
+model DepartmentAnnouncement {
+  id             Int          @id @default(autoincrement())
+  Announcement   Announcement @relation(fields: [announcement_id], references: [announcement_id], onDelete: Cascade)
+  announcement_id String
+  Department     Department   @relation(fields: [dep_id], references: [dep_id], onDelete: Cascade)
+  dep_id          String
+
+  @@index([announcement_id])
+  @@index([dep_id])
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  notif_id     String   @unique
+  title       String
+  description String
+  createdAt   DateTime @default(now())
+  Faculty     Faculty? @relation(fields: [faculty_id], references: [faculty_id], onDelete: Cascade)
+  faculty_id   String?  @unique
+
+  @@index([notif_id])
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  image_id   String   @unique
+  mimetype  String
+  data      Bytes
+  image_link String
+  Faculty   Faculty? @relation(fields: [image_id], references: [faculty_id], onDelete: Cascade)
+
+  @@index([image_id])
+}
+
+model File {
+  id               Int               @id @default(autoincrement())
+  file_id           String            @unique
+  file_name         String
+  mimetype         String
+  data             Bytes
+  file_link         String
+  file_category     String?
+  Submission       Submission?       @relation(fields: [submission_id], references: [submission_id], onDelete: Cascade)
+  submission_id     String?
+  DowloadableFiles DownloadableFile? @relation(fields: [downloadable_id], references: [downloadable_id], onDelete: Cascade)
+  downloadable_id   String?           @unique
+  Announcement     Announcement      @relation(fields: [announcement_id], references: [announcement_id], onDelete: Cascade)
+  announcement_id   String
+  Faculty          Faculty           @relation(fields: [faculty_id], references: [faculty_id], onDelete: Cascade)
+  faculty_id        String
+
+  @@index([file_id])
+  @@index([announcement_id])
+  @@index([submission_id])
+  @@index([faculty_id])
+}
+
+model Submission {
+  id                   Int                    @id @default(autoincrement())
+  submission_id         String                 @unique
+  title                String
+  description          String
+  status               String
+  remarks              String
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  Files                File[]
+  Faculty              Faculty?               @relation(fields: [faculty_id], references: [faculty_id], onDelete: Cascade)
+  faculty_id            String?
+
+  @@index([faculty_id])
+}
+
+model Task {
+  id              Int              @id @default(autoincrement())
+  task_id          String           @unique
+  title           String
+  description     String
+  due_date         DateTime
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  Faculty Faculty @relation(fields: [faculty_id], references: [faculty_id],onDelete: Cascade)
+  faculty_id String @unique
+}
+
+
+model ArchiveAnnouncement {
+  id              Int              @id @default(autoincrement())
+  announcement_id String @unique
+  Announcement Announcement? @relation(fields: [announcement_id], references: [announcement_id], onDelete: Cascade, onUpdate: Cascade)
+  faculty_id String @unique 
+  Faculties   Faculty?    @relation(fields: [faculty_id], references: [faculty_id], onDelete: Cascade)
+}
+
+
+model DownloadableFile {
+  id             Int      @id @default(autoincrement())
+  downloadable_id String   @unique
+  file_category   String
+  description    String?
+  createdAt      DateTime @default(now())
+  File           File?
+}

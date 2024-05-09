@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+    web:
+      depends_on:
+        - postgres
+      build: ./
+      ports:
+        - 3000:3000
+      develop:
+        watch:
+        - path: ./package*.json
+          action: rebuild
+        - path: ./
+          target: ./usr/src/app
+          action: sync
+      networks:
+       - faculty_sytem_network
+    
+
+    postgres:
+      image: postgres:latest
+      restart: always
+      volumes:
+        - faculty_system:/var/lib/postgresql/data
+      ports:
+        - 5432:5432
+      environment:
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: faculty_system
+      networks:
+       - faculty_sytem_network
+    
+    pgadmin: 
+      image: dpage/pgadmin4:latest
+      depends_on:
+        - postgres
+      ports:
+        - 5050:5050
+      environment:
+        PGADMIN_LISTEN_PORT: 5050
+        PGADMIN_DEFAULT_EMAIL: facultymonitoring@gmail.com
+        PGADMIN_DEFAULT_PASSWORD: password
+        SECURE_PROXY_SSL_HEADER : None
+        SESSION_COOKIE_SECURE : False
+        CSRF_COOKIE_SECURE : False
+        SERVER_MODE : False
+      networks:
+       - faculty_sytem_network
+
+networks:
+  faculty_sytem_network:
+    driver: bridge
+
+volumes:
+  faculty_system:
+     name: faculty_system
+     driver: local
