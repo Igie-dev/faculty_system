@@ -2,7 +2,8 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const privatePath = ["dashboard", "departments", "faculties", "announcements"];
+// const privatePath = ["dashboard", "departments", "faculties", "announcements"];
+const privatePath = ["x"];
 
 const allowedOrigins = [""];
 
