@@ -16,11 +16,17 @@ export const options: NextAuthOptions = {
         };
         try {
           const foundFaculty = await prisma.faculty.findUnique({
-            where: email,
+            where: {
+              email,
+            },
           });
 
           if (!foundFaculty?.id) {
-            return null;
+            const error: any = new Error(
+              "Invalid credentials! Please check your email or password!"
+            );
+            error.statusCode = 401; // Unauthorized
+            throw error;
           }
 
           const comparePass = await bcrypt.compare(
@@ -29,11 +35,22 @@ export const options: NextAuthOptions = {
           );
 
           if (!comparePass) {
-            return null;
+            const error: any = new Error(
+              "Invalid credentials! Please check your email or password!"
+            );
+            error.statusCode = 401; // Unauthorized
+            throw error;
           }
           return foundFaculty;
-        } catch (error) {
-          console.log(error);
+        } catch (error: any) {
+          // If the error does not have a status code already, set a default one
+          const statusCode = error.statusCode || 500; // Internal Server Error
+          const message =
+            error.message ||
+            "An unexpected error occurred. Please try again later.";
+          const customError: any = new Error(message);
+          customError.statusCode = statusCode;
+          throw customError;
         }
       },
     }),
@@ -49,41 +66,78 @@ export const options: NextAuthOptions = {
     async signIn({ user, account }: { user: any; account: any }) {
       if (account.provider === "google") {
         try {
-          const { email } = user;
-
           const foundFaculty = await prisma.faculty.findUnique({
-            where: { email },
-            select: { id: true, faculty_id: true },
+            where: {
+              email: user?.email,
+            },
+            select: {
+              faculty_id: true,
+              role: true,
+            },
           });
-
-          if (!foundFaculty?.id) {
-            return null;
+          if (!foundFaculty?.faculty_id) {
+            const error: any = new Error(
+              "Invalid credentials! Please check your email or password!"
+            );
+            error.statusCode = 401; // Unauthorized
+            throw error;
           }
-          return foundFaculty;
-        } catch (error) {
-          console.log(error);
+          return user;
+        } catch (error: any) {
+          // If the error does not have a status code already, set a default one
+          const statusCode = error.statusCode || 500; // Internal Server Error
+          const message =
+            error.message ||
+            "An unexpected error occurred. Please try again later.";
+          const customError: any = new Error(message);
+          customError.statusCode = statusCode;
+          throw customError;
         }
       }
       return user;
     },
     async jwt({ token, user }) {
-      if (user) {
-        token.email = user.email;
-        token.name = user.name;
-      }
+      try {
+        if (user) {
+          const foundFaculty = await prisma.faculty.findUnique({
+            where: {
+              email: user?.email,
+            },
+            select: {
+              faculty_id: true,
+              role: true,
+            },
+          });
+
+          if (foundFaculty?.faculty_id) {
+            token.faculty_id = foundFaculty?.faculty_id;
+            token.role = foundFaculty?.role;
+          }
+
+          token.email = user.email;
+          token.name = user.name;
+        }
+      } catch (error) {}
+
       return token;
     },
     async session({ session, token }: { session: any; token: any }) {
-      if (session.user) {
-        session.user.email = token.email;
-        session.user.name = token.name;
-      }
-      console.log(session);
+      try {
+        if (session.user) {
+          session.user.faculty_id = token?.faculty_id;
+          session.user.role = token?.role;
+          session.user.email = token.email;
+          session.user.name = token.name;
+          session.user.image = token.picture;
+        }
+      } catch (error) {}
+
       return session;
     },
   },
   secret: process.env.NEXTAUTH_SECRET!,
   pages: {
     signIn: "/signin",
+    error: "/autherror",
   },
 };
