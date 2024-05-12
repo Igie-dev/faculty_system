@@ -23,8 +23,8 @@ export default function SignOutDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle className="flex flex-col">
-            <h1>Signing out</h1>
-            <h5>Are you absolutely sure?</h5>
+            <span>Signing out</span>
+            <span>Are you absolutely sure?</span>
           </AlertDialogTitle>
           <AlertDialogDescription>
             This action will log you out of your account, terminating your
@@ -35,7 +35,7 @@ export default function SignOutDialog({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction onClick={() => signOut()}>
-            Continue
+            Sign Out
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
