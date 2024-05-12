@@ -35,12 +35,18 @@ export async function POST(req: NextRequest) {
         { status: 409 }
       );
     }
-    const generateId = uuid().toString().replace("-", "").slice(0, 10);
+    const generateId = `${uuid()
+      .toString()
+      .replace("-", "")
+      .slice(0, 10)}${first_name.slice(0, 2)}${last_name.slice(
+      0,
+      2
+    )}`.toUpperCase();
 
     const salt = await bcrypt.genSalt(10);
-    const saltPass = bcrypt.hash(password, salt);
+    const saltPass = await bcrypt.hash(password, salt);
     const data = {
-      faculy_id: generateId,
+      faculty_id: generateId,
       name: `${first_name} ${last_name}`,
       email,
       contact,
