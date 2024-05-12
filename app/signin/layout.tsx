@@ -9,5 +9,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <main className="screen_wrapper">{children}</main>;
+  return (
+    <main className="w-screen h-screen flex items-center justify-center flex-col lg:flex-row lg:max-w-[70rem]">
+      {children}
+    </main>
+  );
 }
