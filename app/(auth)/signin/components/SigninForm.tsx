@@ -1,9 +1,10 @@
 "use client";
-import React, { useState } from "react";
+import React, { FormEvent, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -15,7 +16,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
-
+import { signIn } from "next-auth/react";
+import Image from "next/image";
+import googleIcon from "@/assets/icons8-google-48.png";
 const formSchema = z.object({
   email: z
     .string()
@@ -25,6 +28,8 @@ const formSchema = z.object({
 });
 export default function SigninForm() {
   const [isShowPass, setIsShowPass] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -32,24 +37,35 @@ export default function SigninForm() {
       password: "",
     },
   });
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const res = await signIn("credentials", {
+        email: values.email,
+        password: values.password,
+        redirect: false,
+      });
+
+      if (res?.ok) {
+        router.push("/dashboard");
+        return;
+      }
+      setErrorMsg(`${res?.error}`);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full  border h-fit lg:w-1/2 lg:h-[80%] flex flex-col gap-5 p-2 lg:p-4"
+        className="w-full  h-fit lg:w-1/2 lg:h-full flex flex-col justify-center space-y-6 p-2 sm:px-4  md:p-10"
       >
-        <div>
-          <h1>Signin</h1>
-          <p>Sometext</p>
-        </div>
-        <div>
-          <p>Error</p>
-        </div>
-        <div className="w-full flex flex-col gap-6 mt-5">
+        <h1 className="text-4xl font-extrabold">Sign In</h1>
+
+        <p className="tex-xs text-destructive">{errorMsg}</p>
+        <div className="w-full flex flex-col gap-6 mt-2">
           <FormField
             control={form.control}
             name="email"
@@ -57,7 +73,7 @@ export default function SigninForm() {
               <FormItem className="relative  w-full h-fit space-y-0">
                 <FormControl>
                   <Input
-                    placeholder="exmaple@gmail.com"
+                    placeholder="john.doe@example.com"
                     type="email"
                     className="peer outline-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-md ring-0 border focus:border-primary "
                     {...field}
@@ -76,18 +92,21 @@ export default function SigninForm() {
             name="password"
             render={({ field }) => (
               <FormItem className="relative  w-full h-fit space-y-0">
-                <FormControl className="relative border border-red-400">
+                <FormControl className="relative border border-blue-200">
                   <>
                     <Input
-                      placeholder="Enter your password"
-                      type="password"
+                      placeholder="******"
+                      type={isShowPass ? "text" : "password"}
+                      autoComplete="false"
                       className="peer outline-0 focus-visible:ring-0 focus-visible:ring-offset-0 rounded-md ring-0 border pr-12  focus:border-primary "
                       {...field}
                     />
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute bottom-1 h-[80%] right-1"
+                      type="button"
+                      onClick={() => setIsShowPass((prev) => !prev)}
+                      className="absolute top-1 h-8 right-1"
                     >
                       {isShowPass ? (
                         <EyeOff absoluteStrokeWidth size={20} />
@@ -105,8 +124,41 @@ export default function SigninForm() {
             )}
           />
         </div>
-
-        <Button type="submit">Submit</Button>
+        <div>
+          <p>Forgot password</p>
+        </div>
+        <Button size="lg" type="submit" className="">
+          Sign In
+        </Button>
+        <div className="w-full flex flex-col items-center gap-5 relative border-t mt-5">
+          <span className="bg-background px-6 text-sm text-muted-foreground font-semibold absolute -top-3">
+            or
+          </span>
+          <Button
+            type="button"
+            size="lg"
+            variant="outline"
+            onClick={() => signIn("google")}
+            className="w-full h-14 flex items-center gap-4  border bg-background rounded-md mt-5"
+          >
+            <Image
+              style={{
+                height: "2.5rem",
+                width: "2.5rem",
+                pointerEvents: "none",
+              }}
+              alt="googlesvg"
+              src={googleIcon}
+            />
+            <span className="pointer-events-none">Sign in with Google</span>
+          </Button>
+          <span className="text-sm mt-5">
+            Don&apos;t have an account?{" "}
+            <a href="" className="text-blue-500 underline">
+              Contact to your admin!
+            </a>
+          </span>
+        </div>
       </form>
     </Form>
   );
