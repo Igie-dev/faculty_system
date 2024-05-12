@@ -2,15 +2,18 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-// const privatePath = ["dashboard", "departments", "faculties", "announcements"];
-const privatePath = ["x"];
-
-const allowedOrigins = [""];
-
-const corsOptions = {
-  "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization",
-};
+const privatePath = [
+  "dashboard",
+  "departments",
+  "faculties",
+  "announcements",
+  "profile",
+  "submissions",
+  "downloadables",
+  "mytask",
+  "notifications",
+];
+const apiEndpoint = ["faculty", "department"];
 
 export async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname;
@@ -18,46 +21,30 @@ export async function middleware(req: NextRequest) {
     req: req,
     secret: process.env.NEXTAUTH_SECRET,
   });
-  if (path === "/" && token) {
+  const splitedPath = path.split("/")[1]; // Get the first part of the pathname
+
+  //Redirect if has token and navigating signin and home
+  if ((path === "/" || path.includes("/signin")) && token) {
     return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
   }
 
+  //Blocking api call without token
   if (path.startsWith("/api") && !token) {
-    return NextResponse.json({ error: "Unauthorized!" }, { status: 401 });
+    const isPrivateApi = apiEndpoint.some(
+      (apiPath) => apiPath === path.split("/")[2]
+    );
+    if (isPrivateApi) {
+      return NextResponse.json({ error: "Unauthorized!" }, { status: 401 });
+    }
   }
 
-  const splitedPath = path.split("/")[1]; // Get the first part of the pathname
+  //Redirect home if no token and navigating private page
   const isPrivatePath = privatePath.some((privatePath) =>
     splitedPath.startsWith(privatePath)
   );
-
-  //Private path without token
   if (isPrivatePath && !token) {
     return NextResponse.redirect(new URL("/", req.nextUrl));
   }
-
-  // Check the origin from the request
-  const origin = req.headers.get("origin") ?? "";
-  const isAllowedOrigin = allowedOrigins.includes(origin);
-  // Handle preflighted requests
-  const isPreflight = req.method === "OPTIONS";
-  if (isPreflight) {
-    const preflightHeaders = {
-      ...(isAllowedOrigin && { "Access-Control-Allow-Origin": origin }),
-      ...corsOptions,
-    };
-    return NextResponse.json({}, { headers: preflightHeaders });
-  }
-  // Handle simple requests
-  const response = NextResponse.next();
-  if (isAllowedOrigin) {
-    response.headers.set("Access-Control-Allow-Origin", origin);
-  }
-  Object.entries(corsOptions).forEach(([key, value]) => {
-    response.headers.set(key, value);
-  });
-
-  return response;
 }
 
 export const config = {
