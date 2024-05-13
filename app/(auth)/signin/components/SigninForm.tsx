@@ -1,5 +1,5 @@
 "use client";
-import React, { FormEvent, useState } from "react";
+import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -60,10 +60,9 @@ export default function SigninForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-full  h-fit lg:w-1/2 lg:h-full flex flex-col justify-center space-y-6 p-2 sm:px-4  md:p-10"
+        className="w-full py-10 h-fit md:max-w-[30rem] border bg-background rounded-md  flex flex-col justify-center space-y-2 p-2 sm:px-4  md:p-10"
       >
-        <h1 className="text-4xl font-extrabold">Sign In</h1>
-
+        <h1 className="text-4xl font-extrabold mb-16">Sign In</h1>
         <p className="tex-xs text-destructive">{errorMsg}</p>
         <div className="w-full flex flex-col gap-6 mt-2">
           <FormField
@@ -106,7 +105,7 @@ export default function SigninForm() {
                       size="icon"
                       type="button"
                       onClick={() => setIsShowPass((prev) => !prev)}
-                      className="absolute top-1 h-8 right-1"
+                      className="absolute top-1 h-8 right-1 text-accent-foreground"
                     >
                       {isShowPass ? (
                         <EyeOff absoluteStrokeWidth size={20} />
@@ -124,13 +123,16 @@ export default function SigninForm() {
             )}
           />
         </div>
-        <div>
-          <p>Forgot password</p>
-        </div>
-        <Button size="lg" type="submit" className="">
+        <a
+          href=""
+          className="text-xs hover:underline hover:text-blue-500 !mt-5"
+        >
+          Forgot password
+        </a>
+        <Button size="lg" type="submit" className="!mt-5">
           Sign In
         </Button>
-        <div className="w-full flex flex-col items-center gap-5 relative border-t mt-5">
+        <div className="w-full flex flex-col items-center gap-5 relative border-t !mt-10">
           <span className="bg-background px-6 text-sm text-muted-foreground font-semibold absolute -top-3">
             or
           </span>
