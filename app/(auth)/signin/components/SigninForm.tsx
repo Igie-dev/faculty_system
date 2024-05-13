@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -18,7 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
-import googleIcon from "@/assets/icons8-google-48.png";
+import googleIcon from "@/public/icons8-google-48.png";
 const formSchema = z.object({
   email: z
     .string()
@@ -62,8 +61,8 @@ export default function SigninForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full py-10 h-fit md:max-w-[30rem] border bg-background rounded-md  flex flex-col justify-center space-y-2 p-2 sm:px-4  md:p-10"
       >
-        <h1 className="text-4xl font-extrabold mb-16">Sign In</h1>
-        <p className="tex-xs text-destructive">{errorMsg}</p>
+        <h1 className="text-4xl font-extrabold mb-10">Sign In</h1>
+        <p className="text-sm text-destructive !mb-5">{errorMsg}</p>
         <div className="w-full flex flex-col gap-6 mt-2">
           <FormField
             control={form.control}
@@ -78,11 +77,10 @@ export default function SigninForm() {
                     {...field}
                   />
                 </FormControl>
-                <FormLabel className="absolute px-1 py-1 left-1 -top-3 bg-background peer-focus:-top-5  peer-focus:left-0  peer-focus:px-0 peer-focus:py-0 transition-all">
+                <FormLabel className="absolute px-1 py-1 left-1 -top-3 bg-background peer-focus:-top-5 peer-focus:left-0  peer-focus:px-0 peer-focus:py-0 transition-all">
                   Email
                 </FormLabel>
-
-                <FormMessage />
+                <FormMessage className="!text-xs" />
               </FormItem>
             )}
           />
@@ -118,14 +116,14 @@ export default function SigninForm() {
                 <FormLabel className="absolute px-1 py-1 left-1 -top-3 bg-background peer-focus:-top-5  peer-focus:left-0  peer-focus:px-0 peer-focus:py-0 transition-all">
                   Password
                 </FormLabel>
-                <FormMessage />
+                <FormMessage className="!text-xs" />
               </FormItem>
             )}
           />
         </div>
         <a
           href=""
-          className="text-xs hover:underline hover:text-blue-500 !mt-5"
+          className="text-xs hover:underline text-muted-foreground hover:text-blue-500 !mt-5"
         >
           Forgot password
         </a>
@@ -152,9 +150,11 @@ export default function SigninForm() {
               alt="googlesvg"
               src={googleIcon}
             />
-            <span className="pointer-events-none">Sign in with Google</span>
+            <span className="pointer-events-none text-muted-foreground">
+              Sign in with Google
+            </span>
           </Button>
-          <span className="text-sm mt-5">
+          <span className="text-sm mt-5 text-muted-foreground">
             Don&apos;t have an account?{" "}
             <a href="" className="text-blue-500 underline">
               Contact to your admin!
