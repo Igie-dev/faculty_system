@@ -128,7 +128,17 @@ export const options: NextAuthOptions = {
           session.user.role = token?.role;
           session.user.email = token.email;
           session.user.name = token.name;
-          session.user.image = token.picture;
+
+          if (!token.picture) {
+            const foundImage = await prisma.image.findUnique({
+              where: { image_id: token?.faculty_id },
+            });
+            if (foundImage?.id) {
+              session.user.image = foundImage?.image_link;
+            }
+          } else {
+            session.user.image = token.picture;
+          }
         }
       } catch (error) {}
 
