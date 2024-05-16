@@ -18,6 +18,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import googleIcon from "@/public/icons8-google-48.png";
+import BtnLoaderSpinner from "@/components/loader/BtnLoaderSpinner";
 const formSchema = z.object({
   email: z
     .string()
@@ -27,6 +28,7 @@ const formSchema = z.object({
 });
 export default function SigninForm() {
   const [isShowPass, setIsShowPass] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
@@ -39,6 +41,7 @@ export default function SigninForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      setIsLoading(true);
       const res = await signIn("credentials", {
         email: values.email,
         password: values.password,
@@ -52,6 +55,8 @@ export default function SigninForm() {
       setErrorMsg(`${res?.error}`);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -130,14 +135,15 @@ export default function SigninForm() {
         >
           Forgot password
         </a>
-        <Button size="lg" type="submit" className="!mt-5">
-          Sign In
+        <Button size="lg" disabled={isLoading} type="submit" className="!mt-5">
+          {isLoading ? <BtnLoaderSpinner /> : "Sign In"}
         </Button>
         <div className="w-full flex flex-col items-center gap-5 relative border-t !mt-10">
           <span className="bg-background px-6 text-sm text-muted-foreground font-semibold absolute -top-3">
             or
           </span>
           <Button
+            disabled={isLoading}
             type="button"
             size="lg"
             variant="outline"
