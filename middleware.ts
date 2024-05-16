@@ -11,7 +11,6 @@ const privatePath = [
   "submissions",
   "downloadables",
   "mytask",
-  "notifications",
 ];
 const apiEndpoint = ["faculty", "department"];
 
