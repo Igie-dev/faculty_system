@@ -21,20 +21,22 @@ export async function middleware(req: NextRequest) {
     req: req,
     secret: process.env.NEXTAUTH_SECRET,
   });
-  const splitedPath = path.split("/")[1]; // Get the first part of the pathname
 
+  const splitedPath = path.split("/")[1]; // Get the first part of the pathname
   //Redirect if has token and navigating signin and home
   if ((path === "/" || path.includes("/signin")) && token) {
     return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
   }
 
   //Blocking api call without token
-  if (path.startsWith("/api") && !token) {
-    const isPrivateApi = apiEndpoint.some(
-      (apiPath) => apiPath === path.split("/")[2]
-    );
-    if (isPrivateApi) {
-      return NextResponse.json({ error: "Unauthorized!" }, { status: 401 });
+  if (token) {
+    if (path.startsWith("/api")) {
+      const isPrivateApi = apiEndpoint.some(
+        (apiPath) => apiPath === path.split("/")[2]
+      );
+      if (isPrivateApi) {
+        return NextResponse.json({ error: "Unauthorized!" }, { status: 401 });
+      }
     }
   }
 
@@ -48,5 +50,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [...privatePath.map((path) => `/${path}/:path*`), "/api/:path*"],
+  matcher: [privatePath.map((path) => `/${path}/:path*`), "/api/:path*"],
 };
