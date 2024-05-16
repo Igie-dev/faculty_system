@@ -61,7 +61,10 @@ export default function SigninForm() {
         onSubmit={form.handleSubmit(onSubmit)}
         className="w-full py-10 h-fit md:max-w-[30rem] border bg-background rounded-md  flex flex-col justify-center space-y-2 p-2 sm:px-4  md:p-10"
       >
-        <h1 className="text-4xl font-extrabold mb-10">Sign In</h1>
+        <h1 className="text-4xl font-extrabold ">Sign In</h1>
+        <p className="text-xs text-muted-foreground mb-10">
+          Please provide your credintails
+        </p>
         <p className="text-sm text-destructive !mb-5">{errorMsg}</p>
         <div className="w-full flex flex-col gap-6 mt-2">
           <FormField
