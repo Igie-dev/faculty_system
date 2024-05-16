@@ -18,6 +18,8 @@ import Link from "next/link";
 import SignOutDialog from "./SignOutDialog";
 import { useSession } from "next-auth/react";
 import { ERole } from "@/@types/enums";
+import NavLinkWrapper from "./NavLinkWrapper";
+
 type Props = {
   isExpanded: boolean;
 };
@@ -36,193 +38,110 @@ export default function Nav({ isExpanded }: Props) {
     }
   }, [session]);
   return (
-    <nav className="w-full flex flex-col gap-1 pt-5 lg:pt-8">
-      <Button
-        variant="ghost"
-        size="lg"
-        asChild
-        className={`gap-4 flex items-center w-[90%] lg:w-full text-sm rounded-lg  ${
-          isExpanded ? "px-4 justify-start" : "justify-center px-0"
-        } ${
-          pathname === "/dashboard"
-            ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
-            : "bg-background  text-muted-foreground"
-        }`}
+    <nav className="w-full flex flex-col space-y-1 pt-5 lg:pt-8">
+      <NavLinkWrapper
+        isExpanded={isExpanded}
+        path="/dashboard"
+        title="Dashboard"
       >
-        <Link href="/dashboard">
+        <>
           <Home absoluteStrokeWidth size={22} />
           <span className={` ${isExpanded ? "flex" : "hidden"}`}>
             Dashboard
           </span>
-        </Link>
-      </Button>
+        </>
+      </NavLinkWrapper>
+
       {isAdmin ? (
-        <Button
-          variant="ghost"
-          size="lg"
-          asChild
-          className={`gap-4 flex items-center w-[90%] lg:w-full text-sm rounded-lg  ${
-            isExpanded ? "px-4 justify-start" : "justify-center px-0"
-          } ${
-            pathname === "/faculties"
-              ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
-              : "bg-background text-muted-foreground"
-          }`}
+        <NavLinkWrapper
+          isExpanded={isExpanded}
+          path="/faculties"
+          title="Faculties"
         >
-          <Link href="/faculties">
+          <>
             <Users absoluteStrokeWidth size={22} />
             <span className={` ${isExpanded ? "flex" : "hidden"}`}>
               Faculties
             </span>
-          </Link>
-        </Button>
+          </>
+        </NavLinkWrapper>
       ) : null}
       {isAdmin ? (
-        <Button
-          variant="ghost"
-          size="lg"
-          asChild
-          className={`gap-4 flex items-center w-[90%] lg:w-full text-sm rounded-lg  ${
-            isExpanded ? "px-4 justify-start" : "justify-center px-0"
-          } ${
-            pathname === "/departments"
-              ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
-              : "bg-background text-muted-foreground"
-          }`}
+        <NavLinkWrapper
+          isExpanded={isExpanded}
+          path="/departments"
+          title="Departments"
         >
-          <Link href="/departments">
+          <>
             <Grid2X2 absoluteStrokeWidth size={22} />
             <span className={` ${isExpanded ? "flex" : "hidden"}`}>
               Departments
             </span>
-          </Link>
-        </Button>
+          </>
+        </NavLinkWrapper>
       ) : null}
       {isDean || isTeacher ? (
-        <Button
-          variant="ghost"
-          size="lg"
-          asChild
-          className={`gap-4 flex items-center w-[90%] lg:w-full text-sm rounded-lg  ${
-            isExpanded ? "px-4 justify-start" : "justify-center px-0"
-          } ${
-            pathname === "/announcements"
-              ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
-              : "bg-background text-muted-foreground"
-          }`}
+        <NavLinkWrapper
+          isExpanded={isExpanded}
+          path="/announcements"
+          title="Announcements"
         >
-          <Link href="/announcements">
+          <>
             <Megaphone absoluteStrokeWidth size={22} />
             <span className={` ${isExpanded ? "flex" : "hidden"}`}>
               Announcements
             </span>
-          </Link>
-        </Button>
+          </>
+        </NavLinkWrapper>
       ) : null}
       {isDean || isTeacher ? (
-        <Button
-          variant="ghost"
-          size="lg"
-          asChild
-          className={`gap-4 flex items-center w-[90%] lg:w-full text-sm rounded-lg  ${
-            isExpanded ? "px-4 justify-start" : "justify-center px-0"
-          } ${
-            pathname === "/submissions"
-              ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
-              : "bg-background text-muted-foreground"
-          }`}
+        <NavLinkWrapper
+          isExpanded={isExpanded}
+          path="/submissions"
+          title="Submissions"
         >
-          <Link href="/submissions">
+          <>
             <FileText absoluteStrokeWidth size={22} />
             <span className={` ${isExpanded ? "flex" : "hidden"}`}>
               Submissions
             </span>
-          </Link>
-        </Button>
+          </>
+        </NavLinkWrapper>
       ) : null}
       <div className="flex flex-col gap-2 pt-5 mt-5 border-t h-fit">
-        <Button
-          variant="ghost"
-          size="lg"
-          asChild
-          className={`gap-4 flex items-center w-[90%] lg:w-full text-sm rounded-lg  ${
-            isExpanded ? "px-4 justify-start" : "justify-center px-0"
-          } ${
-            pathname === "/profile"
-              ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
-              : "bg-background text-muted-foreground"
-          }`}
-        >
-          <Link href="/profile">
+        <NavLinkWrapper isExpanded={isExpanded} path="/profile" title="Profile">
+          <>
             <CircleUserRound absoluteStrokeWidth size={22} />
-
             <span className={` ${isExpanded ? "flex" : "hidden"}`}>
               Profile
             </span>
-          </Link>
-        </Button>
+          </>
+        </NavLinkWrapper>
+
         {isDean || isTeacher ? (
-          <Button
-            variant="ghost"
-            size="lg"
-            asChild
-            className={`gap-4 flex items-center w-[90%] lg:w-full text-sm rounded-lg  ${
-              isExpanded ? "px-4 justify-start" : "justify-center px-0"
-            } ${
-              pathname === "/mytask"
-                ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
-                : "bg-background text-muted-foreground"
-            }`}
-          >
-            <Link href="/mytask">
+          <NavLinkWrapper isExpanded={isExpanded} path="/mytask" title="MyTask">
+            <>
               <CalendarClock absoluteStrokeWidth size={22} />
               <span className={` ${isExpanded ? "flex" : "hidden"}`}>
                 Mytask
               </span>
-            </Link>
-          </Button>
+            </>
+          </NavLinkWrapper>
         ) : null}
+
         {isDean || isTeacher ? (
-          <Button
-            variant="ghost"
-            size="lg"
-            asChild
-            className={`gap-4 flex items-center w-[90%] lg:w-full text-sm rounded-lg  ${
-              isExpanded ? "px-4 justify-start" : "justify-center px-0"
-            } ${
-              pathname === "/notifications"
-                ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
-                : "bg-background text-muted-foreground"
-            }`}
+          <NavLinkWrapper
+            isExpanded={isExpanded}
+            path="/downloadables"
+            title="Downloadables"
           >
-            <Link href="/notifications">
-              <Bell absoluteStrokeWidth size={22} />
-              <span className={` ${isExpanded ? "flex" : "hidden"}`}>
-                Notifications
-              </span>
-            </Link>
-          </Button>
-        ) : null}
-        {isDean || isTeacher ? (
-          <Button
-            variant="ghost"
-            size="lg"
-            asChild
-            className={`gap-4 flex items-center w-[90%] lg:w-full text-sm rounded-lg  ${
-              isExpanded ? "px-4 justify-start" : "justify-center px-0"
-            } ${
-              pathname === "/downloadables"
-                ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
-                : "bg-background text-muted-foreground"
-            }`}
-          >
-            <Link href="/downloadables">
+            <>
               <Download absoluteStrokeWidth size={22} />
               <span className={` ${isExpanded ? "flex" : "hidden"}`}>
                 Downloadables
               </span>
-            </Link>
-          </Button>
+            </>
+          </NavLinkWrapper>
         ) : null}
       </div>
       <div className="flex flex-col gap-2 pt-5 mt-10 border-t h-fit">
