@@ -7,8 +7,8 @@ export default function DesktopNav() {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div
-      className={`hidden lg:flex  p-2 flex-col ${
-        isExpanded ? "w-[16rem]" : "w-[5rem]"
+      className={`hidden lg:flex p-2 flex-col ${
+        isExpanded ? "lg:w-[17rem]" : "lg:w-[5rem]"
       }`}
     >
       <div

@@ -33,7 +33,7 @@ export default function NavLinkWrapper({
       <Link href={`${path}`}>
         <>
           {!isExpanded ? (
-            <span className="absolute hidden z-40 text-xs left-[108%] border px-4 py-1 bg-secondary rounded-md text-muted-foreground group-hover:flex">
+            <span className="absolute hidden z-50 text-xs left-[108%] border px-4 py-1 bg-secondary rounded-md text-muted-foreground group-hover:flex">
               {title}
             </span>
           ) : null}

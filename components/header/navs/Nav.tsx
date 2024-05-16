@@ -2,7 +2,6 @@
 import React, { useLayoutEffect, useState } from "react";
 import { Button } from "../../ui/button";
 import {
-  Bell,
   CalendarClock,
   CircleUserRound,
   Download,
@@ -13,8 +12,6 @@ import {
   Megaphone,
   Users,
 } from "lucide-react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
 import SignOutDialog from "./SignOutDialog";
 import { useSession } from "next-auth/react";
 import { ERole } from "@/@types/enums";
@@ -24,11 +21,12 @@ type Props = {
   isExpanded: boolean;
 };
 export default function Nav({ isExpanded }: Props) {
-  const pathname = usePathname();
   const [isAdmin, setIsAdmin] = useState(false);
   const [isDean, setIsDean] = useState(false);
   const [isTeacher, setIsTeacher] = useState(false);
   const { data: session } = useSession();
+  //TODO
+  //Fix nav hidden when no session and visible when has session
   useLayoutEffect(() => {
     const role = session?.user?.role;
     if (role) {
