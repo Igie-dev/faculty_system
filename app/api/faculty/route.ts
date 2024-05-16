@@ -74,3 +74,75 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export async function GET() {
+  try {
+    const faculties = await prisma.faculty.findMany({
+      include: {
+        Announcements: {
+          include: {
+            Files: {
+              select: {
+                file_id: true,
+                file_name: true,
+                mimetype: true,
+                file_link: true,
+                file_category: true,
+              },
+            },
+          },
+        },
+        FacultyDepartments: {
+          include: {
+            Departments: true,
+          },
+        },
+        ArchiveAnnouncements: true,
+        Notifications: {},
+        Submissions: {
+          include: {
+            Files: {
+              select: {
+                file_id: true,
+                file_name: true,
+                mimetype: true,
+                file_link: true,
+                file_category: true,
+              },
+            },
+          },
+        },
+        Tasks: true,
+        Files: {
+          select: {
+            file_id: true,
+            file_name: true,
+            mimetype: true,
+            file_link: true,
+            file_category: true,
+          },
+        },
+      },
+    });
+
+    if (faculties.length <= 0) {
+      return NextResponse.json(
+        { message: "No faculty found!" },
+        { status: 404 }
+      );
+    }
+
+    //remove password
+    faculties.forEach((faculty: TFacultyData) => {
+      delete faculty.password;
+    });
+
+    return NextResponse.json({ data: faculties }, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Something went wrong!" },
+      { status: 500 }
+    );
+  }
+}
