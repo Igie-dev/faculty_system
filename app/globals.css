@@ -43,4 +43,8 @@
     body {
       @apply bg-background text-foreground flex items-center justify-center;
     } 
+
+    .nav_link::after{
+      content: attr(data-title) !important;
+    }
   }
