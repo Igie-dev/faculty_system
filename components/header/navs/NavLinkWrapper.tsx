@@ -17,29 +17,24 @@ export default function NavLinkWrapper({
   children,
 }: Props) {
   const pathname = usePathname();
+
   return (
     <Button
       variant="ghost"
       size="lg"
       asChild
-      className={`relative group gap-4 flex items-center w-[90%] lg:w-full text-sm rounded-lg  ${
+      data-title={title}
+      className={`nav_link relative gap-4 flex items-center w-full lg:w-full text-sm rounded-none ${
         isExpanded ? "px-4 justify-start" : "justify-center px-0"
       } ${
         pathname === `${path}`
           ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
           : "bg-background text-muted-foreground"
-      }`}
+      }  after:absolute after:hidden  after:z-50 after:items-center after:justify-center after:text-xs after:left-[108%] after:border after:px-4 after:py-1 after:bg-secondary after:rounded-md after:text-muted-foreground hover:after:${
+        !isExpanded ? "flex" : ""
+      } `}
     >
-      <Link href={`${path}`}>
-        <>
-          {!isExpanded ? (
-            <span className="absolute hidden z-50 text-xs left-[108%] border px-4 py-1 bg-secondary rounded-md text-muted-foreground group-hover:flex">
-              {title}
-            </span>
-          ) : null}
-          {children}
-        </>
-      </Link>
+      <Link href={`${path}`}>{children}</Link>
     </Button>
   );
 }

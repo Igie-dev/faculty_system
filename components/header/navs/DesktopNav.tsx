@@ -7,13 +7,13 @@ export default function DesktopNav() {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
     <div
-      className={`hidden lg:flex p-2 flex-col ${
-        isExpanded ? "lg:w-[17rem]" : "lg:w-[5rem]"
+      className={`hidden lg:flex py-2 flex-col ${
+        isExpanded ? "lg:w-[17rem]" : "lg:w-[4rem]"
       }`}
     >
       <div
-        className={`w-full flex items-center  mt-1 ${
-          isExpanded ? "justify-end" : "justify-center"
+        className={`w-full flex items-center  mt-1  ${
+          isExpanded ? "justify-end px-2" : "justify-center"
         }`}
       >
         <Button

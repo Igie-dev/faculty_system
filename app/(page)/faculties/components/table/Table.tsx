@@ -63,10 +63,10 @@ export default function Table({ faculties }: Props) {
             <Input
               placeholder="Filter by last name"
               value={
-                (table.getColumn("lastName")?.getFilterValue() as string) ?? ""
+                (table.getColumn("name")?.getFilterValue() as string) ?? ""
               }
               onChange={(event) =>
-                table.getColumn("lastName")?.setFilterValue(event.target.value)
+                table.getColumn("name")?.setFilterValue(event.target.value)
               }
               className="w-[90%] h-11 max-w-[30rem] bg-primary-foreground"
             />
