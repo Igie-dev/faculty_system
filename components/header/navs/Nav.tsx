@@ -13,18 +13,20 @@ import {
   Users,
 } from "lucide-react";
 import SignOutDialog from "./SignOutDialog";
-import { useSession } from "next-auth/react";
 import { ERole } from "@/@types/enums";
 import NavLinkWrapper from "./NavLinkWrapper";
+import NavLoader from "./NavLoader";
+import { Session } from "next-auth";
 
 type Props = {
   isExpanded: boolean;
+  session: Session;
 };
-export default function Nav({ isExpanded }: Props) {
+export default function Nav({ isExpanded, session }: Props) {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isDean, setIsDean] = useState(false);
   const [isTeacher, setIsTeacher] = useState(false);
-  const { data: session } = useSession();
+
   //TODO
   //Fix nav hidden when no session and visible when has session
   useLayoutEffect(() => {
@@ -35,7 +37,9 @@ export default function Nav({ isExpanded }: Props) {
       setIsTeacher(role === ERole.IS_TEACHER);
     }
   }, [session]);
-  return (
+  return !session ? (
+    <NavLoader />
+  ) : (
     <nav className="w-full flex flex-col space-y-1 pt-5 lg:pt-8">
       <NavLinkWrapper
         isExpanded={isExpanded}
@@ -44,9 +48,7 @@ export default function Nav({ isExpanded }: Props) {
       >
         <>
           <Home absoluteStrokeWidth size={22} />
-          <span className={` ${isExpanded ? "flex" : "hidden"}`}>
-            Dashboard
-          </span>
+          <span className={`${isExpanded ? "flex" : "hidden"}`}>Dashboard</span>
         </>
       </NavLinkWrapper>
 

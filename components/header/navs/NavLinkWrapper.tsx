@@ -30,9 +30,8 @@ export default function NavLinkWrapper({
         pathname === `${path}`
           ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
           : "bg-background text-muted-foreground"
-      }  after:absolute after:hidden  after:z-50 after:items-center after:justify-center after:text-xs after:left-[108%] after:border after:px-4 after:py-1 after:bg-secondary after:rounded-md after:text-muted-foreground hover:after:${
-        !isExpanded ? "flex" : ""
-      } `}
+      }  after:absolute after:hidden after:z-50 after:pointer-events-none after:items-center after:justify-center after:text-xs after:left-[108%] after:border after:px-4 after:py-1 after:bg-secondary after:rounded-md after:text-muted-foreground 
+      ${!isExpanded ? "hover:after:flex" : ""}`}
     >
       <Link href={`${path}`}>{children}</Link>
     </Button>
