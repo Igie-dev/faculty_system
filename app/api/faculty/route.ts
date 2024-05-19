@@ -78,7 +78,16 @@ export async function POST(req: NextRequest) {
 export async function GET() {
   try {
     const faculties = await prisma.faculty.findMany({
-      include: {
+      select: {
+        id: true,
+        faculty_id: true,
+        name: true,
+        contact: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+        role: true,
+
         Announcements: {
           include: {
             Files: {
@@ -132,12 +141,41 @@ export async function GET() {
       );
     }
 
-    //remove password
-    faculties.forEach((faculty: TFacultyData) => {
-      delete faculty.password;
+    return NextResponse.json({ data: faculties }, { status: 200 });
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json(
+      { error: "Something went wrong!" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const faculty_id = req.nextUrl.searchParams.get("facultyId");
+
+    const foundFaculty = await prisma.faculty.findUnique({
+      where: { faculty_id },
+      select: { id: true },
     });
 
-    return NextResponse.json({ data: faculties }, { status: 200 });
+    if (!foundFaculty?.id) {
+      return NextResponse.json(
+        { message: "Faculty not found!" },
+        { status: 404 }
+      );
+    }
+
+    const deletFaculty = await prisma.faculty.delete({ where: { faculty_id } });
+
+    if (!deletFaculty) {
+      throw new Error("Deleting fail!");
+    }
+    return NextResponse.json(
+      { message: "Delete successful!" },
+      { status: 200 }
+    );
   } catch (error) {
     console.log(error);
     return NextResponse.json(
