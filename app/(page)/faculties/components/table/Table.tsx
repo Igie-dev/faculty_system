@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { columns } from "./columns";
 import DataTable from "@/components/DataTable";
 import { Input } from "@/components/ui/input";
+import EmptyBox from "@/components/EmptyBox";
 type Props = {
   faculties: TFacultyData[];
 };
@@ -102,12 +103,18 @@ export default function Table({ faculties }: Props) {
               </p>
             </div>
           </div>
-          {/* <CreateFaculty /> */}
+          <Button>
+            <span>New</span>
+          </Button>
         </div>
       </header>
 
       <main className="flex justify-center w-full overflow-x-auto">
-        <DataTable table={table} columns={c} />
+        {table.options.data?.length >= 1 ? (
+          <DataTable table={table} columns={c} />
+        ) : (
+          <EmptyBox classNames="mt-10" />
+        )}
       </main>
 
       {faculties?.length >= 20 ? (
