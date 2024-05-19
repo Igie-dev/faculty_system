@@ -80,30 +80,41 @@
 	}
 }
 
-.btn_loading_ring_wrapper {
+
+
+.btn_loading_ring_wrapper_wr, .btn_loading_ring_wrapper_dr {
 	display: inline-block;
 	position: relative;
 	width: 1rem;
 	height: 1rem;
 }
 
-.btn_loading_ring_wrapper div {
+.btn_loading_ring_wrapper_wr div ,.btn_loading_ring_wrapper_dr div{
 	display: block;
 	position: absolute;
 	width: 1rem;
 	height: 1rem;
-	border: 5px solid white;
 	border-radius: 50%;
 	animation: lds_ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-	border-color: white transparent transparent transparent;
 }
 
-.btn_loading_ring_wrapper div:nth-child(1) {
+
+.btn_loading_ring_wrapper_wr div {
+	border: 5px solid hsl(var(--background));
+	border-color: hsl(var(--background)) transparent transparent transparent;
+}
+
+.btn_loading_ring_wrapper_dr div {
+	border: 5px solid hsl(var(--primary));
+	border-color: hsl(var(--primary)) transparent transparent transparent;
+}
+
+.btn_loading_ring_wrapper_wr div:nth-child(1), .btn_loading_ring_wrapper_dr div:nth-child(1){
 	animation-delay: -0.45s;
 }
-.btn_loading_ring_wrapper div:nth-child(2) {
+.btn_loading_ring_wrapper_wr div:nth-child(2),.btn_loading_ring_wrapper_dr div:nth-child(2) {
 	animation-delay: -0.3s;
 }
-.btn_loading_ring_wrapper div:nth-child(3) {
+.btn_loading_ring_wrapper_wr div:nth-child(3) ,.btn_loading_ring_wrapper_dr div:nth-child(3){
 	animation-delay: -0.15s;
 }

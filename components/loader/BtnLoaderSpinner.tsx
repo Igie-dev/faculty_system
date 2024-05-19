@@ -1,13 +1,14 @@
 import "./loader_style.css";
-
-import { cn } from "@/lib/utils";
-
+export enum BtnLoaderClassEnum {
+  WHITE_RING = "btn_loading_ring_wrapper_wr",
+  BLACK_RING = "btn_loading_ring_wrapper_dr",
+}
 type Props = {
-  className?: string;
+  classNames: BtnLoaderClassEnum;
 };
-const BtnsLoaderSpinner = ({ className }: Props) => {
+const BtnsLoaderSpinner = ({ classNames }: Props) => {
   return (
-    <div className={cn(`${className} btn_loading_ring_wrapper`)}>
+    <div className={`${classNames}`}>
       <div></div>
       <div></div>
       <div></div>
