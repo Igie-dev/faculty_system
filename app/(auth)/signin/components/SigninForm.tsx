@@ -72,7 +72,7 @@ export default function SigninForm() {
         <p className="text-xs text-muted-foreground mb-10">
           Please provide your credintails
         </p>
-        <p className="text-sm text-destructive !mb-5">{errorMsg}</p>
+        <p className="text-sm text-destructive !my-10">{errorMsg}</p>
         <div className="w-full flex flex-col gap-6 mt-2">
           <FormField
             control={form.control}
@@ -87,7 +87,13 @@ export default function SigninForm() {
                     {...field}
                   />
                 </FormControl>
-                <FormLabel className="absolute px-1 py-1 left-1 -top-3 bg-background peer-focus:-top-5 peer-focus:left-0  peer-focus:px-0 peer-focus:py-0 transition-all">
+                <FormLabel
+                  className={`absolute   -top-3 bg-background peer-focus:-top-5 peer-focus:left-0  peer-focus:px-0 peer-focus:py-0 transition-all ${
+                    form.getValues().email
+                      ? "-top-5 px-0 py-0"
+                      : "px-1 py-1 left-1"
+                  }`}
+                >
                   Email
                 </FormLabel>
                 <FormMessage className="!text-xs" />
@@ -123,7 +129,13 @@ export default function SigninForm() {
                     </Button>
                   </>
                 </FormControl>
-                <FormLabel className="absolute px-1 py-1 left-1 -top-3 bg-background peer-focus:-top-5  peer-focus:left-0  peer-focus:px-0 peer-focus:py-0 transition-all">
+                <FormLabel
+                  className={`absolute   -top-3 bg-background peer-focus:-top-5 peer-focus:left-0  peer-focus:px-0 peer-focus:py-0 transition-all ${
+                    form.getValues().password
+                      ? "-top-5 px-0 py-0"
+                      : "px-1 py-1 left-1"
+                  }`}
+                >
                   Password
                 </FormLabel>
                 <FormMessage className="!text-xs" />
