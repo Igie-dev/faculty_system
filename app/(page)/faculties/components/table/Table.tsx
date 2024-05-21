@@ -23,6 +23,7 @@ import { columns } from "./columns";
 import DataTable from "@/components/DataTable";
 import { Input } from "@/components/ui/input";
 import EmptyBox from "@/components/EmptyBox";
+import Link from "next/link";
 type Props = {
   faculties: TFacultyData[];
 };
@@ -69,7 +70,7 @@ export default function Table({ faculties }: Props) {
               onChange={(event) =>
                 table.getColumn("name")?.setFilterValue(event.target.value)
               }
-              className="w-[90%] h-11 max-w-[30rem] bg-primary-foreground"
+              className="w-[90%] max-w-[30rem] bg-primary-foreground"
             />
             <div className="flex items-center gap-5">
               <DropdownMenu>
@@ -103,8 +104,10 @@ export default function Table({ faculties }: Props) {
               </p>
             </div>
           </div>
-          <Button>
-            <span>New</span>
+          <Button size="sm" asChild>
+            <Link href="/faculties/createaccount">
+              <span>Create account</span>
+            </Link>
           </Button>
         </div>
       </header>

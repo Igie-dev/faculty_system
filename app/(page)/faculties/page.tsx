@@ -4,10 +4,10 @@ import TableLoader from "./components/table/TableLoader";
 
 export default async function page() {
   return (
-    <div className="w-full h-full">
+    <section className="w-full h-full">
       <Suspense fallback={<TableLoader />}>
         <FacultiesTable />
       </Suspense>
-    </div>
+    </section>
   );
 }
