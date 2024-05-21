@@ -33,7 +33,7 @@ export default function MobileNav() {
           )}
         </Button>
       ) : null}
-      <div className="h-full w-[70%] max-w-[18rem] relative border-r flex flex-col bg-background">
+      <div className="h-full w-[65%] max-w-[18rem] relative border-r flex flex-col bg-background">
         <div className="w-full h-12">
           {isShow ? (
             <Button

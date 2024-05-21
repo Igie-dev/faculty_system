@@ -27,7 +27,7 @@ export default function NavLinkWrapper({
       className={`nav_link relative gap-4 flex items-center w-full lg:w-full text-sm rounded-none ${
         isExpanded ? "px-4 justify-start" : "justify-center px-0"
       } ${
-        pathname === `${path}`
+        pathname.startsWith(`${path}`)
           ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
           : "bg-background text-muted-foreground"
       }  after:absolute after:hidden after:z-50 after:pointer-events-none after:items-center after:justify-center after:text-xs after:left-[108%] after:border after:px-4 after:py-1 after:bg-secondary after:rounded-md after:text-muted-foreground 
