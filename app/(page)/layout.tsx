@@ -14,7 +14,7 @@ export default function layout({
     <main className="w-screen h-screen flex overflow-hidden relative">
       <MobileNav />
       <DesktopNav />
-      <section className="h-full w-full lg:flex-1 lg:min-w-0 flex flex-col border">
+      <section className="h-full w-full lg:flex-1 lg:min-w-0 flex flex-col border bg-secondary">
         <MainHeader />
         <main className="w-full h-[93%]">{children}</main>
       </section>
