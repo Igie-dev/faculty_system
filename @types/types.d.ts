@@ -3,7 +3,8 @@ import { ESubmussitionStatus } from "@/enum";
 declare global {
   type TCreateFaculty = {
     faculty_id?: string;
-    name: string;
+    first_name: string;
+    last_name: string;
     email: string;
     password?: string;
     confirmPassword?: string;
