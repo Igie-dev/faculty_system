@@ -4,6 +4,10 @@ import { z } from "zod";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 const saltRound = 9;
+export type TCreateFacultyResult =
+  | { message: string }
+  | { error: string }
+  | { errors: Record<string, string[]> };
 
 //Validate contact
 const phoneRegex = new RegExp(
@@ -72,43 +76,45 @@ const createFacultySchema = z
   .object({
     first_name: z
       .string({
-        invalid_type_error: "First name must be string",
+        invalid_type_error: "First name must be string!",
       })
-      .min(1, { message: "This field has to be filled." }),
+      .min(1, { message: "This field must be filled in!" }),
     last_name: z
       .string({
-        invalid_type_error: "Last name must be string",
+        invalid_type_error: "Last name must be string!",
       })
-      .min(1, { message: "This field has to be filled." }),
+      .min(1, { message: "This field must be filled in!" }),
     email: z
       .string({
-        invalid_type_error: "Name must be string",
+        invalid_type_error: "Name must be string!",
       })
-      .min(1, { message: "This field has to be filled." })
-      .email("Invalid email"),
+      .min(1, { message: "This field must be filled in!" })
+      .email("Invalid email!"),
     password: z
       .string({
-        invalid_type_error: "Name must be string",
+        invalid_type_error: "Name must be string!",
       })
-      .min(1, { message: "This field has to be filled." }),
+      .min(1, { message: "This field must be filled in!" }),
     confirmPassword: z
       .string({
-        invalid_type_error: "Name must be string",
+        invalid_type_error: "Name must be string!",
       })
-      .min(1, { message: "This field has to be filled." }),
+      .min(1, { message: "This field must be filled in!" }),
 
     contact: z
       .string({
-        invalid_type_error: "Name must be string",
+        invalid_type_error: "Name must be string!",
       })
       .regex(phoneRegex, "Invalid Number!"),
-    role: z.string({
-      invalid_type_error: "Name must be string",
-    }),
+    role: z
+      .string({
+        invalid_type_error: "Name must be string!",
+      })
+      .min(1, { message: "Please select role!" }),
     departments: z.array(
       z.object({
         dep_id: z.string({
-          invalid_type_error: "Name must be string",
+          invalid_type_error: "Name must be string!",
         }),
       })
     ),
@@ -120,11 +126,11 @@ const createFacultySchema = z
 
 //Create new faculty account
 export const createFaculty = async (
+  prevState: any,
   formData: FormData
 ): Promise<
-  TFacultyData | { error: string | z.SafeParseError<TCreateFaculty> }
+  { message: string } | { error: string } | { errors: Record<string, string[]> }
 > => {
-  //Distructure data from formData;
   const {
     first_name,
     last_name,
@@ -135,27 +141,13 @@ export const createFaculty = async (
     role,
     departments,
   } = Array.from(formData.entries()).reduce((map, [key, value]) => {
-    // Handle multiple values for departments
-    if (key === "departments") {
-      map[key] = map[key]
-        ? (map[key] as TCreateFacultyDep[]).concat({ dep_id: value as string })
-        : [{ dep_id: value as string }];
-    } else {
-      map[key] = value as string;
-    }
+    map[key] = value as string;
     return map;
   }, {} as Record<string, string | { dep_id: string }[]>);
-  console.log(
-    "Faculty Form: ",
-    first_name,
-    last_name,
-    email,
-    contact,
-    password,
-    confirmPassword,
-    role,
-    departments
-  );
+
+  const facultyDepartments = JSON.parse(departments as string) as {
+    dep_id: string;
+  }[];
 
   //Validate data with zod
   const validatedFields = createFacultySchema.safeParse({
@@ -166,17 +158,21 @@ export const createFaculty = async (
     role: role,
     password: password,
     confirmPassword: confirmPassword,
-    departments: departments,
+    departments: facultyDepartments,
   });
 
   if (!validatedFields.success) {
     return {
-      error: validatedFields.error.flatten()
-        .fieldErrors as z.SafeParseError<TCreateFaculty>,
+      errors: validatedFields.error.flatten().fieldErrors,
     };
   }
 
   try {
+    if (facultyDepartments?.length <= 0) {
+      return {
+        error: "Must include department!",
+      };
+    }
     //check if email or contact already used
     const emailExist = await prisma.faculty.findUnique({
       where: { email },
@@ -189,13 +185,13 @@ export const createFaculty = async (
 
     if (emailExist?.id) {
       return {
-        error: "Email already in use",
+        error: "Email already in use!",
       };
     }
 
     if (contactExist?.id) {
       return {
-        error: "Contact already in use",
+        error: "Contact already in use!",
       };
     }
 
@@ -215,13 +211,30 @@ export const createFaculty = async (
       email: email,
       contact: contact,
       role: role,
-      departments: departments,
       password: hashedPassword,
     };
 
-    const faculty = await getFaculty(facultyData.faculty_id);
-    return faculty;
+    const save = await prisma.faculty.create({ data: facultyData });
+
+    if (!save?.id) {
+      return {
+        error: "Failed to create account!",
+      };
+    }
+    for (const department of facultyDepartments) {
+      await prisma.FacultyDepartment.create({
+        data: {
+          faculty_id: save?.faculty_id,
+          dep_id: department.dep_id,
+        },
+      });
+    }
+
+    return {
+      message: "Create faculty account success!",
+    };
   } catch (error) {
+    console.log(error);
     return {
       error: "Something went wrong!",
     };

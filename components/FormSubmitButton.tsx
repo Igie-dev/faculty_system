@@ -29,7 +29,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={status.pending}
       >
         {status.pending ? (
-          <div className={cn(buttonVariants({ size }))}>
+          <div className={cn(buttonVariants({ size, variant }))}>
             <BtnsLoaderSpinner
               classNames={
                 variant && variant === "default"
