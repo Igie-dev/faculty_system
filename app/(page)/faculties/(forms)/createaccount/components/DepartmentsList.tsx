@@ -2,10 +2,12 @@ import React, { Dispatch, SetStateAction } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 type Props = {
   departmentsData: TDepartmentData[];
+  facultyDep: TCreateFacultyDep[];
   setFacultyDep: Dispatch<SetStateAction<TCreateFacultyDep[]>>;
 };
 export default function DepartmentsList({
   departmentsData,
+  facultyDep,
   setFacultyDep,
 }: Props) {
   const handleCleck = (id: string, checked: boolean) => {
@@ -17,10 +19,27 @@ export default function DepartmentsList({
       });
     }
   };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      if (departmentsData.length >= 1) {
+        setFacultyDep(departmentsData);
+      }
+    } else {
+      setFacultyDep([]);
+    }
+  };
   return (
     <div className="w-full min-h-[5rem] flex justify-center h-fit md:max-h-[30rem] overflow-y-auto">
       {departmentsData.length >= 1 ? (
         <ul className="w-full flex flex-col h-fit">
+          <div className="flex items-center h-fit px-2 my-3 w-fit rounded  text-sm gap-4">
+            <Checkbox
+              checked={facultyDep.length === departmentsData.length}
+              onCheckedChange={handleSelectAll}
+            />
+            <span className="font-semibold">Select all</span>
+          </div>
           {departmentsData.map((dep) => {
             return (
               <li
@@ -28,7 +47,10 @@ export default function DepartmentsList({
                 className="flex items-center space-x-4 w-full h-11  px-2 text-sm"
               >
                 <Checkbox
-                  className="rounded-md"
+                  checked={
+                    facultyDep.map((fdep) => fdep.dep_id === dep.dep_id)
+                      .length >= 1
+                  }
                   onCheckedChange={(e) => handleCleck(dep.dep_id, e as boolean)}
                 />
                 <span className="font-semibold">{dep.acronym}</span>

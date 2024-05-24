@@ -1,169 +1,53 @@
 "use server";
 import prisma from "@/utils/prisma";
-import { z } from "zod";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
+import { getCurrentUser } from "@/lib/auth";
+import { ERole } from "@/@types/enums";
+import { createFacultySchema } from "@/lib/helper";
+import { facultyQuery } from "@/lib/helper";
 const saltRound = 9;
-export type TCreateFacultyResult =
-  | { message: string }
-  | { error: string }
-  | { errors: Record<string, string[]> };
-
-//Validate contact
-const phoneRegex = new RegExp(
-  /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
-);
-
 //Get all faculty data fields
-const facultyFilterQuery = {
-  select: {
-    id: true,
-    faculty_id: true,
-    name: true,
-    contact: true,
-    email: true,
-    createdAt: true,
-    updatedAt: true,
-    role: true,
-    Announcements: {
-      include: {
-        Files: {
-          select: {
-            file_id: true,
-            file_name: true,
-            mimetype: true,
-            file_link: true,
-            file_category: true,
-          },
-        },
-      },
-    },
-    FacultyDepartments: {
-      include: {
-        Departments: true,
-      },
-    },
-    ArchiveAnnouncements: true,
-    Notifications: {},
-    Submissions: {
-      include: {
-        Files: {
-          select: {
-            file_id: true,
-            file_name: true,
-            mimetype: true,
-            file_link: true,
-            file_category: true,
-          },
-        },
-      },
-    },
-    Tasks: true,
-    Files: {
-      select: {
-        file_id: true,
-        file_name: true,
-        mimetype: true,
-        file_link: true,
-        file_category: true,
-      },
-    },
-  },
+
+export type FormState = {
+  message?: string;
+  error?: string;
+  fields?: Record<string, string>;
+  issues?: string[];
 };
-
-//Schema for creating new faculty account
-const createFacultySchema = z
-  .object({
-    first_name: z
-      .string({
-        invalid_type_error: "First name must be string!",
-      })
-      .min(1, { message: "This field must be filled in!" }),
-    last_name: z
-      .string({
-        invalid_type_error: "Last name must be string!",
-      })
-      .min(1, { message: "This field must be filled in!" }),
-    email: z
-      .string({
-        invalid_type_error: "Name must be string!",
-      })
-      .min(1, { message: "This field must be filled in!" })
-      .email("Invalid email!"),
-    password: z
-      .string({
-        invalid_type_error: "Name must be string!",
-      })
-      .min(1, { message: "This field must be filled in!" }),
-    confirmPassword: z
-      .string({
-        invalid_type_error: "Name must be string!",
-      })
-      .min(1, { message: "This field must be filled in!" }),
-
-    contact: z
-      .string({
-        invalid_type_error: "Name must be string!",
-      })
-      .regex(phoneRegex, "Invalid Number!"),
-    role: z
-      .string({
-        invalid_type_error: "Name must be string!",
-      })
-      .min(1, { message: "Please select role!" }),
-    departments: z.array(
-      z.object({
-        dep_id: z.string({
-          invalid_type_error: "Name must be string!",
-        }),
-      })
-    ),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwordm don't match!",
-    path: ["confirmPassword"],
-  });
 
 //Create new faculty account
 export const createFaculty = async (
-  prevState: any,
-  formData: FormData
-): Promise<
-  { message: string } | { error: string } | { errors: Record<string, string[]> }
-> => {
-  const {
-    first_name,
-    last_name,
-    email,
-    contact,
-    password,
-    confirmPassword,
-    role,
-    departments,
-  } = Array.from(formData.entries()).reduce((map, [key, value]) => {
-    map[key] = value as string;
-    return map;
-  }, {} as Record<string, string | { dep_id: string }[]>);
+  prevState: FormState,
+  data: FormData
+): Promise<FormState> => {
+  const { role: userRole } = await getCurrentUser();
 
-  const facultyDepartments = JSON.parse(departments as string) as {
+  if (userRole !== ERole.IS_ADMIN) {
+    return {
+      error: "Unauthorized user!",
+    };
+  }
+
+  const formData = Object.fromEntries(data);
+
+  const facultyDepartments = JSON.parse(formData.departments as string) as {
     dep_id: string;
   }[];
 
   //Validate data with zod
-  const validatedFields = createFacultySchema.safeParse({
-    first_name: first_name,
-    last_name: last_name,
-    email: email,
-    contact: contact,
-    role: role,
-    password: password,
-    confirmPassword: confirmPassword,
-    departments: facultyDepartments,
-  });
+  const parsed = createFacultySchema.safeParse(formData);
 
-  if (!validatedFields.success) {
+  if (!parsed.success) {
+    const fields: Record<string, string> = {};
+    for (const key of Object.keys(formData)) {
+      fields[key] = formData[key].toString();
+    }
+
     return {
-      errors: validatedFields.error.flatten().fieldErrors,
+      error: "Invalid form data",
+      fields,
+      issues: parsed.error.issues.map((issue) => issue.message),
     };
   }
 
@@ -175,11 +59,11 @@ export const createFaculty = async (
     }
     //check if email or contact already used
     const emailExist = await prisma.faculty.findUnique({
-      where: { email },
+      where: { email: formData.email },
       select: { id: true },
     });
     const contactExist = await prisma.faculty.findUnique({
-      where: { contact },
+      where: { contact: formData.contact },
       select: { id: true },
     });
 
@@ -199,18 +83,21 @@ export const createFaculty = async (
     const generateId = `${uuid()
       .toString()
       .replace("-", "")
-      .slice(0, 10)}${first_name.slice(0, 2)}${last_name.slice(
+      .slice(0, 10)}${formData.first_name.slice(
       0,
       2
-    )}`.toUpperCase();
+    )}${formData.last_name.slice(0, 2)}`.toUpperCase();
 
-    const hashedPassword = await bcrypt.hash(password as string, saltRound);
+    const hashedPassword = await bcrypt.hash(
+      formData.password as string,
+      saltRound
+    );
     const facultyData = {
       faculty_id: generateId,
-      name: `${first_name} ${last_name}`,
-      email: email,
-      contact: contact,
-      role: role,
+      name: `${formData.first_name} ${formData.last_name}`,
+      email: formData.email,
+      contact: formData.contact,
+      role: formData.role,
       password: hashedPassword,
     };
 
@@ -244,7 +131,7 @@ export const createFaculty = async (
 //Get all faculties
 export const getFaculties = async (): Promise<TFacultyData[]> => {
   try {
-    const faculties = await prisma.faculty.findMany(facultyFilterQuery);
+    const faculties = await prisma.faculty.findMany(facultyQuery);
 
     if (faculties?.length <= 0) {
       return [];
@@ -261,7 +148,7 @@ export const getFaculty = async (
   try {
     const foundFaculty = await prisma.faculty.findUnique({
       where: { faculty_id: id },
-      facultyFilterQuery,
+      facultyQuery,
     });
 
     if (foundFaculty?.id) {
