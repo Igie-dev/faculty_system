@@ -50,6 +50,33 @@ export const createFacultySchema = z
     path: ["confirmPassword"],
   });
 
+//Schema for updating faculty account
+export const updateFacultySchema = z.object({
+  name: z
+    .string({
+      invalid_type_error: "Last name must be string!",
+    })
+    .min(1, { message: "This field must be filled in!" }),
+  email: z
+    .string({
+      invalid_type_error: "Name must be string!",
+    })
+    .min(1, { message: "This field must be filled in!" })
+    .email("Invalid email!"),
+  contact: z
+    .string({
+      invalid_type_error: "Name must be string!",
+    })
+    .min(10, { message: "Contact minimum of 10" })
+    .max(10, { message: "Contact maximum of 10" })
+    .regex(phoneRegex, "Invalid contact!"),
+  role: z
+    .string({
+      invalid_type_error: "Name must be string!",
+    })
+    .min(1, { message: "Please select role!" }),
+});
+
 export const facultyQuery = {
   select: {
     id: true,
@@ -75,7 +102,7 @@ export const facultyQuery = {
     },
     FacultyDepartments: {
       include: {
-        Departments: true,
+        Department: true,
       },
     },
     ArchiveAnnouncements: true,
