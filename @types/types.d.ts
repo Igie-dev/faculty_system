@@ -46,13 +46,14 @@ declare global {
     department?: string;
     createdAt?: Date;
     updatedAt?: Date;
-    FacultyDepartment?: TFacultyDepartment[];
+    FacultyDepartments?: TFacultyDepartment[];
   };
 
   type TFacultyDepartment = {
     id?: number;
     faculty_id: string;
     dep_id: string;
+    Department: TDepartmentData;
   };
 
   type TCreateAnnouncement = {
@@ -72,6 +73,15 @@ declare global {
     createdAt: Date;
     updatedAt?: Date;
     Files: TFileData[];
+    DepartmentsAnnouncements: TDepartmentAnnouncement[];
+  };
+
+  type TDepartmentAnnouncement = {
+    id?: number;
+    Announcement: TAnnouncementData;
+    announcement_id: string;
+    Department: TDepartmentData;
+    dep_id: string;
   };
 
   type TPostFilter = {
