@@ -16,9 +16,15 @@ import { ERole } from "@/@types/enums";
 // import UpdateFaculty from "../update/UpdateFaculty";
 export const columns: ColumnDef<TFacultyData>[] = [
   {
+    accessorKey: "id",
+    header: () => {
+      return <div className="flex items-center h-full">ID</div>;
+    },
+  },
+  {
     accessorKey: "faculty_id",
     header: () => {
-      return <div className="flex items-center h-full pl-4">id</div>;
+      return <div className="flex items-center h-full">Faculty ID</div>;
     },
   },
   {
@@ -27,6 +33,7 @@ export const columns: ColumnDef<TFacultyData>[] = [
       return (
         <Button
           variant="ghost"
+          className="pl-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Name
@@ -41,6 +48,7 @@ export const columns: ColumnDef<TFacultyData>[] = [
       return (
         <Button
           variant="ghost"
+          className="pl-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Email
@@ -55,6 +63,7 @@ export const columns: ColumnDef<TFacultyData>[] = [
       return (
         <Button
           variant="ghost"
+          className="pl-0"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Contact
@@ -66,7 +75,7 @@ export const columns: ColumnDef<TFacultyData>[] = [
   {
     accessorKey: "role",
     header: () => {
-      return <div className="flex items-center h-full pl-4">Role</div>;
+      return <div className="flex items-center h-full ">Role</div>;
     },
   },
   {

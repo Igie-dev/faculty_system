@@ -121,10 +121,10 @@ export default function Table({ faculties }: Props) {
       </main>
 
       {faculties?.length >= 20 ? (
-        <footer className="flex items-center justify-end py-4 space-x-2">
+        <footer className="flex w-full px-4 items-center justify-end py-4 space-x-2">
           <Button
             variant="outline"
-            size="lg"
+            size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
             className="flex items-center gap-1 py-2 pl-2 pr-3"
@@ -134,7 +134,7 @@ export default function Table({ faculties }: Props) {
           </Button>
           <Button
             variant="outline"
-            size="lg"
+            size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
             className="flex items-center gap-1 py-2 pl-3 pr-2"

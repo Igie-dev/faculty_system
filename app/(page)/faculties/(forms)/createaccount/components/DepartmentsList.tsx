@@ -33,7 +33,7 @@ export default function DepartmentsList({
     <div className="w-full min-h-[5rem] flex justify-center h-fit md:max-h-[30rem] overflow-y-auto">
       {departmentsData.length >= 1 ? (
         <ul className="w-full flex flex-col h-fit">
-          <div className="flex items-center h-fit px-2 my-3 w-fit rounded  text-sm gap-4">
+          <div className="flex items-center h-fit px-3 my-3 w-fit rounded  text-sm border py-2 bg-secondary gap-4">
             <Checkbox
               checked={facultyDep.length === departmentsData.length}
               onCheckedChange={handleSelectAll}
@@ -44,12 +44,12 @@ export default function DepartmentsList({
             return (
               <li
                 key={dep.id}
-                className="flex items-center space-x-4 w-full h-11  px-2 text-sm"
+                className="flex  items-center space-x-4 w-full h-11  px-3 text-sm"
               >
                 <Checkbox
                   checked={
-                    facultyDep.map((fdep) => fdep.dep_id === dep.dep_id)
-                      .length >= 1
+                    facultyDep.filter((fdep) => fdep.dep_id === dep.dep_id)[0]
+                      ?.dep_id === dep.dep_id
                   }
                   onCheckedChange={(e) => handleCleck(dep.dep_id, e as boolean)}
                 />

@@ -61,15 +61,23 @@ export default function CreateForm({ departmentsData }: Props) {
   });
 
   useEffect(() => {
-    if (!state?.message) return;
-    toast({
-      title: "Create account",
-      description: state.message,
-    });
-    const timer = setTimeout(() => {
-      router.push("/faculties");
-    }, 500);
-
+    let timer: NodeJS.Timeout;
+    if (state.message || state.error) {
+      toast({
+        variant: state.error ? "destructive" : "default",
+        title: state.message
+          ? "Create account success!"
+          : state.error
+          ? "Create account failed!"
+          : "",
+        description: state.message ?? state.error ?? "",
+      });
+    }
+    if (state.message) {
+      timer = setTimeout(() => {
+        router.push("/faculties");
+      }, 500);
+    }
     return () => {
       clearTimeout(timer);
     };

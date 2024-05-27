@@ -40,7 +40,11 @@ export default function Nav({ isExpanded, session }: Props) {
   return !session ? (
     <NavLoader />
   ) : (
-    <nav className="w-full flex flex-col space-y-1 pt-5 lg:pt-8">
+    <nav
+      className={`w-full flex flex-col space-y-1 pt-5 lg:pt-8  ${
+        isExpanded ? "px-2" : "px-0"
+      }`}
+    >
       <NavLinkWrapper
         isExpanded={isExpanded}
         path="/dashboard"
