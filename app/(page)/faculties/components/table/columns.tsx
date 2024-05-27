@@ -92,20 +92,28 @@ export const columns: ColumnDef<TFacultyData>[] = [
             <DropdownMenuContent align="end" className="w-44">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {/* <DropdownMenuItem asChild>
-                <Link
-                  to={`/page/faculties/view?facultyId=${encryptText(
-                    encodeURIComponent(faculty?.facultyId as string)
-                  )}`}
-                >
-                  <Eye className="w-4 h-4 mr-2" /> <span>View</span>
+
+              <Button
+                asChild
+                size="sm"
+                variant="ghost"
+                className="w-full flex items-center space-x-2  justify-start text-muted-foreground"
+              >
+                <Link href={`/faculties/${faculty.faculty_id}/view`}>
+                  <Eye size={20} /> <span>View</span>
                 </Link>
-              </DropdownMenuItem> */}
-              {/* <DropdownMenuItem asChild>
-                <UpdateFaculty facultyId={faculty?.facultyId as string}>
-                  <PencilLine className="w-4 h-4 mr-2" /> <span>Update</span>
-                </UpdateFaculty>
-              </DropdownMenuItem> */}
+              </Button>
+
+              <Button
+                asChild
+                size="sm"
+                variant="ghost"
+                className="w-full flex items-center space-x-2  justify-start text-muted-foreground"
+              >
+                <Link href={`/faculties/${faculty.faculty_id}/update`}>
+                  <PencilLine size={20} /> <span>Update</span>
+                </Link>
+              </Button>
 
               <DeleteFaculty
                 facultyId={faculty.faculty_id as string}
