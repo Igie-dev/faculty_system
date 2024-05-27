@@ -13,8 +13,8 @@ model Department {
   dep_id                  String                   @unique
   acronym                String                   @unique
   department             String                   @unique
-  FacultyDepartment      FacultyDepartment[]
-  DepartmentAnnouncement DepartmentAnnouncement[]
+  FacultyDepartments      FacultyDepartment[]
+  DepartmentAnnouncements DepartmentAnnouncement[]
 
   @@index([dep_id])
 }
@@ -46,7 +46,7 @@ model FacultyDepartment {
   faculty_id   String?
   dep_id       String?
   Faculties   Faculty?    @relation(fields: [faculty_id], references: [faculty_id], onDelete: Cascade)
-  Departments Department? @relation(fields: [dep_id], references: [dep_id], onDelete: Cascade)
+  Department Department? @relation(fields: [dep_id], references: [dep_id], onDelete: Cascade)
 
   @@unique([faculty_id, dep_id])
   @@index([dep_id])
@@ -58,7 +58,7 @@ model Announcement {
   description             String   
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
-  DepartmentsAnnouncement DepartmentAnnouncement[] 
+  DepartmentsAnnouncements DepartmentAnnouncement[] 
   Faculty                 Faculty                  @relation(fields: [faculty_id], references: [faculty_id], onDelete: Cascade)
   faculty_id               String
   Files                   File[]
