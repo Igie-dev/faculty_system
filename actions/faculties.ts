@@ -6,6 +6,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { ERole } from "@/@types/enums";
 import { createFacultySchema } from "@/lib/helper";
 import { facultyQuery } from "@/lib/helper";
+import { revalidatePath } from "next/cache";
 const saltRound = 9;
 //Get all faculty data fields
 
@@ -117,6 +118,7 @@ export const createFaculty = async (
       });
     }
 
+    revalidatePath("/faculties");
     return {
       message: "Create faculty account success!",
     };
@@ -129,8 +131,18 @@ export const createFaculty = async (
 };
 
 //Get all faculties
-export const getFaculties = async (): Promise<TFacultyData[]> => {
+export const getFaculties = async (): Promise<
+  TFacultyData[] | { error: string }
+> => {
   try {
+    const { role: userRole } = await getCurrentUser();
+
+    if (userRole !== ERole.IS_ADMIN) {
+      return {
+        error: "Unauthorized user!",
+      };
+    }
+
     const faculties = await prisma.faculty.findMany(facultyQuery);
 
     if (faculties?.length <= 0) {
@@ -164,8 +176,16 @@ export const getFaculty = async (
 
 export const deleteFaculty = async (
   id: string
-): Promise<{ message: string } | { error: string }> => {
+): Promise<{ message?: string; error?: string }> => {
   try {
+    const { role: userRole } = await getCurrentUser();
+
+    if (userRole !== ERole.IS_ADMIN) {
+      return {
+        error: "Unauthorized user!",
+      };
+    }
+
     const foundFaculty = await prisma.faculty.findUnique({
       where: { faculty_id: id },
       select: { id: true },
@@ -187,6 +207,7 @@ export const deleteFaculty = async (
       };
     }
 
+    revalidatePath("/faculties");
     return {
       message: "Delete successful!",
     };

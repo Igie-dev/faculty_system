@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ERole } from "@/@types/enums";
 // import { encryptText } from "@/utils/helper";
-// import DeleteFaculty from "../delete/DeleteFaculty";
+import DeleteFaculty from "../delete/DeleteFaculty";
 // import UpdateFaculty from "../update/UpdateFaculty";
 export const columns: ColumnDef<TFacultyData>[] = [
   {
@@ -107,11 +107,10 @@ export const columns: ColumnDef<TFacultyData>[] = [
                 </UpdateFaculty>
               </DropdownMenuItem> */}
 
-              {/* <DeleteFaculty
-                facultyId={faculty?.facultyId as string}
-                firstName={faculty?.firstName}
-                lastName={faculty?.lastName}
-              /> */}
+              <DeleteFaculty
+                facultyId={faculty.faculty_id as string}
+                name={faculty?.name}
+              />
             </DropdownMenuContent>
           )}
         </DropdownMenu>
