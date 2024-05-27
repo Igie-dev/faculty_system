@@ -4,7 +4,7 @@ import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import { getCurrentUser } from "@/lib/auth";
 import { ERole } from "@/@types/enums";
-import { createFacultySchema } from "@/lib/helper";
+import { createFacultySchema, updateFacultySchema } from "@/lib/helper";
 import { facultyQuery } from "@/lib/helper";
 import { revalidatePath } from "next/cache";
 const saltRound = 9;
@@ -23,36 +23,35 @@ export const createFaculty = async (
   data: FormData
 ): Promise<FormState> => {
   const { role: userRole } = await getCurrentUser();
-
-  if (userRole !== ERole.IS_ADMIN) {
-    return {
-      error: "Unauthorized user!",
-    };
-  }
-
-  const formData = Object.fromEntries(data);
-
-  const facultyDepartments = JSON.parse(formData.departments as string) as {
-    dep_id: string;
-  }[];
-
-  //Validate data with zod
-  const parsed = createFacultySchema.safeParse(formData);
-
-  if (!parsed.success) {
-    const fields: Record<string, string> = {};
-    for (const key of Object.keys(formData)) {
-      fields[key] = formData[key].toString();
+  try {
+    if (userRole !== ERole.IS_ADMIN) {
+      return {
+        error: "Unauthorized user!",
+      };
     }
 
-    return {
-      error: "Invalid form data",
-      fields,
-      issues: parsed.error.issues.map((issue) => issue.message),
-    };
-  }
+    const formData = Object.fromEntries(data);
 
-  try {
+    const facultyDepartments = JSON.parse(formData.departments as string) as {
+      dep_id: string;
+    }[];
+
+    //Validate data with zod
+    const parsed = createFacultySchema.safeParse(formData);
+
+    if (!parsed.success) {
+      const fields: Record<string, string> = {};
+      for (const key of Object.keys(formData)) {
+        fields[key] = formData[key].toString();
+      }
+
+      return {
+        error: "Invalid form data",
+        fields,
+        issues: parsed.error.issues.map((issue) => issue.message),
+      };
+    }
+
     if (facultyDepartments?.length <= 0) {
       return {
         error: "Must include department!",
@@ -110,7 +109,7 @@ export const createFaculty = async (
       };
     }
     for (const department of facultyDepartments) {
-      await prisma.FacultyDepartment.create({
+      await prisma.facultyDepartment.create({
         data: {
           faculty_id: save?.faculty_id,
           dep_id: department.dep_id,
@@ -129,11 +128,85 @@ export const createFaculty = async (
     };
   }
 };
+//Update
+export const updateFaculty = async (
+  prevState: FormState,
+  data: FormData
+): Promise<FormState> => {
+  try {
+    const { role: userRole } = await getCurrentUser();
+    if (userRole !== ERole.IS_ADMIN) {
+      return {
+        error: "Unauthorized user!",
+      };
+    }
+
+    const formData = Object.fromEntries(data);
+
+    //Validate data with zod
+    const parsed = updateFacultySchema.safeParse(formData);
+
+    if (!parsed.success) {
+      const fields: Record<string, string> = {};
+      for (const key of Object.keys(formData)) {
+        fields[key] = formData[key].toString();
+      }
+
+      return {
+        error: "Invalid form data",
+        fields,
+        issues: parsed.error.issues.map((issue) => issue.message),
+      };
+    }
+
+    const foundFaculty = await prisma.faculty.findUnique({
+      where: { faculty_id: formData.faculty_id },
+      select: { id: true },
+    });
+
+    if (!foundFaculty?.id) {
+      return {
+        error: "Faculty not found!",
+      };
+    }
+
+    const facultyData = {
+      name: formData.name,
+      email: formData.email,
+      contact: formData.contact,
+      role: formData.role,
+    };
+
+    const updateFaculty = await prisma.faculty.update({
+      where: { faculty_id: formData.faculty_id },
+      data: {
+        facultyData,
+      },
+    });
+
+    if (!updateFaculty?.id) {
+      return {
+        error: "Failed to update faculty!",
+      };
+    }
+
+    revalidatePath(`/faculties/${formData?.faculty_id}/update`);
+    return {
+      message: "Create faculty account success!",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error: "Something went wrong!",
+    };
+  }
+};
 
 //Get all faculties
-export const getFaculties = async (): Promise<
-  TFacultyData[] | { error: string }
-> => {
+export const getFaculties = async (): Promise<{
+  data?: TFacultyData[];
+  error?: string;
+}> => {
   try {
     const { role: userRole } = await getCurrentUser();
 
@@ -146,28 +219,32 @@ export const getFaculties = async (): Promise<
     const faculties = await prisma.faculty.findMany(facultyQuery);
 
     if (faculties?.length <= 0) {
-      return [];
+      return { data: [] };
     }
-    return faculties;
+    return { data: faculties };
   } catch (error) {
-    return [];
+    return {
+      error: "Something went wrong!",
+    };
   }
 };
 
 export const getFaculty = async (
   id: string
-): Promise<TFacultyData | { error: string }> => {
+): Promise<{ data?: TFacultyData; error?: string }> => {
   try {
     const foundFaculty = await prisma.faculty.findUnique({
       where: { faculty_id: id },
-      facultyQuery,
+      select: facultyQuery.select,
     });
 
     if (foundFaculty?.id) {
-      return foundFaculty;
+      return { data: foundFaculty };
     }
+
     return { error: "Faculty not found!" };
   } catch (error) {
+    console.log(error);
     return {
       error: "Something went wrong!",
     };
@@ -188,12 +265,18 @@ export const deleteFaculty = async (
 
     const foundFaculty = await prisma.faculty.findUnique({
       where: { faculty_id: id },
-      select: { id: true },
+      select: { id: true, role: true },
     });
 
     if (!foundFaculty?.id) {
       return {
         error: "Faculty not found!",
+      };
+    }
+
+    if (foundFaculty?.role === "Admin") {
+      return {
+        error: "Admin cannot be deleted!",
       };
     }
 
@@ -212,6 +295,80 @@ export const deleteFaculty = async (
       message: "Delete successful!",
     };
   } catch (error) {
+    return {
+      error: "Something went wrong!",
+    };
+  }
+};
+
+export const updateFacultyDepartments = async (
+  faculty_id: string,
+  departments: TCreateFacultyDep[]
+): Promise<{ message?: string; error?: string }> => {
+  try {
+    const { role: userRole } = await getCurrentUser();
+
+    if (userRole !== ERole.IS_ADMIN) {
+      return {
+        error: "Unauthorized user!",
+      };
+    }
+
+    if (departments.length <= 0) {
+      return {
+        error: "Please add departments!",
+      };
+    }
+
+    const foundFaculty = await prisma.faculty.findUnique({
+      where: { faculty_id },
+      select: { id: true },
+    });
+
+    if (!foundFaculty?.id) {
+      return {
+        error: "Faculty not found!",
+      };
+    }
+
+    const deleteFacultyDep = await prisma.facultyDepartment.deleteMany({
+      where: {
+        faculty_id: faculty_id,
+      },
+    });
+    if (!deleteFacultyDep) {
+      return {
+        error: "Failed to update!",
+      };
+    }
+    for (let dep of departments) {
+      const existDep = await prisma.facultyDepartment.findUnique({
+        where: {
+          faculty_id_dep_id: {
+            dep_id: dep.dep_id,
+            faculty_id: faculty_id,
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+      if (!existDep?.id) {
+        await prisma.facultyDepartment.create({
+          data: {
+            dep_id: dep.dep_id,
+            faculty_id: faculty_id,
+          },
+        });
+      }
+    }
+
+    revalidatePath(`/faculties/${faculty_id}/update`);
+    return {
+      message: "Update success!",
+    };
+  } catch (error) {
+    console.log(error);
     return {
       error: "Something went wrong!",
     };
