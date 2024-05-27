@@ -1,15 +1,12 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { getDepartments } from "@/actions/departments";
 type Props = {
-  departmentsData: TDepartmentData[];
   facultyDep: TCreateFacultyDep[];
   setFacultyDep: Dispatch<SetStateAction<TCreateFacultyDep[]>>;
 };
-export default function DepartmentsList({
-  departmentsData,
-  facultyDep,
-  setFacultyDep,
-}: Props) {
+export default function DepartmentsList({ facultyDep, setFacultyDep }: Props) {
+  const [departments, setDepartments] = useState<TDepartmentData[]>([]);
   const handleCleck = (id: string, checked: boolean) => {
     if (checked) {
       setFacultyDep((prev) => [...prev, { dep_id: id }]);
@@ -22,29 +19,41 @@ export default function DepartmentsList({
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      if (departmentsData.length >= 1) {
-        setFacultyDep(departmentsData);
+      if (departments.length >= 1) {
+        setFacultyDep(departments);
       }
     } else {
       setFacultyDep([]);
     }
   };
+
+  useEffect(() => {
+    if (departments?.length <= 0) {
+      (async () => {
+        const res = await getDepartments();
+        if (res?.data) {
+          setDepartments(res.data);
+        }
+      })();
+    }
+  }, [departments]);
+
   return (
     <div className="w-full min-h-[5rem] flex justify-center h-fit md:max-h-[30rem] overflow-y-auto">
-      {departmentsData.length >= 1 ? (
+      {departments.length >= 1 ? (
         <ul className="w-full flex flex-col h-fit">
           <div className="flex items-center h-fit px-3 my-3 w-fit rounded  text-sm border py-2 bg-secondary gap-4">
             <Checkbox
-              checked={facultyDep.length === departmentsData.length}
+              checked={facultyDep.length === departments.length}
               onCheckedChange={handleSelectAll}
             />
             <span className="font-semibold">Select all</span>
           </div>
-          {departmentsData.map((dep) => {
+          {departments.map((dep) => {
             return (
               <li
                 key={dep.id}
-                className="flex  items-center space-x-4 w-full h-11  px-3 text-sm"
+                className="flex  items-center space-x-4 w-full h-fit min-h-11   px-3 text-sm"
               >
                 <Checkbox
                   checked={

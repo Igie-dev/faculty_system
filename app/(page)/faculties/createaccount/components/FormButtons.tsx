@@ -5,7 +5,7 @@ import { useFormStatus } from "react-dom";
 import BtnsLoaderSpinner, {
   BtnLoaderClassEnum,
 } from "@/components/loader/BtnLoaderSpinner";
-export default function FormButton() {
+export default function FormButtons() {
   const status = useFormStatus();
   return (
     <div className="flex items-center gap-2">

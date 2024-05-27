@@ -4,9 +4,7 @@ import React, { useEffect, useState, useRef } from "react";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -19,8 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-
-import FormButton from "./FormButton";
+import FormButtons from "./FormButtons";
 import DepartmentsList from "./DepartmentsList";
 import { createFaculty } from "@/actions/faculties";
 import { useFormState } from "react-dom";
@@ -31,12 +28,7 @@ import { createFacultySchema } from "@/lib/helper";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-type Props = {
-  departmentsData: TDepartmentData[];
-};
-
-export default function CreateForm({ departmentsData }: Props) {
+export default function CreateForm() {
   const [facultyDep, setFacultyDep] = useState<TCreateFacultyDep[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const [inputPassType, setInputPassType] = useState("password");
@@ -115,8 +107,8 @@ export default function CreateForm({ departmentsData }: Props) {
             <p className="font-normal">Error: {` ${state?.error}`}</p>
           ) : null}
         </span>
-        <div className="flex flex-col w-full h-fit md:flex-row  gap-2 md:gap-4">
-          <div className="w-full flex flex-col md:h-full md:w-[50%] space-y-7">
+        <div className="flex flex-col w-full h-fit md:flex-row justify-between md:gap-4">
+          <div className="w-full flex flex-col md:h-full md:w-[45%] space-y-7">
             <div className="w-full flex flex-col space-y-2 relative ">
               <FormField
                 control={form.control}
@@ -268,7 +260,7 @@ export default function CreateForm({ departmentsData }: Props) {
             </div>
           </div>
           {/* Departments */}
-          <div className="w-full flex flex-col md:h-full md:w-[50%]  mt-10 md:mt-0">
+          <div className="w-full flex flex-col md:h-full md:w-[45%]  mt-10 md:mt-0">
             <div className="w-full flex flex-col">
               <span className="text-lg font-semibold">Departments</span>
               <span className="text-xs text-muted-foreground">
@@ -284,14 +276,13 @@ export default function CreateForm({ departmentsData }: Props) {
               </span>
             </div>
             <DepartmentsList
-              departmentsData={departmentsData}
               setFacultyDep={setFacultyDep}
               facultyDep={facultyDep}
             />
           </div>
         </div>
         <div className="flex items-center !mt-10 flex-row-reverse">
-          <FormButton />
+          <FormButtons />
         </div>
       </form>
     </Form>
