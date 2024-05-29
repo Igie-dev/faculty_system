@@ -1,12 +1,14 @@
 "use server";
-import prisma from "@/utils/prisma";
+import { db } from "@/db/db";
+import { FacultyDepartmentTable, FacultyTable } from "@/db/schema";
+import { sql } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import { getCurrentUser } from "@/lib/auth";
 import { ERole } from "@/@types/enums";
 import { createFacultySchema, updateFacultySchema } from "@/lib/helper";
-import { facultyQuery } from "@/lib/helper";
 import { revalidatePath } from "next/cache";
+
 const saltRound = 9;
 //Get all faculty data fields
 
@@ -58,13 +60,18 @@ export const createFaculty = async (
       };
     }
     //check if email or contact already used
-    const emailExist = await prisma.faculty.findUnique({
-      where: { email: formData.email },
-      select: { id: true },
+    const emailExist = await db.query.FacultyTable.findFirst({
+      where: () => sql`${FacultyTable.email} = ${formData.email}`,
+      columns: {
+        id: true,
+      },
     });
-    const contactExist = await prisma.faculty.findUnique({
-      where: { contact: formData.contact },
-      select: { id: true },
+
+    const contactExist = await db.query.FacultyTable.findFirst({
+      where: () => sql`${FacultyTable.contact} = ${formData.contact}`,
+      columns: {
+        id: true,
+      },
     });
 
     if (emailExist?.id) {
@@ -95,29 +102,29 @@ export const createFaculty = async (
     const facultyData = {
       faculty_id: generateId,
       name: `${formData.first_name} ${formData.last_name}`,
-      email: formData.email,
-      contact: formData.contact,
-      role: formData.role,
+      email: formData.email as string,
+      contact: formData.contact as string,
+      role: formData.role as "Dean" | "Teacher",
       password: hashedPassword,
     };
 
-    const save = await prisma.faculty.create({ data: facultyData });
+    const save = await db
+      .insert(FacultyTable)
+      .values(facultyData)
+      .returning({ id: FacultyTable.id });
 
-    if (!save?.id) {
+    if (!save[0]?.id) {
       return {
         error: "Failed to create account!",
       };
     }
     for (const department of facultyDepartments) {
-      await prisma.facultyDepartment.create({
-        data: {
-          faculty_id: save?.faculty_id,
-          dep_id: department.dep_id,
-        },
+      await db.insert(FacultyDepartmentTable).values({
+        faculty_id: facultyData.faculty_id,
+        dep_id: department.dep_id,
       });
     }
 
-    revalidatePath("/faculties");
     return {
       message: "Create faculty account success!",
     };
@@ -159,9 +166,11 @@ export const updateFaculty = async (
       };
     }
 
-    const foundFaculty = await prisma.faculty.findUnique({
-      where: { faculty_id: formData.faculty_id },
-      select: { id: true },
+    const foundFaculty = await db.query.FacultyTable.findFirst({
+      where: () => sql`${FacultyTable.faculty_id} = ${formData.faculty_id}`,
+      columns: {
+        id: true,
+      },
     });
 
     if (!foundFaculty?.id) {
@@ -170,21 +179,18 @@ export const updateFaculty = async (
       };
     }
 
-    const facultyData = {
-      name: formData.name,
-      email: formData.email,
-      contact: formData.contact,
-      role: formData.role,
-    };
+    const updateFaculty = await db
+      .update(FacultyTable)
+      .set({
+        name: formData.name as string,
+        email: formData.email as string,
+        contact: formData.contact as string,
+        role: formData.role as "Dean" | "Teacher",
+      })
+      .where(sql`${FacultyTable.faculty_id} = ${formData.faculty_id}`)
+      .returning({ id: FacultyTable.id });
 
-    const updateFaculty = await prisma.faculty.update({
-      where: { faculty_id: formData.faculty_id },
-      data: {
-        facultyData,
-      },
-    });
-
-    if (!updateFaculty?.id) {
+    if (!updateFaculty[0]?.id) {
       return {
         error: "Failed to update faculty!",
       };
@@ -216,13 +222,83 @@ export const getFaculties = async (): Promise<{
       };
     }
 
-    const faculties = await prisma.faculty.findMany(facultyQuery);
+    const faculties = await db.query.FacultyTable.findMany({
+      columns: {
+        id: true,
+        name: true,
+        faculty_id: true,
+        avatar_url: true,
+        email: true,
+        contact: true,
+        createdAt: true,
+        updatedAt: true,
+        role: true,
+      },
+      with: {
+        // facultyDepartments: {
+        //   columns: {
+        //     faculty_id: false,
+        //     dep_id: false,
+        //   },
+        // },
+        announcements: true,
+        // submissions: {
+        //   columns: {
+        //     id: true,
+        //     submission_id: true,
+        //     title: true,
+        //     status: true,
+        //     remarks: true,
+        //     description: true,
+        //     createdAt: true,
+        //     updatedAt: true,
+        //   },
+        // },
+        // tasks: {
+        //   columns: {
+        //     id: true,
+        //     task_id: true,
+        //     title: true,
+        //     due_date: true,
+        //     description: true,
+        //     createdAt: true,
+        //     updatedAt: true,
+        //   },
+        // },
+        // files: {
+        //   columns: {
+        //     id: true,
+        //     file_id: true,
+        //     file_name: true,
+        //     mimetype: true,
+        //     file_url: true,
+        //   },
+        // },
+        // archiveAnnouncements: {
+        //   columns: {
+        //     announcement_id: true,
+        //     faculty_id: true,
+        //   },
+        // },
+        // notifications: {
+        //   columns: {
+        //     notif_id: true,
+        //     title: true,
+        //     description: true,
+        //     createdAt: true,
+        //   },
+        // },
+      },
+    });
 
     if (faculties?.length <= 0) {
       return { data: [] };
     }
-    return { data: faculties };
+
+    ///TODO Fix return value on types
+    return { data: faculties as any };
   } catch (error) {
+    console.log(error);
     return {
       error: "Something went wrong!",
     };
@@ -233,13 +309,24 @@ export const getFaculty = async (
   id: string
 ): Promise<{ data?: TFacultyData; error?: string }> => {
   try {
-    const foundFaculty = await prisma.faculty.findUnique({
-      where: { faculty_id: id },
-      select: facultyQuery.select,
+    const foundFaculty = await db.query.FacultyTable.findFirst({
+      where: () => sql`${FacultyTable.faculty_id} = ${id}`,
+      columns: {
+        id: true,
+        name: true,
+        faculty_id: true,
+        avatar_url: true,
+        email: true,
+        contact: true,
+        createdAt: true,
+        updatedAt: true,
+        role: true,
+      },
     });
 
     if (foundFaculty?.id) {
-      return { data: foundFaculty };
+      ///TODO Fix return value on types
+      return { data: foundFaculty as any };
     }
 
     return { error: "Faculty not found!" };
@@ -263,9 +350,12 @@ export const deleteFaculty = async (
       };
     }
 
-    const foundFaculty = await prisma.faculty.findUnique({
-      where: { faculty_id: id },
-      select: { id: true, role: true },
+    const foundFaculty = await db.query.FacultyTable.findFirst({
+      where: () => sql`${FacultyTable.faculty_id} = ${id}`,
+      columns: {
+        id: true,
+        role: true,
+      },
     });
 
     if (!foundFaculty?.id) {
@@ -280,9 +370,9 @@ export const deleteFaculty = async (
       };
     }
 
-    const deletFaculty = await prisma.faculty.delete({
-      where: { faculty_id: id },
-    });
+    const deletFaculty = await db
+      .delete(FacultyTable)
+      .where(sql`${FacultyTable.faculty_id} = ${id}`);
 
     if (!deletFaculty) {
       return {
@@ -320,9 +410,11 @@ export const updateFacultyDepartments = async (
       };
     }
 
-    const foundFaculty = await prisma.faculty.findUnique({
-      where: { faculty_id },
-      select: { id: true },
+    const foundFaculty = await db.query.FacultyTable.findFirst({
+      where: () => sql`${FacultyTable.faculty_id} = ${faculty_id}`,
+      columns: {
+        id: true,
+      },
     });
 
     if (!foundFaculty?.id) {
@@ -331,34 +423,28 @@ export const updateFacultyDepartments = async (
       };
     }
 
-    const deleteFacultyDep = await prisma.facultyDepartment.deleteMany({
-      where: {
-        faculty_id: faculty_id,
-      },
-    });
+    const deleteFacultyDep = await db
+      .delete(FacultyDepartmentTable)
+      .where(sql`${FacultyDepartmentTable.faculty_id} = ${faculty_id}`);
+
     if (!deleteFacultyDep) {
       return {
         error: "Failed to update!",
       };
     }
     for (let dep of departments) {
-      const existDep = await prisma.facultyDepartment.findUnique({
-        where: {
-          faculty_id_dep_id: {
-            dep_id: dep.dep_id,
-            faculty_id: faculty_id,
-          },
-        },
-        select: {
-          id: true,
+      const existDep = await db.query.FacultyDepartmentTable.findFirst({
+        where: () =>
+          sql`${FacultyDepartmentTable.dep_id} = ${dep.dep_id} AND ${FacultyDepartmentTable.faculty_id} = ${faculty_id}`,
+        columns: {
+          dep_id: true,
         },
       });
-      if (!existDep?.id) {
-        await prisma.facultyDepartment.create({
-          data: {
-            dep_id: dep.dep_id,
-            faculty_id: faculty_id,
-          },
+
+      if (!existDep?.dep_id) {
+        await db.insert(FacultyDepartmentTable).values({
+          dep_id: dep.dep_id,
+          faculty_id: faculty_id,
         });
       }
     }

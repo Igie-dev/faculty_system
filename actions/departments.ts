@@ -1,7 +1,9 @@
 "use server";
 import { ERole } from "@/@types/enums";
 import { getCurrentUser } from "@/lib/auth";
-import prisma from "@/utils/prisma";
+import { db } from "@/db/db";
+import { DepartmentTable } from "@/db/schema";
+import { sql } from "drizzle-orm";
 
 export const getDepartments = async (): Promise<{
   data?: TDepartmentData[];
@@ -15,7 +17,7 @@ export const getDepartments = async (): Promise<{
         error: "Unauthorized user!",
       };
     }
-    const departments = await prisma.department.findMany();
+    const departments = await db.query.DepartmentTable.findMany();
 
     if (departments?.length <= 0) {
       return { data: [] };

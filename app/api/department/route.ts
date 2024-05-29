@@ -1,6 +1,8 @@
-import prisma from "@/utils/prisma";
 import { v4 as uuid } from "uuid";
 import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/db/db";
+import { DepartmentTable } from "@/db/schema";
+import { sql } from "drizzle-orm";
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,38 +15,37 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const exist = await prisma.department.findMany({
-      where: {
-        OR: [{ acronym }, { department }],
-      },
-      select: {
+    const exist = await db.query.DepartmentTable.findFirst({
+      where: () =>
+        sql`${DepartmentTable.acronym} = ${acronym} OR ${DepartmentTable.department} = ${department}`,
+      columns: {
         dep_id: true,
       },
     });
 
-    if (exist[0]?.dep_id) {
+    if (exist?.dep_id) {
       return NextResponse.json(
         { message: "Department already exist!" },
         { status: 409 }
       );
     }
     const dep_id = uuid();
-
-    const saveDepartment = await prisma.department.create({
-      data: {
+    const saveDepartment = await db
+      .insert(DepartmentTable)
+      .values({
         dep_id,
         acronym,
         department,
-      },
-    });
+      })
+      .returning({ id: DepartmentTable.id });
 
-    if (!saveDepartment?.id) {
+    if (!saveDepartment[0]?.id) {
       return NextResponse.json(
         { error: "Failed to save department!" },
         { status: 500 }
       );
     }
-    return NextResponse.json({ data: saveDepartment }, { status: 200 });
+    return NextResponse.json({ message: "Department saved!" }, { status: 200 });
   } catch (error) {
     console.log(error);
     return NextResponse.json(
@@ -56,7 +57,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    const departments = await prisma.department.findMany();
+    const departments = await db.query.DepartmentTable.findMany();
 
     if (departments?.length <= 0) {
       return NextResponse.json(

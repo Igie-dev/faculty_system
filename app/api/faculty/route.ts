@@ -1,7 +1,9 @@
-import prisma from "@/utils/prisma";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
+import { db } from "@/db/db";
+import { FacultyTable } from "@/db/schema";
+import { sql } from "drizzle-orm";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,26 +17,44 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const existEmail = await prisma.faculty.findUnique({
-      where: { email },
-      select: { id: true, faculty_id: true },
+    // const existEmail = await db
+    //   .select({ id: FacultyTable.id })
+    //   .from(FacultyTable)
+    //   .where(sql`${FacultyTable.email} = ${email}`);
+
+    const existEmail = await db.query.FacultyTable.findFirst({
+      where: () => sql`${FacultyTable.email} = ${email}`,
+      columns: {
+        id: true,
+      },
     });
+
     if (existEmail?.id) {
       return NextResponse.json(
         { message: "Email already exist!" },
         { status: 409 }
       );
     }
-    const existContact = await prisma.faculty.findUnique({
-      where: { contact },
-      select: { id: true, faculty_id: true },
+
+    // const existContact = await db
+    //   .select({ id: FacultyTable.id })
+    //   .from(FacultyTable)
+    //   .where(sql`${FacultyTable.contact} = ${contact}`);
+
+    const existContact = await db.query.FacultyTable.findFirst({
+      where: () => sql`${FacultyTable.contact} = ${contact}`,
+      columns: {
+        id: true,
+      },
     });
+
     if (existContact?.id) {
       return NextResponse.json(
         { message: "Contact already exist!" },
         { status: 409 }
       );
     }
+
     const generateId = `${uuid()
       .toString()
       .replace("-", "")
@@ -54,9 +74,12 @@ export async function POST(req: NextRequest) {
       password: saltPass,
     };
 
-    const save = await prisma.faculty.create({ data });
+    const save = await db
+      .insert(FacultyTable)
+      .values(data)
+      .returning({ id: FacultyTable.id });
 
-    if (!save?.id) {
+    if (!save[0]?.id) {
       return NextResponse.json(
         { error: "Failed to save data!" },
         { status: 500 }
@@ -77,63 +100,82 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    const faculties = await prisma.faculty.findMany({
-      select: {
+    const faculties = await db.query.FacultyTable.findMany({
+      columns: {
         id: true,
-        faculty_id: true,
         name: true,
-        contact: true,
+        faculty_id: true,
+        avatar_url: true,
         email: true,
+        contact: true,
         createdAt: true,
         updatedAt: true,
         role: true,
-
-        Announcements: {
-          include: {
-            Files: {
-              select: {
-                file_id: true,
-                file_name: true,
-                mimetype: true,
-                file_link: true,
-                file_category: true,
-              },
-            },
-          },
-        },
-        FacultyDepartments: {
-          include: {
-            Departments: true,
-          },
-        },
-        ArchiveAnnouncements: true,
-        Notifications: {},
-        Submissions: {
-          include: {
-            Files: {
-              select: {
-                file_id: true,
-                file_name: true,
-                mimetype: true,
-                file_link: true,
-                file_category: true,
-              },
-            },
-          },
-        },
-        Tasks: true,
-        Files: {
-          select: {
-            file_id: true,
-            file_name: true,
-            mimetype: true,
-            file_link: true,
-            file_category: true,
-          },
-        },
       },
+      // with: {
+      //   facultyDepartments: {
+      //     columns: {
+      //       faculty_id: false,
+      //       dep_id: false,
+      //     },
+      //   },
+      //   announcements: {
+      //     columns: {
+      //       id: true,
+      //       announcement_id: true,
+      //       description: true,
+      //       createdAt: true,
+      //       updatedAt: true,
+      //     },
+      //   },
+      //   submissions: {
+      //     columns: {
+      //       id: true,
+      //       submission_id: true,
+      //       title: true,
+      //       status: true,
+      //       remarks: true,
+      //       description: true,
+      //       createdAt: true,
+      //       updatedAt: true,
+      //     },
+      //   },
+      //   tasks: {
+      //     columns: {
+      //       id: true,
+      //       task_id: true,
+      //       title: true,
+      //       due_date: true,
+      //       description: true,
+      //       createdAt: true,
+      //       updatedAt: true,
+      //     },
+      //   },
+      //   files: {
+      //     columns: {
+      //       id: true,
+      //       file_id: true,
+      //       file_name: true,
+      //       mimetype: true,
+      //       file_url: true,
+      //     },
+      //   },
+      //   archiveAnnouncements: {
+      //     columns: {
+      //       announcement_id: true,
+      //       faculty_id: true,
+      //     },
+      //   },
+      //   notifications: {
+      //     columns: {
+      //       notif_id: true,
+      //       title: true,
+      //       description: true,
+      //       createdAt: true,
+      //     },
+      //   },
+      // },
     });
-
     if (faculties.length <= 0) {
       return NextResponse.json(
         { message: "No faculty found!" },
@@ -155,9 +197,11 @@ export async function DELETE(req: NextRequest) {
   try {
     const faculty_id = req.nextUrl.searchParams.get("facultyId");
 
-    const foundFaculty = await prisma.faculty.findUnique({
-      where: { faculty_id },
-      select: { id: true },
+    const foundFaculty = await db.query.FacultyTable.findFirst({
+      where: () => sql`${FacultyTable.faculty_id} = ${faculty_id}`,
+      columns: {
+        id: true,
+      },
     });
 
     if (!foundFaculty?.id) {
@@ -167,7 +211,9 @@ export async function DELETE(req: NextRequest) {
       );
     }
 
-    const deletFaculty = await prisma.faculty.delete({ where: { faculty_id } });
+    const deletFaculty = await db
+      .delete(FacultyTable)
+      .where(sql`${FacultyTable.faculty_id} = ${faculty_id}`);
 
     if (!deletFaculty) {
       throw new Error("Deleting fail!");

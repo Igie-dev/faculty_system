@@ -1,8 +1,10 @@
 import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import prisma from "@/utils/prisma";
 import bcrypt from "bcrypt";
+import { db } from "@/db/db";
+import { FacultyTable } from "@/db/schema";
+import { sql } from "drizzle-orm";
 
 export const options: NextAuthOptions = {
   providers: [
@@ -15,13 +17,11 @@ export const options: NextAuthOptions = {
           password: string;
         };
         try {
-          const foundFaculty = await prisma.faculty.findUnique({
-            where: {
-              email,
-            },
+          const foundFaculty = await db.query.FacultyTable.findFirst({
+            where: () => sql`${FacultyTable.email} = ${email}`,
           });
 
-          if (!foundFaculty?.id) {
+          if (!foundFaculty || !foundFaculty?.id) {
             const error: any = new Error(
               "Invalid credentials! Please check your email or password!"
             );
@@ -41,7 +41,7 @@ export const options: NextAuthOptions = {
             error.statusCode = 401; // Unauthorized
             throw error;
           }
-          return foundFaculty;
+          return foundFaculty as any;
         } catch (error: any) {
           // If the error does not have a status code already, set a default one
           const statusCode = error.statusCode || 500; // Internal Server Error
@@ -66,15 +66,14 @@ export const options: NextAuthOptions = {
     async signIn({ user, account }: { user: any; account: any }) {
       if (account.provider === "google") {
         try {
-          const foundFaculty = await prisma.faculty.findUnique({
-            where: {
-              email: user?.email,
-            },
-            select: {
+          const foundFaculty = await db.query.FacultyTable.findFirst({
+            where: () => sql`${FacultyTable.email} = ${user?.email}`,
+            columns: {
               faculty_id: true,
               role: true,
             },
           });
+
           if (!foundFaculty?.faculty_id) {
             const error: any = new Error(
               "Invalid credentials! Please check your email or password!"
@@ -99,11 +98,9 @@ export const options: NextAuthOptions = {
     async jwt({ token, user }) {
       try {
         if (user) {
-          const foundFaculty = await prisma.faculty.findUnique({
-            where: {
-              email: user?.email,
-            },
-            select: {
+          const foundFaculty = await db.query.FacultyTable.findFirst({
+            where: () => sql`${FacultyTable.email} = ${user?.email}`,
+            columns: {
               faculty_id: true,
               role: true,
             },
@@ -130,11 +127,16 @@ export const options: NextAuthOptions = {
           session.user.name = token.name;
 
           if (!token.picture) {
-            const foundImage = await prisma.image.findUnique({
-              where: { image_id: token?.faculty_id },
+            const foundImage = await db.query.FacultyTable.findFirst({
+              where: () =>
+                sql`${FacultyTable.faculty_id} = ${token?.faculty_id}`,
+              columns: {
+                avatar_url: true,
+              },
             });
-            if (foundImage?.id) {
-              session.user.image = foundImage?.image_link;
+
+            if (foundImage?.avatar_url) {
+              session.user.image = foundImage.avatar_url;
             }
           } else {
             session.user.image = token.picture;
