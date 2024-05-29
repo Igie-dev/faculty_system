@@ -112,69 +112,15 @@ export async function GET() {
         updatedAt: true,
         role: true,
       },
-      // with: {
-      //   facultyDepartments: {
-      //     columns: {
-      //       faculty_id: false,
-      //       dep_id: false,
-      //     },
-      //   },
-      //   announcements: {
-      //     columns: {
-      //       id: true,
-      //       announcement_id: true,
-      //       description: true,
-      //       createdAt: true,
-      //       updatedAt: true,
-      //     },
-      //   },
-      //   submissions: {
-      //     columns: {
-      //       id: true,
-      //       submission_id: true,
-      //       title: true,
-      //       status: true,
-      //       remarks: true,
-      //       description: true,
-      //       createdAt: true,
-      //       updatedAt: true,
-      //     },
-      //   },
-      //   tasks: {
-      //     columns: {
-      //       id: true,
-      //       task_id: true,
-      //       title: true,
-      //       due_date: true,
-      //       description: true,
-      //       createdAt: true,
-      //       updatedAt: true,
-      //     },
-      //   },
-      //   files: {
-      //     columns: {
-      //       id: true,
-      //       file_id: true,
-      //       file_name: true,
-      //       mimetype: true,
-      //       file_url: true,
-      //     },
-      //   },
-      //   archiveAnnouncements: {
-      //     columns: {
-      //       announcement_id: true,
-      //       faculty_id: true,
-      //     },
-      //   },
-      //   notifications: {
-      //     columns: {
-      //       notif_id: true,
-      //       title: true,
-      //       description: true,
-      //       createdAt: true,
-      //     },
-      //   },
-      // },
+      with: {
+        departments: true,
+        announcements: true,
+        submissions: true,
+        tasks: true,
+        files: true,
+        archiveAnnouncements: true,
+        notifications: true,
+      },
     });
     if (faculties.length <= 0) {
       return NextResponse.json(

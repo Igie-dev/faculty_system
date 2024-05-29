@@ -57,7 +57,12 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    const departments = await db.query.DepartmentTable.findMany();
+    const departments = await db.query.DepartmentTable.findMany({
+      with: {
+        faculties: true,
+        announcements: true,
+      },
+    });
 
     if (departments?.length <= 0) {
       return NextResponse.json(

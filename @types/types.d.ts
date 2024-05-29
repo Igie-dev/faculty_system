@@ -14,6 +14,7 @@ declare global {
   };
   type TCreateFacultyDep = {
     dep_id: string;
+    faculty_id: string;
   };
 
   type TFacultyData = {
@@ -26,12 +27,13 @@ declare global {
     role: string;
     createdAt?: Date;
     updatedAt?: Date;
-    FacultyDepartments: TFacultyDepartment[];
-    Announcements: TAnnouncementData[];
-    Notifications: TNotificationData[];
-    Submissions: TSubmissionData[];
-    Tasks: TTaskData[];
-    Files: TFileData[];
+    departments: TFacultyDepartments[];
+    announcements: TAnnouncementData[];
+    submissions: TSubmissionData[];
+    task: TTaskData[];
+    files: TFileData[];
+    archiveAnnouncements: TFacultyArchiveAnnouncements[];
+    notifications: TNotificationData[];
   };
 
   type TCreateDepartment = {
@@ -46,14 +48,13 @@ declare global {
     department?: string;
     createdAt?: Date;
     updatedAt?: Date;
-    FacultyDepartments?: TFacultyDepartment[];
+    faculties: TFacultyData[];
+    announcements: TDepartmentAnnouncement[];
   };
 
-  type TFacultyDepartment = {
-    id?: number;
+  type TFacultyDepartments = {
     faculty_id: string;
     dep_id: string;
-    Department: TDepartmentData;
   };
 
   type TCreateAnnouncement = {
@@ -67,25 +68,19 @@ declare global {
 
   type TAnnouncementData = {
     id?: number;
-    announcement_id?: string;
+    announcement_id: string;
     faculty_id: string;
     description: string;
     createdAt: Date;
     updatedAt?: Date;
-    Files: TFileData[];
-    DepartmentsAnnouncements: TDepartmentAnnouncement[];
+    files: TFileData[];
+    departments: TDepartmentAnnouncement[];
+    faculty: TFacultyData[];
   };
 
   type TDepartmentAnnouncement = {
-    id?: number;
-    Announcement: TAnnouncementData;
     announcement_id: string;
-    Department: TDepartmentData;
     dep_id: string;
-  };
-
-  type TPostFilter = {
-    filtererDepartments: string[];
   };
 
   type TUploadFile = {
@@ -100,11 +95,17 @@ declare global {
     id?: number;
     file_id: string;
     file_name: string;
-    data: Bytes;
     mimetype: string;
-    file_link: string;
+    file_url: string;
     faculty_id: string;
-    file_category?: string;
+    annoncement_id: string;
+    faculty: TFacultyData;
+    departments: TFileDepartment[];
+  };
+
+  type TFileDepartment = {
+    file_id: string;
+    dep_id: string;
   };
 
   type TTaskData = {
@@ -115,6 +116,8 @@ declare global {
     due_date: Date;
     createdAt: Date;
     updatedAt?: Date;
+    faculty_id: string;
+    faculty: TFacultyData;
   };
 
   type TSubmissionData = {
@@ -126,7 +129,15 @@ declare global {
     remarks: string;
     createdAt: Date;
     updatedAt?: Date;
+    faculty: TFacultyData;
+    departments: TSubmissionDepartments[];
   };
+
+  type TSubmissionDepartments = {
+    submission_id: String;
+    dep_id: string;
+  };
+
   type TNotificationData = {
     id?: number;
     notif_id: string;
@@ -134,6 +145,19 @@ declare global {
     description: string;
     createdAt: Date;
     updatedAt?: Date;
+    faculty: TFacultyData;
+  };
+  type TFacultyArchiveAnnouncements = {
+    announcement_id: string;
+    faculty_id: string;
+  };
+  type TPostFilter = {
+    filtererDepartments: string[];
+  };
+  type TCategoryData = {
+    id?: number;
+    category_id: string;
+    name: string;
   };
 }
 
