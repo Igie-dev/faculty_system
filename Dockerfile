@@ -6,6 +6,8 @@ COPY package*.json ./
 
 RUN npm install
 
+RUN npm install -g tsc
+
 COPY . .
 
 
@@ -14,6 +16,7 @@ RUN apt update && apt install netcat-traditional
 
 # Add user privilege to execute the init.bash file
 RUN chmod +x /usr/src/app/init.bash
+
 
 
 EXPOSE 3000

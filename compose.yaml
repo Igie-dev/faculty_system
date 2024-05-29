@@ -15,7 +15,8 @@ services:
           target: ./usr/src/app
           action: sync
       networks:
-       - faculty_sytem_network
+       faculty_sytem_network:
+        ipv4_address: 172.10.0.4
     
 
     postgres:
@@ -29,7 +30,8 @@ services:
         POSTGRES_PASSWORD: postgres
         POSTGRES_DB: faculty_system
       networks:
-       - faculty_sytem_network
+       faculty_sytem_network:
+        ipv4_address: 172.10.0.5
     
     pgadmin: 
       image: dpage/pgadmin4:latest
@@ -46,11 +48,15 @@ services:
         CSRF_COOKIE_SECURE : False
         SERVER_MODE : False
       networks:
-       - faculty_sytem_network
+       faculty_sytem_network:
+        ipv4_address: 172.10.0.6
 
 networks:
   faculty_sytem_network:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.10.0.0/16
 
 volumes:
   faculty_system:

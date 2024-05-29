@@ -4,9 +4,12 @@ while ! nc -z postgres 5432; do
     sleep 1
 done
 
-# Run prisma db push
-npx prisma generate
+# npm run db:generate
 
-npx prisma db push
-# Start the server
+# npm run db:migrate & PID=$!
+
+# wait $PID
+
+# npm run db:push
+
 npm run dev
