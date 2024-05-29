@@ -1,6 +1,6 @@
 "use server";
 import { db } from "@/db/db";
-import { FacultyDepartmentTable, FacultyTable } from "@/db/schema";
+import { FacultyDepartment, FacultyTable } from "@/db/schema";
 import { sql } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
@@ -119,7 +119,7 @@ export const createFaculty = async (
       };
     }
     for (const department of facultyDepartments) {
-      await db.insert(FacultyDepartmentTable).values({
+      await db.insert(FacultyDepartment).values({
         faculty_id: facultyData.faculty_id,
         dep_id: department.dep_id,
       });
@@ -235,7 +235,7 @@ export const getFaculties = async (): Promise<{
         role: true,
       },
       with: {
-        facultyDepartments: true,
+        departments: true,
         announcements: true,
         submissions: true,
         tasks: true,
@@ -378,8 +378,8 @@ export const updateFacultyDepartments = async (
     }
 
     const deleteFacultyDep = await db
-      .delete(FacultyDepartmentTable)
-      .where(sql`${FacultyDepartmentTable.faculty_id} = ${faculty_id}`);
+      .delete(FacultyDepartment)
+      .where(sql`${FacultyDepartment.faculty_id} = ${faculty_id}`);
 
     if (!deleteFacultyDep) {
       return {
@@ -387,16 +387,16 @@ export const updateFacultyDepartments = async (
       };
     }
     for (let dep of departments) {
-      const existDep = await db.query.FacultyDepartmentTable.findFirst({
+      const existDep = await db.query.FacultyDepartment.findFirst({
         where: () =>
-          sql`${FacultyDepartmentTable.dep_id} = ${dep.dep_id} AND ${FacultyDepartmentTable.faculty_id} = ${faculty_id}`,
+          sql`${FacultyDepartment.dep_id} = ${dep.dep_id} AND ${FacultyDepartment.faculty_id} = ${faculty_id}`,
         columns: {
           dep_id: true,
         },
       });
 
       if (!existDep?.dep_id) {
-        await db.insert(FacultyDepartmentTable).values({
+        await db.insert(FacultyDepartment).values({
           dep_id: dep.dep_id,
           faculty_id: faculty_id,
         });
