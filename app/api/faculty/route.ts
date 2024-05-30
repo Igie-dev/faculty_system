@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/db";
-import { FacultyTable } from "@/db/schema";
+import { faculty } from "@/db/schema";
 import { sql } from "drizzle-orm";
 
 export async function POST(req: NextRequest) {
@@ -18,12 +18,12 @@ export async function POST(req: NextRequest) {
     }
 
     // const existEmail = await db
-    //   .select({ id: FacultyTable.id })
-    //   .from(FacultyTable)
-    //   .where(sql`${FacultyTable.email} = ${email}`);
+    //   .select({ id: faculty.id })
+    //   .from(faculty)
+    //   .where(sql`${faculty.email} = ${email}`);
 
-    const existEmail = await db.query.FacultyTable.findFirst({
-      where: () => sql`${FacultyTable.email} = ${email}`,
+    const existEmail = await db.query.faculty.findFirst({
+      where: () => sql`${faculty.email} = ${email}`,
       columns: {
         id: true,
       },
@@ -37,12 +37,12 @@ export async function POST(req: NextRequest) {
     }
 
     // const existContact = await db
-    //   .select({ id: FacultyTable.id })
-    //   .from(FacultyTable)
-    //   .where(sql`${FacultyTable.contact} = ${contact}`);
+    //   .select({ id: faculty.id })
+    //   .from(faculty)
+    //   .where(sql`${faculty.contact} = ${contact}`);
 
-    const existContact = await db.query.FacultyTable.findFirst({
-      where: () => sql`${FacultyTable.contact} = ${contact}`,
+    const existContact = await db.query.faculty.findFirst({
+      where: () => sql`${faculty.contact} = ${contact}`,
       columns: {
         id: true,
       },
@@ -75,9 +75,9 @@ export async function POST(req: NextRequest) {
     };
 
     const save = await db
-      .insert(FacultyTable)
+      .insert(faculty)
       .values(data)
-      .returning({ id: FacultyTable.id });
+      .returning({ id: faculty.id });
 
     if (!save[0]?.id) {
       return NextResponse.json(
@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    const faculties = await db.query.FacultyTable.findMany({
+    const faculties = await db.query.faculty.findMany({
       columns: {
         id: true,
         name: true,
@@ -143,8 +143,8 @@ export async function DELETE(req: NextRequest) {
   try {
     const faculty_id = req.nextUrl.searchParams.get("facultyId");
 
-    const foundFaculty = await db.query.FacultyTable.findFirst({
-      where: () => sql`${FacultyTable.faculty_id} = ${faculty_id}`,
+    const foundFaculty = await db.query.faculty.findFirst({
+      where: () => sql`${faculty.faculty_id} = ${faculty_id}`,
       columns: {
         id: true,
       },
@@ -158,8 +158,8 @@ export async function DELETE(req: NextRequest) {
     }
 
     const deletFaculty = await db
-      .delete(FacultyTable)
-      .where(sql`${FacultyTable.faculty_id} = ${faculty_id}`);
+      .delete(faculty)
+      .where(sql`${faculty.faculty_id} = ${faculty_id}`);
 
     if (!deletFaculty) {
       throw new Error("Deleting fail!");

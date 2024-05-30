@@ -1,14 +1,13 @@
 "use server";
 import { db } from "@/db/db";
-import { FacultyDepartment, FacultyTable } from "@/db/schema";
 import { sql } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import { getCurrentUser } from "@/lib/auth";
 import { ERole } from "@/@types/enums";
-import { createFacultySchema, updateFacultySchema } from "@/lib/helper";
 import { revalidatePath } from "next/cache";
-
+import { faculty, facultyDepartment } from "@/db/schema";
+import { createFacultySchema, updateFacultySchema } from "@/lib/helper";
 const saltRound = 9;
 //Get all faculty data fields
 
@@ -60,15 +59,15 @@ export const createFaculty = async (
       };
     }
     //check if email or contact already used
-    const emailExist = await db.query.FacultyTable.findFirst({
-      where: () => sql`${FacultyTable.email} = ${formData.email}`,
+    const emailExist = await db.query.faculty.findFirst({
+      where: () => sql`${faculty.email} = ${formData.email}`,
       columns: {
         id: true,
       },
     });
 
-    const contactExist = await db.query.FacultyTable.findFirst({
-      where: () => sql`${FacultyTable.contact} = ${formData.contact}`,
+    const contactExist = await db.query.faculty.findFirst({
+      where: () => sql`${faculty.contact} = ${formData.contact}`,
       columns: {
         id: true,
       },
@@ -104,14 +103,14 @@ export const createFaculty = async (
       name: `${formData.first_name} ${formData.last_name}`,
       email: formData.email as string,
       contact: formData.contact as string,
-      role: formData.role as "Dean" | "Teacher",
+      role: formData.role as any,
       password: hashedPassword,
     };
 
     const save = await db
-      .insert(FacultyTable)
+      .insert(faculty)
       .values(facultyData)
-      .returning({ id: FacultyTable.id });
+      .returning({ id: faculty.id });
 
     if (!save[0]?.id) {
       return {
@@ -119,7 +118,7 @@ export const createFaculty = async (
       };
     }
     for (const department of facultyDepartments) {
-      await db.insert(FacultyDepartment).values({
+      await db.insert(facultyDepartment).values({
         faculty_id: facultyData.faculty_id,
         dep_id: department.dep_id,
       });
@@ -166,8 +165,8 @@ export const updateFaculty = async (
       };
     }
 
-    const foundFaculty = await db.query.FacultyTable.findFirst({
-      where: () => sql`${FacultyTable.faculty_id} = ${formData.faculty_id}`,
+    const foundFaculty = await db.query.faculty.findFirst({
+      where: () => sql`${faculty.faculty_id} = ${formData.faculty_id}`,
       columns: {
         id: true,
       },
@@ -180,15 +179,15 @@ export const updateFaculty = async (
     }
 
     const updateFaculty = await db
-      .update(FacultyTable)
+      .update(faculty)
       .set({
         name: formData.name as string,
         email: formData.email as string,
         contact: formData.contact as string,
         role: formData.role as "Dean" | "Teacher",
       })
-      .where(sql`${FacultyTable.faculty_id} = ${formData.faculty_id}`)
-      .returning({ id: FacultyTable.id });
+      .where(sql`${faculty.faculty_id} = ${formData.faculty_id}`)
+      .returning({ id: faculty.id });
 
     if (!updateFaculty[0]?.id) {
       return {
@@ -222,7 +221,7 @@ export const getFaculties = async (): Promise<{
       };
     }
 
-    const faculties = await db.query.FacultyTable.findMany({
+    const faculties = await db.query.faculty.findMany({
       columns: {
         id: true,
         name: true,
@@ -235,7 +234,11 @@ export const getFaculties = async (): Promise<{
         role: true,
       },
       with: {
-        departments: true,
+        departments: {
+          with: {
+            department: true,
+          },
+        },
         announcements: true,
         submissions: true,
         tasks: true,
@@ -263,8 +266,8 @@ export const getFaculty = async (
   id: string
 ): Promise<{ data?: TFacultyData; error?: string }> => {
   try {
-    const foundFaculty = await db.query.FacultyTable.findFirst({
-      where: () => sql`${FacultyTable.faculty_id} = ${id}`,
+    const foundFaculty = await db.query.faculty.findFirst({
+      where: () => sql`${faculty.faculty_id} = ${id}`,
       columns: {
         id: true,
         name: true,
@@ -275,6 +278,19 @@ export const getFaculty = async (
         createdAt: true,
         updatedAt: true,
         role: true,
+      },
+      with: {
+        departments: {
+          with: {
+            department: true,
+          },
+        },
+        announcements: true,
+        submissions: true,
+        tasks: true,
+        files: true,
+        archiveAnnouncements: true,
+        notifications: true,
       },
     });
 
@@ -304,8 +320,8 @@ export const deleteFaculty = async (
       };
     }
 
-    const foundFaculty = await db.query.FacultyTable.findFirst({
-      where: () => sql`${FacultyTable.faculty_id} = ${id}`,
+    const foundFaculty = await db.query.faculty.findFirst({
+      where: () => sql`${faculty.faculty_id} = ${id}`,
       columns: {
         id: true,
         role: true,
@@ -325,8 +341,8 @@ export const deleteFaculty = async (
     }
 
     const deletFaculty = await db
-      .delete(FacultyTable)
-      .where(sql`${FacultyTable.faculty_id} = ${id}`);
+      .delete(faculty)
+      .where(sql`${faculty.faculty_id} = ${id}`);
 
     if (!deletFaculty) {
       return {
@@ -364,8 +380,8 @@ export const updateFacultyDepartments = async (
       };
     }
 
-    const foundFaculty = await db.query.FacultyTable.findFirst({
-      where: () => sql`${FacultyTable.faculty_id} = ${faculty_id}`,
+    const foundFaculty = await db.query.faculty.findFirst({
+      where: () => sql`${faculty.faculty_id} = ${faculty_id}`,
       columns: {
         id: true,
       },
@@ -378,8 +394,8 @@ export const updateFacultyDepartments = async (
     }
 
     const deleteFacultyDep = await db
-      .delete(FacultyDepartment)
-      .where(sql`${FacultyDepartment.faculty_id} = ${faculty_id}`);
+      .delete(facultyDepartment)
+      .where(sql`${facultyDepartment.faculty_id} = ${faculty_id}`);
 
     if (!deleteFacultyDep) {
       return {
@@ -387,16 +403,16 @@ export const updateFacultyDepartments = async (
       };
     }
     for (let dep of departments) {
-      const existDep = await db.query.FacultyDepartment.findFirst({
+      const existDep = await db.query.facultyDepartment.findFirst({
         where: () =>
-          sql`${FacultyDepartment.dep_id} = ${dep.dep_id} AND ${FacultyDepartment.faculty_id} = ${faculty_id}`,
+          sql`${facultyDepartment.dep_id} = ${dep.dep_id} AND ${facultyDepartment.faculty_id} = ${faculty_id}`,
         columns: {
           dep_id: true,
         },
       });
 
       if (!existDep?.dep_id) {
-        await db.insert(FacultyDepartment).values({
+        await db.insert(facultyDepartment).values({
           dep_id: dep.dep_id,
           faculty_id: faculty_id,
         });

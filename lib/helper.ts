@@ -1,9 +1,8 @@
 import { z } from "zod";
-//Validate contact
+
 const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
 );
-//Schema for creating new faculty account
 export const createFacultySchema = z
   .object({
     first_name: z

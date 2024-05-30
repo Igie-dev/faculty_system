@@ -2,9 +2,7 @@
 import { ERole } from "@/@types/enums";
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/db/db";
-import { DepartmentTable } from "@/db/schema";
-import { sql } from "drizzle-orm";
-
+import { department } from "@/db/schema";
 export const getDepartments = async (): Promise<{
   data?: TDepartmentData[];
   error?: string;
@@ -17,15 +15,7 @@ export const getDepartments = async (): Promise<{
         error: "Unauthorized user!",
       };
     }
-    const departments = await db.query.DepartmentTable.findMany({
-      columns: {
-        id: true,
-        dep_id: true,
-        acronym: true,
-        department: true,
-        createdAt: true,
-        updatedAt: true,
-      },
+    const departments = await db.query.department.findMany({
       with: {
         faculties: true,
         announcements: true,
@@ -36,7 +26,7 @@ export const getDepartments = async (): Promise<{
       return { data: [] };
     }
 
-    return { data: departments as TDepartmentData[] };
+    return { data: departments };
   } catch (error) {
     return {
       error: "Something went wrong!",

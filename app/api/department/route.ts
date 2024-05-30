@@ -1,23 +1,23 @@
 import { v4 as uuid } from "uuid";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/db/db";
-import { DepartmentTable } from "@/db/schema";
+import { department } from "@/db/schema";
 import { sql } from "drizzle-orm";
 
 export async function POST(req: NextRequest) {
   try {
-    const { acronym, department } = await req.json();
+    const { acronym, department: departmentData } = await req.json();
 
-    if (!acronym || !department) {
+    if (!acronym || !departmentData) {
       return NextResponse.json(
         { message: "All field are required!" },
         { status: 400 }
       );
     }
 
-    const exist = await db.query.DepartmentTable.findFirst({
+    const exist = await db.query.department.findFirst({
       where: () =>
-        sql`${DepartmentTable.acronym} = ${acronym} OR ${DepartmentTable.department} = ${department}`,
+        sql`${department.acronym} = ${acronym} OR ${department.department} = ${departmentData}`,
       columns: {
         dep_id: true,
       },
@@ -29,15 +29,14 @@ export async function POST(req: NextRequest) {
         { status: 409 }
       );
     }
-    const dep_id = uuid();
     const saveDepartment = await db
-      .insert(DepartmentTable)
+      .insert(department)
       .values({
-        dep_id,
+        dep_id: uuid(),
         acronym,
-        department,
+        department: departmentData,
       })
-      .returning({ id: DepartmentTable.id });
+      .returning({ id: department.id });
 
     if (!saveDepartment[0]?.id) {
       return NextResponse.json(
@@ -57,7 +56,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET() {
   try {
-    const departments = await db.query.DepartmentTable.findMany({
+    const departments = await db.query.department.findMany({
       with: {
         faculties: true,
         announcements: true,

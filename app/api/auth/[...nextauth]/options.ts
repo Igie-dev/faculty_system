@@ -3,7 +3,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcrypt";
 import { db } from "@/db/db";
-import { FacultyTable } from "@/db/schema";
+import { faculty } from "@/db/schema";
 import { sql } from "drizzle-orm";
 
 export const options: NextAuthOptions = {
@@ -17,8 +17,8 @@ export const options: NextAuthOptions = {
           password: string;
         };
         try {
-          const foundFaculty = await db.query.FacultyTable.findFirst({
-            where: () => sql`${FacultyTable.email} = ${email}`,
+          const foundFaculty = await db.query.faculty.findFirst({
+            where: () => sql`${faculty.email} = ${email}`,
           });
 
           if (!foundFaculty || !foundFaculty?.id) {
@@ -66,8 +66,8 @@ export const options: NextAuthOptions = {
     async signIn({ user, account }: { user: any; account: any }) {
       if (account.provider === "google") {
         try {
-          const foundFaculty = await db.query.FacultyTable.findFirst({
-            where: () => sql`${FacultyTable.email} = ${user?.email}`,
+          const foundFaculty = await db.query.faculty.findFirst({
+            where: () => sql`${faculty.email} = ${user?.email}`,
             columns: {
               faculty_id: true,
               role: true,
@@ -98,8 +98,8 @@ export const options: NextAuthOptions = {
     async jwt({ token, user }) {
       try {
         if (user) {
-          const foundFaculty = await db.query.FacultyTable.findFirst({
-            where: () => sql`${FacultyTable.email} = ${user?.email}`,
+          const foundFaculty = await db.query.faculty.findFirst({
+            where: () => sql`${faculty.email} = ${user?.email}`,
             columns: {
               faculty_id: true,
               role: true,
@@ -127,9 +127,8 @@ export const options: NextAuthOptions = {
           session.user.name = token.name;
 
           if (!token.picture) {
-            const foundImage = await db.query.FacultyTable.findFirst({
-              where: () =>
-                sql`${FacultyTable.faculty_id} = ${token?.faculty_id}`,
+            const foundImage = await db.query.faculty.findFirst({
+              where: () => sql`${faculty.faculty_id} = ${token?.faculty_id}`,
               columns: {
                 avatar_url: true,
               },
