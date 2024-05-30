@@ -8,7 +8,7 @@ export default function MainHeader() {
       <Logo />
       <div className="h-full flex items-center space-x-5 w-fit">
         <Notifications />
-        <div className="h-9  w-9 rounded-full overflow-hidden">
+        <div className="h-8 w-8 rounded-full overflow-hidden">
           <UserAvatar />
         </div>
       </div>

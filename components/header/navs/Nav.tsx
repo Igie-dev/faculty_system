@@ -8,6 +8,7 @@ import {
   FileText,
   Grid2X2,
   Home,
+  List,
   LogOut,
   Megaphone,
   Users,
@@ -23,12 +24,10 @@ type Props = {
   session: Session;
 };
 export default function Nav({ isExpanded, session }: Props) {
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [isDean, setIsDean] = useState(false);
-  const [isTeacher, setIsTeacher] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
+  const [isDean, setIsDean] = useState(true);
+  const [isTeacher, setIsTeacher] = useState(true);
 
-  //TODO
-  //Fix nav hidden when no session and visible when has session
   useLayoutEffect(() => {
     const role = session?.user?.role;
     if (role) {
@@ -41,7 +40,7 @@ export default function Nav({ isExpanded, session }: Props) {
     <NavLoader />
   ) : (
     <nav
-      className={`w-full flex flex-col space-y-1 pt-5 lg:pt-8  ${
+      className={`w-full h-full flex flex-col space-y-1 pt-5 lg:pt-8  ${
         isExpanded ? "px-2" : "px-0"
       }`}
     >
@@ -84,6 +83,21 @@ export default function Nav({ isExpanded, session }: Props) {
           </>
         </NavLinkWrapper>
       ) : null}
+      {isAdmin ? (
+        <NavLinkWrapper
+          isExpanded={isExpanded}
+          path="/categories"
+          title="Categories"
+        >
+          <>
+            <List absoluteStrokeWidth size={22} />
+            <span className={` ${isExpanded ? "flex" : "hidden"}`}>
+              Categories
+            </span>
+          </>
+        </NavLinkWrapper>
+      ) : null}
+
       {isDean || isTeacher ? (
         <NavLinkWrapper
           isExpanded={isExpanded}
@@ -148,13 +162,15 @@ export default function Nav({ isExpanded, session }: Props) {
           </NavLinkWrapper>
         ) : null}
       </div>
-      <div className="flex flex-col gap-2 pt-5 mt-10 border-t h-fit">
+      <div className="flex flex-col gap-2 pt-5 mt-10 flex-1  justify-end pb-5 h-fit">
         <SignOutDialog>
           <Button
             variant="ghost"
             size="lg"
             className={`gap-4 flex items-center w-[90%] lg:w-full text-muted-foreground text-sm rounded-lg  ${
               isExpanded ? "px-4 justify-start" : "justify-center px-0"
+            } relative after:absolute after:hidden  after:z-50 after:pointer-events-none after:items-center after:content-["Signout"] after:justify-center after:text-xs after:left-[103%] after:border after:border-muted  after:px-4 after:py-2 after:bg-primary after:rounded-md after:text-background ${
+              !isExpanded ? "hover:after:flex" : ""
             }`}
           >
             <LogOut absoluteStrokeWidth size={22} />
