@@ -1,0 +1,29 @@
+[
+    {
+        "first_name": "Igie Boy",
+        "last_name": "Baldesanso",
+        "email": "baldesansoigieboysanchez@gmail.com",
+        "password": "password",
+        "contact": "99999999999",
+        "role": "Admin",
+        "departments": []
+    },
+    {
+        "first_name": "Jose",
+        "last_name": "Cruz",
+        "email": "jrpogiyanyow@gmail.com",
+        "password": "password",
+        "contact": "99259393949",
+        "role": "Dean",
+        "departments": []
+    },
+    {
+        "first_name": "Ann",
+        "last_name": "Mediz",
+        "email": "facultymonitorin@gmail.com",
+        "password": "password",
+        "contact": "94259647949",
+        "role": "Teacher",
+        "departments": []
+    }
+]

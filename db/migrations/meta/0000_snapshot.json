@@ -1,0 +1,1059 @@
+{
+  "id": "65460111-b50b-48e6-a4a4-8b5db5d379fe",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "6",
+  "dialect": "postgresql",
+  "tables": {
+    "public.announcement": {
+      "name": "announcement",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "announcement_id": {
+          "name": "announcement_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "faculty_id": {
+          "name": "faculty_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dep_id": {
+          "name": "dep_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "announcementIndex": {
+          "name": "announcementIndex",
+          "columns": [
+            "announcement_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "announcement_faculty_id_faculty_faculty_id_fk": {
+          "name": "announcement_faculty_id_faculty_faculty_id_fk",
+          "tableFrom": "announcement",
+          "tableTo": "faculty",
+          "columnsFrom": [
+            "faculty_id"
+          ],
+          "columnsTo": [
+            "faculty_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "announcement_dep_id_department_dep_id_fk": {
+          "name": "announcement_dep_id_department_dep_id_fk",
+          "tableFrom": "announcement",
+          "tableTo": "department",
+          "columnsFrom": [
+            "dep_id"
+          ],
+          "columnsTo": [
+            "dep_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "announcement_announcement_id_unique": {
+          "name": "announcement_announcement_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "announcement_id"
+          ]
+        }
+      }
+    },
+    "public.category": {
+      "name": "category",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "category_category_id_unique": {
+          "name": "category_category_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "category_id"
+          ]
+        },
+        "category_name_unique": {
+          "name": "category_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      }
+    },
+    "public.department": {
+      "name": "department",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "dep_id": {
+          "name": "dep_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "acronym": {
+          "name": "acronym",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "department": {
+          "name": "department",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "depIdIndex": {
+          "name": "depIdIndex",
+          "columns": [
+            "dep_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "department_dep_id_unique": {
+          "name": "department_dep_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "dep_id"
+          ]
+        },
+        "department_acronym_unique": {
+          "name": "department_acronym_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "acronym"
+          ]
+        },
+        "department_department_unique": {
+          "name": "department_department_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "department"
+          ]
+        }
+      }
+    },
+    "public.departmentAnnouncement": {
+      "name": "departmentAnnouncement",
+      "schema": "",
+      "columns": {
+        "announcement_id": {
+          "name": "announcement_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dep_id": {
+          "name": "dep_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "departmentAnnouncement_announcement_id_announcement_announcement_id_fk": {
+          "name": "departmentAnnouncement_announcement_id_announcement_announcement_id_fk",
+          "tableFrom": "departmentAnnouncement",
+          "tableTo": "announcement",
+          "columnsFrom": [
+            "announcement_id"
+          ],
+          "columnsTo": [
+            "announcement_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "departmentAnnouncement_dep_id_department_dep_id_fk": {
+          "name": "departmentAnnouncement_dep_id_department_dep_id_fk",
+          "tableFrom": "departmentAnnouncement",
+          "tableTo": "department",
+          "columnsFrom": [
+            "dep_id"
+          ],
+          "columnsTo": [
+            "dep_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "departmentAnnouncement_announcement_id_dep_id_pk": {
+          "name": "departmentAnnouncement_announcement_id_dep_id_pk",
+          "columns": [
+            "announcement_id",
+            "dep_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.faculty": {
+      "name": "faculty",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "faculty_id": {
+          "name": "faculty_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "avatar_url": {
+          "name": "avatar_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "contact": {
+          "name": "contact",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "role": {
+          "name": "role",
+          "type": "facultyRole",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Teacher'"
+        }
+      },
+      "indexes": {
+        "emailIndex": {
+          "name": "emailIndex",
+          "columns": [
+            "email"
+          ],
+          "isUnique": true
+        },
+        "contactIndex": {
+          "name": "contactIndex",
+          "columns": [
+            "email"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "faculty_faculty_id_unique": {
+          "name": "faculty_faculty_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "faculty_id"
+          ]
+        },
+        "faculty_name_unique": {
+          "name": "faculty_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        },
+        "faculty_email_unique": {
+          "name": "faculty_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      }
+    },
+    "public.facultyArchiveAnnouncement": {
+      "name": "facultyArchiveAnnouncement",
+      "schema": "",
+      "columns": {
+        "announcement_id": {
+          "name": "announcement_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "faculty_id": {
+          "name": "faculty_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "facultyArchiveAnnouncement_announcement_id_announcement_announcement_id_fk": {
+          "name": "facultyArchiveAnnouncement_announcement_id_announcement_announcement_id_fk",
+          "tableFrom": "facultyArchiveAnnouncement",
+          "tableTo": "announcement",
+          "columnsFrom": [
+            "announcement_id"
+          ],
+          "columnsTo": [
+            "announcement_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "facultyArchiveAnnouncement_faculty_id_faculty_faculty_id_fk": {
+          "name": "facultyArchiveAnnouncement_faculty_id_faculty_faculty_id_fk",
+          "tableFrom": "facultyArchiveAnnouncement",
+          "tableTo": "faculty",
+          "columnsFrom": [
+            "faculty_id"
+          ],
+          "columnsTo": [
+            "faculty_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "facultyArchiveAnnouncement_announcement_id_faculty_id_pk": {
+          "name": "facultyArchiveAnnouncement_announcement_id_faculty_id_pk",
+          "columns": [
+            "announcement_id",
+            "faculty_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.facultyDepartment": {
+      "name": "facultyDepartment",
+      "schema": "",
+      "columns": {
+        "faculty_id": {
+          "name": "faculty_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dep_id": {
+          "name": "dep_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "facultyDepartment_faculty_id_faculty_faculty_id_fk": {
+          "name": "facultyDepartment_faculty_id_faculty_faculty_id_fk",
+          "tableFrom": "facultyDepartment",
+          "tableTo": "faculty",
+          "columnsFrom": [
+            "faculty_id"
+          ],
+          "columnsTo": [
+            "faculty_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "facultyDepartment_dep_id_department_dep_id_fk": {
+          "name": "facultyDepartment_dep_id_department_dep_id_fk",
+          "tableFrom": "facultyDepartment",
+          "tableTo": "department",
+          "columnsFrom": [
+            "dep_id"
+          ],
+          "columnsTo": [
+            "dep_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "facultyDepartment_dep_id_faculty_id_pk": {
+          "name": "facultyDepartment_dep_id_faculty_id_pk",
+          "columns": [
+            "dep_id",
+            "faculty_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.file": {
+      "name": "file",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "file_id": {
+          "name": "file_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "file_name": {
+          "name": "file_name",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "mimetype": {
+          "name": "mimetype",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "file_url": {
+          "name": "file_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "faculty_id": {
+          "name": "faculty_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "announcement_id": {
+          "name": "announcement_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "fileIndex": {
+          "name": "fileIndex",
+          "columns": [
+            "file_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "file_faculty_id_faculty_faculty_id_fk": {
+          "name": "file_faculty_id_faculty_faculty_id_fk",
+          "tableFrom": "file",
+          "tableTo": "faculty",
+          "columnsFrom": [
+            "faculty_id"
+          ],
+          "columnsTo": [
+            "faculty_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "file_announcement_id_announcement_announcement_id_fk": {
+          "name": "file_announcement_id_announcement_announcement_id_fk",
+          "tableFrom": "file",
+          "tableTo": "announcement",
+          "columnsFrom": [
+            "announcement_id"
+          ],
+          "columnsTo": [
+            "announcement_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "file_file_id_unique": {
+          "name": "file_file_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "file_id"
+          ]
+        },
+        "file_file_name_unique": {
+          "name": "file_file_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "file_name"
+          ]
+        }
+      }
+    },
+    "public.filedepartment": {
+      "name": "filedepartment",
+      "schema": "",
+      "columns": {
+        "file_id": {
+          "name": "file_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "dep_id": {
+          "name": "dep_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "filedepartment_file_id_file_file_id_fk": {
+          "name": "filedepartment_file_id_file_file_id_fk",
+          "tableFrom": "filedepartment",
+          "tableTo": "file",
+          "columnsFrom": [
+            "file_id"
+          ],
+          "columnsTo": [
+            "file_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "filedepartment_dep_id_department_dep_id_fk": {
+          "name": "filedepartment_dep_id_department_dep_id_fk",
+          "tableFrom": "filedepartment",
+          "tableTo": "department",
+          "columnsFrom": [
+            "dep_id"
+          ],
+          "columnsTo": [
+            "dep_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.notification": {
+      "name": "notification",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "notif_id": {
+          "name": "notif_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "faculty_id": {
+          "name": "faculty_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "notidIndex": {
+          "name": "notidIndex",
+          "columns": [
+            "notif_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "notification_faculty_id_faculty_faculty_id_fk": {
+          "name": "notification_faculty_id_faculty_faculty_id_fk",
+          "tableFrom": "notification",
+          "tableTo": "faculty",
+          "columnsFrom": [
+            "faculty_id"
+          ],
+          "columnsTo": [
+            "faculty_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "notification_notif_id_unique": {
+          "name": "notification_notif_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "notif_id"
+          ]
+        },
+        "notification_title_unique": {
+          "name": "notification_title_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "title"
+          ]
+        }
+      }
+    },
+    "public.submission": {
+      "name": "submission",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "submission_id": {
+          "name": "submission_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "remarks": {
+          "name": "remarks",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "submissionStatus",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "'Pending'"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "faculty_id": {
+          "name": "faculty_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category_id": {
+          "name": "category_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "submissionIndex": {
+          "name": "submissionIndex",
+          "columns": [
+            "submission_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "submission_faculty_id_faculty_faculty_id_fk": {
+          "name": "submission_faculty_id_faculty_faculty_id_fk",
+          "tableFrom": "submission",
+          "tableTo": "faculty",
+          "columnsFrom": [
+            "faculty_id"
+          ],
+          "columnsTo": [
+            "faculty_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "submission_category_id_category_category_id_fk": {
+          "name": "submission_category_id_category_category_id_fk",
+          "tableFrom": "submission",
+          "tableTo": "category",
+          "columnsFrom": [
+            "category_id"
+          ],
+          "columnsTo": [
+            "category_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "submission_submission_id_unique": {
+          "name": "submission_submission_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "submission_id"
+          ]
+        },
+        "submission_title_unique": {
+          "name": "submission_title_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "title"
+          ]
+        }
+      }
+    },
+    "public.submissionDepartment": {
+      "name": "submissionDepartment",
+      "schema": "",
+      "columns": {
+        "submission_id": {
+          "name": "submission_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "dep_id": {
+          "name": "dep_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "submissionDepartment_submission_id_submission_submission_id_fk": {
+          "name": "submissionDepartment_submission_id_submission_submission_id_fk",
+          "tableFrom": "submissionDepartment",
+          "tableTo": "submission",
+          "columnsFrom": [
+            "submission_id"
+          ],
+          "columnsTo": [
+            "submission_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "submissionDepartment_dep_id_department_dep_id_fk": {
+          "name": "submissionDepartment_dep_id_department_dep_id_fk",
+          "tableFrom": "submissionDepartment",
+          "tableTo": "department",
+          "columnsFrom": [
+            "dep_id"
+          ],
+          "columnsTo": [
+            "dep_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "public.task": {
+      "name": "task",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "task_id": {
+          "name": "task_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "due_date": {
+          "name": "due_date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "createdAt": {
+          "name": "createdAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updatedAt": {
+          "name": "updatedAt",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "faculty_id": {
+          "name": "faculty_id",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "taslIndex": {
+          "name": "taslIndex",
+          "columns": [
+            "task_id"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "task_faculty_id_faculty_faculty_id_fk": {
+          "name": "task_faculty_id_faculty_faculty_id_fk",
+          "tableFrom": "task",
+          "tableTo": "faculty",
+          "columnsFrom": [
+            "faculty_id"
+          ],
+          "columnsTo": [
+            "faculty_id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "task_task_id_unique": {
+          "name": "task_task_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "task_id"
+          ]
+        },
+        "task_title_unique": {
+          "name": "task_title_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "title"
+          ]
+        }
+      }
+    }
+  },
+  "enums": {
+    "public.facultyRole": {
+      "name": "facultyRole",
+      "schema": "public",
+      "values": [
+        "Admin",
+        "Teacher",
+        "Dean"
+      ]
+    },
+    "public.submissionStatus": {
+      "name": "submissionStatus",
+      "schema": "public",
+      "values": [
+        "Pending",
+        "Disapproved",
+        "Approved"
+      ]
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
