@@ -48,7 +48,7 @@ declare global {
     department?: string;
     createdAt?: Date;
     updatedAt?: Date;
-    faculties: TFacultyData[];
+    faculties: TFacultyDepartments[];
     announcements: TDepartmentAnnouncement[];
   };
 
