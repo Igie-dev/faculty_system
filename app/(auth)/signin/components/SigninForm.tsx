@@ -73,7 +73,7 @@ export default function SigninForm() {
           Please provide your credintails
         </p>
         <p className="text-sm text-destructive !my-10">{errorMsg}</p>
-        <div className="w-full flex flex-col gap-6 mt-2">
+        <div className="w-full flex flex-col space-y-8 mt-2">
           <FormField
             control={form.control}
             name="email"
