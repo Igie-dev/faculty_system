@@ -49,10 +49,8 @@ export default function DataTable<TData, TValue>({
               {row.getVisibleCells().map((cell) => (
                 <TableCell
                   key={cell.id}
-                  className={`pl-5 border !py-2 ${
-                    row.index % 2 === 0
-                      ? "bg-primary-foreground"
-                      : "bg-background"
+                  className={`pl-5 border py-2 text-sm ${
+                    row.index % 2 === 0 ? "bg-background" : "bg-secondary"
                   }`}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
