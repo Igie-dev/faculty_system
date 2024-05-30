@@ -6,20 +6,18 @@ import {
   uniqueIndex,
   varchar,
   timestamp,
-  uuid,
   text,
   primaryKey,
+  uuid,
 } from "drizzle-orm/pg-core";
-
-export const FacultyRole = pgEnum("facultyRole", ["Admin", "Teacher", "Dean"]);
-export const SubmissionStatus = pgEnum("submissionStatus", [
+export const facultyRole = pgEnum("facultyRole", ["Admin", "Teacher", "Dean"]);
+export const submissionStatus = pgEnum("submissionStatus", [
   "Pending",
   "Disapproved",
   "Approved",
 ]);
 
-//Files and Avatar stored on supabase bucket
-export const FacultyTable = pgTable(
+export const faculty = pgTable(
   "faculty",
   {
     id: serial("id").primaryKey(),
@@ -29,9 +27,13 @@ export const FacultyTable = pgTable(
     email: varchar("email", { length: 255 }).notNull().unique(),
     password: text("password").notNull(),
     contact: varchar("contact", { length: 255 }).notNull(),
-    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
-    updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
-    role: FacultyRole("role").default("Teacher").notNull(),
+    createdAt: timestamp("createdAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+    role: facultyRole("role").default("Teacher").notNull(),
   },
   (t) => {
     return {
@@ -41,15 +43,94 @@ export const FacultyTable = pgTable(
   }
 );
 
-export const DepartmentTable = pgTable(
+export const facultyRelations = relations(faculty, ({ many }) => ({
+  departments: many(facultyDepartment),
+  announcements: many(announcement),
+  submissions: many(submission),
+  tasks: many(task),
+  files: many(file),
+  archiveAnnouncements: many(facultyArchiveAnnoucement),
+  notifications: many(notification),
+}));
+
+export const facultyDepartment = pgTable(
+  "facultyDepartment",
+  {
+    faculty_id: varchar("faculty_id", { length: 255 })
+      .references(() => faculty.faculty_id, { onDelete: "cascade" })
+      .notNull(),
+    dep_id: uuid("dep_id")
+      .notNull()
+      .references(() => department.dep_id, { onDelete: "cascade" })
+      .notNull(),
+  },
+  (t) => {
+    return {
+      pk: primaryKey({ columns: [t.dep_id, t.faculty_id] }),
+    };
+  }
+);
+
+export const facultyArchiveAnnoucement = pgTable(
+  "facultyArchiveAnnouncement",
+  {
+    announcement_id: uuid("announcement_id").references(
+      () => announcement.announcement_id,
+      { onDelete: "cascade" }
+    ),
+    faculty_id: varchar("faculty_id", { length: 255 }).references(
+      () => faculty.faculty_id,
+      { onDelete: "cascade" }
+    ),
+  },
+  (t) => {
+    return {
+      pk: primaryKey({ columns: [t.announcement_id, t.faculty_id] }),
+    };
+  }
+);
+
+export const facultyDepartmentlations = relations(
+  facultyDepartment,
+  ({ one }) => ({
+    faculty: one(faculty, {
+      fields: [facultyDepartment.faculty_id],
+      references: [faculty.faculty_id],
+    }),
+    department: one(department, {
+      fields: [facultyDepartment.dep_id],
+      references: [department.dep_id],
+    }),
+  })
+);
+
+export const facultyArchiveAnnoucementRelations = relations(
+  facultyArchiveAnnoucement,
+  ({ one }) => ({
+    faculty: one(faculty, {
+      fields: [facultyArchiveAnnoucement.faculty_id],
+      references: [faculty.faculty_id],
+    }),
+    announcement: one(announcement, {
+      fields: [facultyArchiveAnnoucement.announcement_id],
+      references: [announcement.announcement_id],
+    }),
+  })
+);
+
+export const department = pgTable(
   "department",
   {
     id: serial("id").primaryKey(),
-    dep_id: varchar("dep_id", { length: 255 }).notNull().unique(),
+    dep_id: uuid("dep_id").notNull().unique(),
     acronym: varchar("acronym", { length: 255 }).notNull().unique(),
     department: varchar("department", { length: 255 }).notNull().unique(),
-    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
-    updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
+    createdAt: timestamp("createdAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
   },
   (t) => {
     return {
@@ -58,20 +139,62 @@ export const DepartmentTable = pgTable(
   }
 );
 
-export const AnnouncementTable = pgTable(
+export const departmentAnnouncement = pgTable(
+  "departmentAnnouncement",
+  {
+    announcement_id: uuid("announcement_id")
+      .references(() => announcement.announcement_id, {
+        onDelete: "cascade",
+      })
+      .notNull(),
+    dep_id: uuid("dep_id")
+      .references(() => department.dep_id, { onDelete: "cascade" })
+      .notNull(),
+  },
+  (t) => {
+    return {
+      pk: primaryKey({ columns: [t.announcement_id, t.dep_id] }),
+    };
+  }
+);
+
+export const departmentAnnoucementsRelations = relations(
+  departmentAnnouncement,
+  ({ one }) => ({
+    announcement: one(announcement, {
+      fields: [departmentAnnouncement.dep_id],
+      references: [announcement.dep_id],
+    }),
+    department: one(department, {
+      fields: [departmentAnnouncement.dep_id],
+      references: [department.dep_id],
+    }),
+  })
+);
+
+export const departmentRelations = relations(department, ({ many }) => ({
+  faculties: many(facultyDepartment),
+  announcements: many(departmentAnnouncement),
+}));
+
+export const announcement = pgTable(
   "announcement",
   {
     id: serial("id").primaryKey(),
     announcement_id: uuid("announcement_id").defaultRandom().notNull().unique(),
     description: text("description").notNull(),
-    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
-    updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
+    createdAt: timestamp("createdAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
     faculty_id: varchar("faculty_id", { length: 255 }).references(
-      () => FacultyTable.faculty_id,
+      () => faculty.faculty_id,
       { onDelete: "cascade" }
     ),
-    dep_id: varchar("dep_id", { length: 255 })
-      .references(() => DepartmentTable.dep_id, { onDelete: "cascade" })
+    dep_id: uuid("dep_id")
+      .references(() => department.dep_id, { onDelete: "cascade" })
       .notNull(),
   },
   (t) => {
@@ -81,63 +204,25 @@ export const AnnouncementTable = pgTable(
   }
 );
 
-export const SubmissionTable = pgTable(
-  "submission",
-  {
-    id: serial("id").primaryKey(),
-    submission_id: uuid("submission_id").defaultRandom().notNull().unique(),
-    title: varchar("title", { length: 255 }).notNull().unique(),
-    description: text("description").notNull(),
-    remarks: text("remarks"),
-    status: SubmissionStatus("status").default("Pending"),
-    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
-    updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
-    faculty_id: varchar("faculty_id", { length: 255 }).references(
-      () => FacultyTable.faculty_id,
-      { onDelete: "cascade" }
-    ),
-    category_id: uuid("category_id").references(
-      () => CategoryTable.category_id
-    ),
-  },
-  (t) => {
-    return {
-      submissionIndex: uniqueIndex("submissionIndex").on(t.submission_id),
-    };
-  }
+export const annoucementRelations = relations(
+  announcement,
+  ({ one, many }) => ({
+    faculty: one(faculty, {
+      fields: [announcement.faculty_id],
+      references: [faculty.faculty_id],
+    }),
+    departments: many(departmentAnnouncement),
+    files: many(file),
+  })
 );
 
-//Submission has one category
-export const CategoryTable = pgTable("category", {
+export const category = pgTable("category", {
   id: serial("id").primaryKey(),
   category_id: uuid("category_id").defaultRandom().notNull().unique(),
   name: varchar("name", { length: 255 }).notNull().unique(),
 });
 
-///Faculty has many task
-export const TaskTable = pgTable(
-  "task",
-  {
-    id: serial("id").primaryKey(),
-    task_id: uuid("task_id").defaultRandom().notNull().unique(),
-    title: varchar("title", { length: 255 }).notNull().unique(),
-    description: text("description").notNull(),
-    due_date: timestamp("due_date", { mode: "date" }).notNull().defaultNow(),
-    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
-    updatedAt: timestamp("updatedAt", { mode: "date" }).notNull().defaultNow(),
-    faculty_id: varchar("faculty_id", { length: 255 }).references(
-      () => FacultyTable.faculty_id,
-      { onDelete: "cascade" }
-    ),
-  },
-  (t) => {
-    return {
-      taskIndex: uniqueIndex("taslIndex").on(t.task_id),
-    };
-  }
-);
-
-export const FileTable = pgTable(
+export const file = pgTable(
   "file",
   {
     id: serial("id").primaryKey(),
@@ -145,12 +230,18 @@ export const FileTable = pgTable(
     file_name: varchar("file_name", { length: 255 }).notNull().unique(),
     mimetype: varchar("mimetype", { length: 255 }),
     file_url: text("file_url").notNull(),
+    createdAt: timestamp("createdAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
     faculty_id: varchar("faculty_id", { length: 255 }).references(
-      () => FacultyTable.faculty_id,
+      () => faculty.faculty_id,
       { onDelete: "cascade" }
     ),
     announcement_id: uuid("announcement_id")
-      .references(() => AnnouncementTable.announcement_id, {
+      .references(() => announcement.announcement_id, {
         onDelete: "cascade",
       })
       .notNull(),
@@ -162,17 +253,35 @@ export const FileTable = pgTable(
   }
 );
 
-//Faculty has many notifications, or Department
-export const NotificationTable = pgTable(
+export const fileDepartment = pgTable("filedepartment", {
+  file_id: uuid("file_id")
+    .references(() => file.file_id, { onDelete: "cascade" })
+    .notNull(),
+  dep_id: uuid("dep_id")
+    .references(() => department.dep_id, { onDelete: "cascade" })
+    .notNull(),
+});
+
+export const fileRelations = relations(file, ({ one, many }) => ({
+  faculty: one(faculty, {
+    fields: [file.faculty_id],
+    references: [faculty.faculty_id],
+  }),
+  departments: many(fileDepartment),
+}));
+
+export const notification = pgTable(
   "notification",
   {
     id: serial("id").primaryKey(),
     notif_id: varchar("notif_id", { length: 255 }).notNull().unique(),
     title: varchar("title", { length: 255 }).notNull().unique(),
     description: text("description").notNull(),
-    createdAt: timestamp("createdAt", { mode: "date" }).notNull().defaultNow(),
+    createdAt: timestamp("createdAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
     faculty_id: varchar("faculty_id", { length: 255 }).references(
-      () => FacultyTable.faculty_id,
+      () => faculty.faculty_id,
       { onDelete: "cascade" }
     ),
   },
@@ -183,184 +292,89 @@ export const NotificationTable = pgTable(
   }
 );
 
-//Junctions
-export const FacultyDepartment = pgTable(
-  "facultyDepartment",
-  {
-    faculty_id: varchar("faculty_id", { length: 255 })
-      .references(() => FacultyTable.faculty_id, { onDelete: "cascade" })
-      .notNull(),
-    dep_id: varchar("dep_id", { length: 255 })
-      .references(() => DepartmentTable.dep_id, { onDelete: "cascade" })
-      .notNull(),
-  },
-  (t) => {
-    return {
-      pk: primaryKey({ columns: [t.dep_id, t.faculty_id] }),
-    };
-  }
-);
+export const notificationRelations = relations(notification, ({ one }) => ({
+  faculty: one(faculty, {
+    fields: [notification.faculty_id],
+    references: [faculty.faculty_id],
+  }),
+}));
 
-export const SubmissionDepartment = pgTable("submissionDepartment", {
-  submission_id: uuid("submission_id").references(
-    () => SubmissionTable.submission_id,
-    { onDelete: "cascade" }
-  ),
-  dep_id: varchar("dep_id", { length: 255 }).references(
-    () => DepartmentTable.dep_id,
-    { onDelete: "cascade" }
-  ),
-});
-
-export const FacultyArchiveAnnoucement = pgTable(
-  "facultyArchiveAnnouncement",
+export const submission = pgTable(
+  "submission",
   {
-    announcement_id: uuid("announcement_id").references(
-      () => AnnouncementTable.announcement_id,
-      { onDelete: "cascade" }
-    ),
+    id: serial("id").primaryKey(),
+    submission_id: uuid("submission_id").defaultRandom().notNull().unique(),
+    title: varchar("title", { length: 255 }).notNull().unique(),
+    description: text("description").notNull(),
+    remarks: text("remarks"),
+    status: submissionStatus("status").default("Pending"),
+    createdAt: timestamp("createdAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
     faculty_id: varchar("faculty_id", { length: 255 }).references(
-      () => FacultyTable.faculty_id,
+      () => faculty.faculty_id,
+      { onDelete: "cascade" }
+    ),
+    category_id: uuid("category_id").references(() => category.category_id),
+  },
+  (t) => {
+    return {
+      submissionIndex: uniqueIndex("submissionIndex").on(t.submission_id),
+    };
+  }
+);
+
+export const submissionDepartment = pgTable("submissionDepartment", {
+  submission_id: uuid("submission_id").references(
+    () => submission.submission_id,
+    { onDelete: "cascade" }
+  ),
+  dep_id: uuid("dep_id")
+    .notNull()
+    .references(() => department.dep_id, { onDelete: "cascade" }),
+});
+
+export const submissionRelations = relations(submission, ({ one, many }) => ({
+  faculty: one(faculty, {
+    fields: [submission.faculty_id],
+    references: [faculty.faculty_id],
+  }),
+  departments: many(submissionDepartment),
+  category: many(category),
+}));
+
+export const task = pgTable(
+  "task",
+  {
+    id: serial("id").primaryKey(),
+    task_id: uuid("task_id").defaultRandom().notNull().unique(),
+    title: varchar("title", { length: 255 }).notNull().unique(),
+    description: text("description").notNull(),
+    due_date: timestamp("due_date", { mode: "string" }).notNull().defaultNow(),
+    createdAt: timestamp("createdAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+    updatedAt: timestamp("updatedAt", { mode: "string" })
+      .notNull()
+      .defaultNow(),
+    faculty_id: varchar("faculty_id", { length: 255 }).references(
+      () => faculty.faculty_id,
       { onDelete: "cascade" }
     ),
   },
   (t) => {
     return {
-      pk: primaryKey({ columns: [t.announcement_id, t.faculty_id] }),
+      taskIndex: uniqueIndex("taslIndex").on(t.task_id),
     };
   }
 );
 
-export const DepartmentAnnouncement = pgTable(
-  "departmentAnnouncement",
-  {
-    announcement_id: uuid("announcement_id")
-      .references(() => AnnouncementTable.announcement_id, {
-        onDelete: "cascade",
-      })
-      .notNull(),
-    dep_id: varchar("dep_id", { length: 255 })
-      .references(() => DepartmentTable.dep_id, { onDelete: "cascade" })
-      .notNull(),
-  },
-  (t) => {
-    return {
-      pk: primaryKey({ columns: [t.announcement_id, t.dep_id] }),
-    };
-  }
-);
-export const FileDepartment = pgTable("filedepartment", {
-  file_id: uuid("file_id")
-    .references(() => FileTable.file_id, { onDelete: "cascade" })
-    .notNull(),
-  dep_id: varchar("dep_id", { length: 255 })
-    .references(() => DepartmentTable.dep_id, { onDelete: "cascade" })
-    .notNull(),
-});
-
-///Relations
-export const FacultyRelations = relations(FacultyTable, ({ many }) => ({
-  departments: many(FacultyDepartment),
-  announcements: many(AnnouncementTable),
-  submissions: many(SubmissionTable),
-  tasks: many(TaskTable),
-  files: many(FileTable),
-  archiveAnnouncements: many(FacultyArchiveAnnoucement),
-  notifications: many(NotificationTable),
-}));
-
-export const DepartmentAnnoucementsRelations = relations(
-  DepartmentAnnouncement,
-  ({ one }) => ({
-    announcement: one(AnnouncementTable, {
-      fields: [DepartmentAnnouncement.dep_id],
-      references: [AnnouncementTable.dep_id],
-    }),
-    department: one(DepartmentTable, {
-      fields: [DepartmentAnnouncement.dep_id],
-      references: [DepartmentTable.dep_id],
-    }),
-  })
-);
-
-export const FacultyDepartmentTableRelations = relations(
-  FacultyDepartment,
-  ({ one }) => ({
-    faculty: one(FacultyTable, {
-      fields: [FacultyDepartment.faculty_id],
-      references: [FacultyTable.faculty_id],
-    }),
-    department: one(DepartmentTable, {
-      fields: [FacultyDepartment.dep_id],
-      references: [DepartmentTable.dep_id],
-    }),
-  })
-);
-
-export const AnnoucementRelations = relations(
-  AnnouncementTable,
-  ({ one, many }) => ({
-    faculty: one(FacultyTable, {
-      fields: [AnnouncementTable.faculty_id],
-      references: [FacultyTable.faculty_id],
-    }),
-    departments: many(DepartmentAnnouncement),
-    files: many(FileTable),
-  })
-);
-
-export const DepartmentRelations = relations(DepartmentTable, ({ many }) => ({
-  faculties: many(FacultyDepartment),
-  announcements: many(DepartmentAnnouncement),
-}));
-
-export const SubmissionRelations = relations(
-  SubmissionTable,
-  ({ one, many }) => ({
-    faculty: one(FacultyTable, {
-      fields: [SubmissionTable.faculty_id],
-      references: [FacultyTable.faculty_id],
-    }),
-    departments: many(SubmissionDepartment),
-    category: many(CategoryTable),
-  })
-);
-
-export const NotificationRelations = relations(
-  NotificationTable,
-  ({ one }) => ({
-    faculty: one(FacultyTable, {
-      fields: [NotificationTable.faculty_id],
-      references: [FacultyTable.faculty_id],
-    }),
-  })
-);
-
-export const TaskRelations = relations(TaskTable, ({ one }) => ({
-  faculty: one(FacultyTable, {
-    fields: [TaskTable.faculty_id],
-    references: [FacultyTable.faculty_id],
+export const taskRelations = relations(task, ({ one }) => ({
+  faculty: one(faculty, {
+    fields: [task.faculty_id],
+    references: [faculty.faculty_id],
   }),
 }));
-
-export const FileRelations = relations(FileTable, ({ one, many }) => ({
-  faculty: one(FacultyTable, {
-    fields: [FileTable.faculty_id],
-    references: [FacultyTable.faculty_id],
-  }),
-  departments: many(FileDepartment),
-}));
-
-export const FacultyArchiveAnnoucementRelations = relations(
-  FacultyArchiveAnnoucement,
-  ({ one }) => ({
-    faculty: one(FacultyTable, {
-      fields: [FacultyArchiveAnnoucement.faculty_id],
-      references: [FacultyTable.faculty_id],
-    }),
-    announcement: one(AnnouncementTable, {
-      fields: [FacultyArchiveAnnoucement.announcement_id],
-      references: [AnnouncementTable.announcement_id],
-    }),
-  })
-);

@@ -1,14 +1,20 @@
-import { drizzle } from "drizzle-orm/postgres-js";
-import { migrate } from "drizzle-orm/postgres-js/migrator";
-import postgres from "postgres";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { migrate } from "drizzle-orm/node-postgres/migrator";
+import { Pool } from "pg";
 
-const migrationClient = postgres(process.env.DATABASE_URL as string, {
-  max: 1,
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL as string,
 });
 
-(async () => {
-  await migrate(drizzle(migrationClient), {
+const db = drizzle(pool);
+
+async function main() {
+  console.log("Migration started");
+  await migrate(db, {
     migrationsFolder: "/db/migrations",
   });
-  await migrationClient.end();
-})();
+  console.log("Migration end");
+  process.exit(0);
+}
+
+main().catch((error) => console.log(error));
