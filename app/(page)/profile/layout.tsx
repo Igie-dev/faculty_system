@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 export default function layout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  return <main>{children}</main>;
+  return <>{children}</>;
 }
