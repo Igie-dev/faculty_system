@@ -83,44 +83,42 @@ export const columns: ColumnDef<TFacultyData>[] = [
     cell: ({ row }) => {
       const faculty = row.original as TFacultyData;
 
-      return (
+      return faculty.role === ERole.IS_ADMIN ? (
+        <div className="w-8 h-8"></div>
+      ) : (
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex items-center justify-center w-8 h-8 p-0">
-            <MoreHorizontal className="w-4 h-4" />
+          <DropdownMenuTrigger className="flex items-center justify-center w-8 h-8 p-0 hover:bg-secondary rounded-md border border-transparent hover:border-border">
+            <MoreHorizontal className="w-4 h-4 pointer-events-none" />
           </DropdownMenuTrigger>
-          {faculty.role === ERole.IS_ADMIN ? null : (
-            <DropdownMenuContent align="end" className="w-44">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuSeparator />
+          <DropdownMenuContent align="end" className="w-44">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <Button
+              asChild
+              size="sm"
+              variant="ghost"
+              className="w-full flex items-center space-x-2  justify-start text-muted-foreground"
+            >
+              <Link href={`/faculties/${faculty.faculty_id}/view`}>
+                <Eye size={20} /> <span>View</span>
+              </Link>
+            </Button>
+            <Button
+              asChild
+              size="sm"
+              variant="ghost"
+              className="w-full flex items-center space-x-2  justify-start text-muted-foreground"
+            >
+              <Link href={`/faculties/${faculty.faculty_id}/update`}>
+                <PencilLine size={20} /> <span>Update</span>
+              </Link>
+            </Button>
 
-              <Button
-                asChild
-                size="sm"
-                variant="ghost"
-                className="w-full flex items-center space-x-2  justify-start text-muted-foreground"
-              >
-                <Link href={`/faculties/${faculty.faculty_id}/view`}>
-                  <Eye size={20} /> <span>View</span>
-                </Link>
-              </Button>
-
-              <Button
-                asChild
-                size="sm"
-                variant="ghost"
-                className="w-full flex items-center space-x-2  justify-start text-muted-foreground"
-              >
-                <Link href={`/faculties/${faculty.faculty_id}/update`}>
-                  <PencilLine size={20} /> <span>Update</span>
-                </Link>
-              </Button>
-
-              <DeleteFaculty
-                facultyId={faculty.faculty_id as string}
-                name={faculty?.name}
-              />
-            </DropdownMenuContent>
-          )}
+            <DeleteFaculty
+              facultyId={faculty.faculty_id as string}
+              name={faculty?.name}
+            />
+          </DropdownMenuContent>
         </DropdownMenu>
       );
     },

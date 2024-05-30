@@ -147,23 +147,21 @@ export default function UpdateDetailsForm({ faculty }: Props) {
               Departments
             </span>
 
-            <UpdateDepartments
-              facultyDepartments={faculty?.FacultyDepartments}
-            />
+            <UpdateDepartments facultyDepartments={faculty?.departments} />
           </div>
           <ul className="w-full flex flex-col mt-5">
-            {faculty?.FacultyDepartments.length >= 1 ? (
-              faculty?.FacultyDepartments.map((department) => {
+            {faculty?.departments.length >= 1 ? (
+              faculty?.departments.map((department: TFacultyDepartments) => {
                 return (
                   <li
-                    key={department.Department.dep_id}
+                    key={department.dep_id}
                     className="flex  items-center space-x-8 w-full h-fit min-h-11   px-3 text-sm"
                   >
                     <span className="font-semibold">
-                      {department.Department.acronym}
+                      {department.department.acronym}
                     </span>
                     <span className="text-muted-foreground !ml-5">
-                      {department.Department.department}
+                      {department.department.department}
                     </span>
                   </li>
                 );
