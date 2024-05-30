@@ -110,12 +110,12 @@ export const options: NextAuthOptions = {
             token.faculty_id = foundFaculty?.faculty_id;
             token.role = foundFaculty?.role;
           }
-
           token.email = user.email;
           token.name = user.name;
         }
-      } catch (error) {}
-
+      } catch (error) {
+        throw Error("Unauthorized user!");
+      }
       return token;
     },
     async session({ session, token }: { session: any; token: any }) {
