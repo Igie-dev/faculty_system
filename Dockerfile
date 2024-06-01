@@ -16,7 +16,7 @@ RUN apt update && apt install netcat-traditional
 # Add user privilege to execute the init.bash file
 RUN chmod +x /usr/src/app/init.bash
 
-RUN chmod +x /usr/src/app/db/seed.ts
+RUN chmod +x /usr/src/app/server/db/seed.ts
 
 EXPOSE 3000
 

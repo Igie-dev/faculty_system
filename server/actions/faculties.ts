@@ -1,6 +1,6 @@
 "use server";
 import { db } from "@/server/db";
-import { sql } from "drizzle-orm";
+import { sql, eq } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import { getCurrentUser } from "@/lib/auth";
@@ -134,78 +134,6 @@ export const createFaculty = async (
     };
   }
 };
-//Update
-export const updateFaculty = async (
-  prevState: FormState,
-  data: FormData
-): Promise<FormState> => {
-  try {
-    const { role: userRole } = await getCurrentUser();
-    if (userRole !== ERole.IS_ADMIN) {
-      return {
-        error: "Unauthorized user!",
-      };
-    }
-
-    const formData = Object.fromEntries(data);
-
-    //Validate data with zod
-    const parsed = updateFacultySchema.safeParse(formData);
-
-    if (!parsed.success) {
-      const fields: Record<string, string> = {};
-      for (const key of Object.keys(formData)) {
-        fields[key] = formData[key].toString();
-      }
-
-      return {
-        error: "Invalid form data",
-        fields,
-        issues: parsed.error.issues.map((issue) => issue.message),
-      };
-    }
-
-    const foundFaculty = await db.query.faculty.findFirst({
-      where: () => sql`${faculty.faculty_id} = ${formData.faculty_id}`,
-      columns: {
-        id: true,
-      },
-    });
-
-    if (!foundFaculty?.id) {
-      return {
-        error: "Faculty not found!",
-      };
-    }
-
-    const updateFaculty = await db
-      .update(faculty)
-      .set({
-        name: formData.name as string,
-        email: formData.email as string,
-        contact: formData.contact as string,
-        role: formData.role as "Dean" | "Teacher",
-      })
-      .where(sql`${faculty.faculty_id} = ${formData.faculty_id}`)
-      .returning({ id: faculty.id });
-
-    if (!updateFaculty[0]?.id) {
-      return {
-        error: "Failed to update faculty!",
-      };
-    }
-
-    revalidatePath(`/faculties/${formData?.faculty_id}/update`);
-    return {
-      message: "Create faculty account success!",
-    };
-  } catch (error) {
-    console.log(error);
-    return {
-      error: "Something went wrong!",
-    };
-  }
-};
 
 //Get all faculties
 export const getFaculties = async (): Promise<{
@@ -298,6 +226,79 @@ export const getFaculty = async (
     }
 
     return { error: "Faculty not found!" };
+  } catch (error) {
+    console.log(error);
+    return {
+      error: "Something went wrong!",
+    };
+  }
+};
+
+//Update
+export const updateFaculty = async (
+  prevState: FormState,
+  data: FormData
+): Promise<FormState> => {
+  try {
+    const { role: userRole } = await getCurrentUser();
+    if (userRole !== ERole.IS_ADMIN) {
+      return {
+        error: "Unauthorized user!",
+      };
+    }
+
+    const formData = Object.fromEntries(data);
+
+    //Validate data with zod
+    const parsed = updateFacultySchema.safeParse(formData);
+
+    if (!parsed.success) {
+      const fields: Record<string, string> = {};
+      for (const key of Object.keys(formData)) {
+        fields[key] = formData[key].toString();
+      }
+
+      return {
+        error: "Invalid form data",
+        fields,
+        issues: parsed.error.issues.map((issue) => issue.message),
+      };
+    }
+
+    const foundFaculty = await db.query.faculty.findFirst({
+      where: () => sql`${faculty.faculty_id} = ${formData.faculty_id}`,
+      columns: {
+        id: true,
+      },
+    });
+
+    if (!foundFaculty?.id) {
+      return {
+        error: "Faculty not found!",
+      };
+    }
+
+    const updateFaculty = await db
+      .update(faculty)
+      .set({
+        name: formData.name as string,
+        email: formData.email as string,
+        contact: formData.contact as string,
+        role: formData.role as "Dean" | "Teacher" | "Admin",
+      })
+      .where(eq(faculty.faculty_id, `${formData.faculty_id}`))
+      .returning({ id: faculty.id });
+
+    if (!updateFaculty[0]?.id) {
+      return {
+        error: "Failed to update faculty!",
+      };
+    }
+
+    revalidatePath(`/faculties/${formData?.faculty_id}/update`);
+    return {
+      message: "Update faculty account success!",
+    };
   } catch (error) {
     console.log(error);
     return {

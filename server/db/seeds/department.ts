@@ -1,4 +1,4 @@
-import departments from "@/db/seeds/data/department.json";
+import departments from "@/server/db/seeds/data/department.json";
 import { department } from "@/server/db/schema";
 import { v4 as uuid } from "uuid";
 export default async function seed(db: any) {
