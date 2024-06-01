@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ERole } from "@/@types/enums";
 // import { encryptText } from "@/utils/helper";
-import DeleteFaculty from "../delete/DeleteFaculty";
+import DeleteFaculty from "../deleteAccount/DeleteFaculty";
 // import UpdateFaculty from "../update/UpdateFaculty";
 export const columns: ColumnDef<TFacultyData>[] = [
   {
