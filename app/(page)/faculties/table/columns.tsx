@@ -117,6 +117,9 @@ export const columns: ColumnDef<TFacultyData>[] = [
             <DeleteFaculty
               facultyId={faculty.faculty_id as string}
               name={faculty?.name}
+              email={faculty?.email}
+              contact={faculty?.contact}
+              role={faculty?.role}
             />
           </DropdownMenuContent>
         </DropdownMenu>

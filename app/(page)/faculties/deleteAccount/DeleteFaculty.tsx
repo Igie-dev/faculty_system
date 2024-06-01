@@ -17,8 +17,17 @@ import { useToast } from "@/components/ui/use-toast";
 type Props = {
   facultyId: string;
   name: string;
+  contact: string;
+  email: string;
+  role: string;
 };
-export default function DeleteFaculty({ facultyId, name }: Props) {
+export default function DeleteFaculty({
+  facultyId,
+  name,
+  contact,
+  email,
+  role,
+}: Props) {
   const { toast } = useToast();
   const deleteAccount = async () => {
     const res = await deleteFaculty(facultyId);
@@ -55,10 +64,22 @@ export default function DeleteFaculty({ facultyId, name }: Props) {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <div className="flex flex-col gap-2">
-          <span className="text-lg text-muted-foreground">Details</span>
+          <span className="text-sm text-muted-foreground">Details</span>
           <div className="flex items-center gap-2 text-sm">
             <span className="font-semibold">Name: </span>
             <span>{name}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="font-semibold">Email: </span>
+            <span>{email}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="font-semibold">Contact Number: </span>
+            <span>{contact}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <span className="font-semibold">Role: </span>
+            <span>{role}</span>
           </div>
         </div>
         <AlertDialogFooter>
