@@ -17,7 +17,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import FormButtons from "./FormButtons";
+import FormButtons from "@/components/FormButtons";
 import DepartmentsList from "./DepartmentsList";
 import { createFaculty } from "@/server/actions/faculties";
 import { useFormState } from "react-dom";
@@ -282,7 +282,11 @@ export default function CreateForm() {
           </div>
         </div>
         <div className="flex items-center !mt-10 flex-row-reverse">
-          <FormButtons />
+          <FormButtons
+            cancelLink="/faculties"
+            cancelText="cancel"
+            submitText="submit"
+          />
         </div>
       </form>
     </Form>
