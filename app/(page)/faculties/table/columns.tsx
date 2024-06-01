@@ -4,16 +4,13 @@ import { ArrowUpDown, Eye, MoreHorizontal, PencilLine } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { ERole } from "@/@types/enums";
-// import { encryptText } from "@/utils/helper";
 import DeleteFaculty from "../deleteAccount/DeleteFaculty";
-// import UpdateFaculty from "../update/UpdateFaculty";
 export const columns: ColumnDef<TFacultyData>[] = [
   {
     accessorKey: "id",
