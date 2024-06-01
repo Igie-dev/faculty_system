@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db";
-import { department } from "@/db/schema";
+import { db } from "@/server/db";
+import { department } from "@/server/db/schema";
 import { sql } from "drizzle-orm";
 
 export async function POST(req: NextRequest) {

@@ -1,8 +1,8 @@
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db";
-import { faculty } from "@/db/schema";
+import { db } from "@/server/db";
+import { faculty } from "@/server/db/schema";
 import { sql } from "drizzle-orm";
 
 export async function POST(req: NextRequest) {

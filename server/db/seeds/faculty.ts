@@ -2,8 +2,8 @@ import { InferSelectModel } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import faculties from "./data/faculty.json";
-import { faculty, facultyDepartment } from "@/db/schema";
-import type db from "@/db";
+import { faculty, facultyDepartment } from "@/server/db/schema";
+import type db from "@/server/db";
 const saltRound = 9;
 export default async function seed(db: db) {
   return await Promise.all(

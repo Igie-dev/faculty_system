@@ -17,7 +17,7 @@ import {
   submissionDepartment,
   task,
   facultyArchiveAnnouncement,
-} from "@/db/schema";
+} from "@/server/db/schema";
 declare global {
   type TCreateFaculty = {
     faculty_id?: string;

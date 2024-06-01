@@ -1,6 +1,6 @@
 import React, { Suspense } from "react";
-import FacultiesTable from "./components/table/FacultiesTable";
-import TableLoader from "./components/table/TableLoader";
+import FacultiesTable from "./table/FacultiesTable";
+import TableLoader from "./table/TableLoader";
 
 export default async function page() {
   return (

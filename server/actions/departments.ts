@@ -1,7 +1,9 @@
 "use server";
 import { ERole } from "@/@types/enums";
 import { getCurrentUser } from "@/lib/auth";
-import { db } from "@/db";
+import { db } from "@/server/db";
+import { sql } from "drizzle-orm";
+import { facultyDepartment } from "@/server/db/schema";
 export const getDepartments = async (): Promise<{
   data?: TDepartmentData[];
   error?: string;
@@ -26,6 +28,24 @@ export const getDepartments = async (): Promise<{
     }
 
     return { data: departments };
+  } catch (error) {
+    return {
+      error: "Something went wrong!",
+    };
+  }
+};
+
+export const getFacultyDepartmentsQuery = async (
+  faculty_id: string
+): Promise<{ data?: TFacultyDepartment[]; error?: string }> => {
+  try {
+    const foundDepartments = await db.query.facultyDepartment.findMany({
+      where: () => sql`${facultyDepartment.faculty_id} = ${faculty_id}`,
+      with: {
+        department: true,
+      },
+    });
+    return { data: foundDepartments };
   } catch (error) {
     return {
       error: "Something went wrong!",

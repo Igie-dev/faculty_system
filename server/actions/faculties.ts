@@ -1,12 +1,12 @@
 "use server";
-import { db } from "@/db";
+import { db } from "@/server/db";
 import { sql } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import { getCurrentUser } from "@/lib/auth";
 import { ERole } from "@/@types/enums";
 import { revalidatePath } from "next/cache";
-import { faculty, facultyDepartment } from "@/db/schema";
+import { faculty, facultyDepartment } from "@/server/db/schema";
 import { createFacultySchema, updateFacultySchema } from "@/lib/helper";
 const saltRound = 9;
 //Get all faculty data fields

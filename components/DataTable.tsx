@@ -19,8 +19,8 @@ export default function DataTable<TData, TValue>({
   table,
 }: Props<TData, TValue>) {
   return (
-    <T className="min-w-[70rem] bg-background my-1 text-sm">
-      <TableHeader>
+    <T className="min-w-[70rem] bg-transparent my-1 text-sm">
+      <TableHeader className="bg-background">
         {table?.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id} className="!h-9">
             {headerGroup.headers.map((header) => {
@@ -50,7 +50,7 @@ export default function DataTable<TData, TValue>({
                 <TableCell
                   key={cell.id}
                   className={`pl-5 border py-2 text-sm ${
-                    row.index % 2 === 0 ? "bg-background" : "bg-secondary"
+                    row.index % 2 === 0 ? "bg-secondary " : "bg-background"
                   }`}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}

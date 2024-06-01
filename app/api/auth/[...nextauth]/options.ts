@@ -2,8 +2,8 @@ import type { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcrypt";
-import { db } from "@/db";
-import { faculty } from "@/db/schema";
+import { db } from "@/server/db";
+import { faculty } from "@/server/db/schema";
 import { sql } from "drizzle-orm";
 
 export const options: NextAuthOptions = {

@@ -1,8 +1,8 @@
 import { Table, getTableName, sql } from "drizzle-orm";
 import faculty from "./seeds/faculty.js";
 import department from "./seeds/department.js";
-import { db, client } from "@/db";
-import * as schema from "@/db/schema";
+import { db, client } from "@/server/db/index.js";
+import * as schema from "@/server/db/schema.js";
 
 async function resetTable(db: db, table: Table) {
   return db.execute(
