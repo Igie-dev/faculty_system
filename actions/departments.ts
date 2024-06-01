@@ -1,8 +1,7 @@
 "use server";
 import { ERole } from "@/@types/enums";
 import { getCurrentUser } from "@/lib/auth";
-import { db } from "@/db/db";
-import { department } from "@/db/schema";
+import { db } from "@/db";
 export const getDepartments = async (): Promise<{
   data?: TDepartmentData[];
   error?: string;

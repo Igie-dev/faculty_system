@@ -1,5 +1,5 @@
 "use server";
-import { db } from "@/db/db";
+import { db } from "@/db";
 import { sql } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
@@ -252,8 +252,7 @@ export const getFaculties = async (): Promise<{
       return { data: [] };
     }
 
-    ///TODO Fix return value on types
-    return { data: faculties as any };
+    return { data: faculties };
   } catch (error) {
     console.log(error);
     return {
@@ -295,8 +294,7 @@ export const getFaculty = async (
     });
 
     if (foundFaculty?.id) {
-      ///TODO Fix return value on types
-      return { data: foundFaculty as any };
+      return { data: foundFaculty };
     }
 
     return { error: "Faculty not found!" };
@@ -355,6 +353,7 @@ export const deleteFaculty = async (
       message: "Delete successful!",
     };
   } catch (error) {
+    console.log(error);
     return {
       error: "Something went wrong!",
     };

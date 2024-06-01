@@ -1,35 +1,13 @@
-import { sql, InferSelectModel } from "drizzle-orm";
+import { InferSelectModel } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import faculties from "./data/faculty.json";
-import { faculty, facultyDepartment } from "../schema";
+import { faculty, facultyDepartment } from "@/db/schema";
+import type db from "@/db";
 const saltRound = 9;
-export default async function seed(db: any) {
-  await Promise.all(
+export default async function seed(db: db) {
+  return await Promise.all(
     faculties.map(async (facultyData) => {
-      //check if email or contact already used
-      const emailExist = await db.query.faculty.findFirst({
-        where: () => sql`${faculty.email} = ${facultyData.email}`,
-        columns: {
-          id: true,
-        },
-      });
-
-      if (emailExist?.id) {
-        throw new Error(`Email ${facultyData.email} already used!`);
-      }
-
-      const contactExist = await db.query.faculty.findFirst({
-        where: () => sql`${faculty.contact} = ${facultyData.contact}`,
-        columns: {
-          id: true,
-        },
-      });
-
-      if (contactExist?.id) {
-        throw new Error(`Email ${facultyData.contact} already used!`);
-      }
-
       const generateId = `${uuid()
         .toString()
         .replace("-", "")
@@ -66,19 +44,10 @@ export default async function seed(db: any) {
 
       if (departments.length >= 0) {
         for (let dep of departments) {
-          const existDep = await db.query.facultyDepartment.findFirst({
-            where: () =>
-              sql`${facultyDepartment.dep_id} = ${dep.dep_id} AND ${facultyDepartment.faculty_id} = ${dep.faculty_id}`,
-            columns: {
-              dep_id: true,
-            },
+          await db.insert(facultyDepartment).values({
+            faculty_id: data.faculty_id,
+            dep_id: dep.dep_id,
           });
-          if (!existDep?.dep_id) {
-            await db.insert(facultyDepartment).values({
-              faculty_id: data.faculty_id,
-              dep_id: dep.dep_id,
-            });
-          }
         }
       }
     })

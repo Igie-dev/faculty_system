@@ -1,7 +1,7 @@
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db/db";
+import { db } from "@/db";
 import { faculty } from "@/db/schema";
 import { sql } from "drizzle-orm";
 

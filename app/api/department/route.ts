@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/db/db";
+import { db } from "@/db";
 import { department } from "@/db/schema";
 import { sql } from "drizzle-orm";
 
