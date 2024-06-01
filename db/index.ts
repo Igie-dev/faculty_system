@@ -8,3 +8,5 @@ export const client = new Client({
 
 client.connect();
 export const db = drizzle(client, { schema, logger: true });
+export type db = typeof db;
+export default db;
