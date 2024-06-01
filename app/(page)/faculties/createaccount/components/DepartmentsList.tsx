@@ -9,7 +9,7 @@ export default function DepartmentsList({ facultyDep, setFacultyDep }: Props) {
   const [departments, setDepartments] = useState<TDepartmentData[]>([]);
   const handleCleck = (id: string, checked: boolean) => {
     if (checked) {
-      setFacultyDep((prev) => [...prev, { dep_id: id }]);
+      setFacultyDep((prev) => [...prev, { dep_id: id, faculty_id: "" }]);
     } else {
       setFacultyDep((prev) => {
         return prev.filter((dep) => dep.dep_id !== id);
@@ -20,7 +20,11 @@ export default function DepartmentsList({ facultyDep, setFacultyDep }: Props) {
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
       if (departments.length >= 1) {
-        setFacultyDep(departments);
+        setFacultyDep(
+          departments.map((dep) => {
+            return { dep_id: dep.dep_id, faculty_id: "" };
+          })
+        );
       }
     } else {
       setFacultyDep([]);

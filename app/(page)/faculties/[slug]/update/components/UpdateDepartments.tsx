@@ -13,15 +13,30 @@ import { getDepartments } from "@/actions/departments";
 import { Checkbox } from "@/components/ui/checkbox";
 import { updateFacultyDepartments } from "@/actions/faculties";
 import { useToast } from "@/components/ui/use-toast";
+import { InferSelectModel } from "drizzle-orm";
+import { department } from "@/db/schema";
 type Props = {
+  faculty_id: string;
   facultyDepartments: TFacultyDepartment[];
 };
-export default function UpdateDepartments({ facultyDepartments }: Props) {
+export default function UpdateDepartments({
+  faculty_id,
+  facultyDepartments,
+}: Props) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const [departments, setDepartments] = useState<TDepartmentData[]>([]);
-  const [toSaveFacultyDepartments, setToSaveFacultyDepartments] =
-    useState<TCreateFacultyDep[]>(facultyDepartments);
+  const [toSaveFacultyDepartments, setToSaveFacultyDepartments] = useState<
+    TCreateFacultyDep[]
+  >(
+    facultyDepartments.map((dep: TFacultyDepartment) => {
+      const department = dep.department;
+      return {
+        dep_id: dep.dep_id,
+        faculty_id: faculty_id,
+      };
+    })
+  );
 
   useEffect(() => {
     if (open && departments?.length <= 0) {
@@ -37,7 +52,7 @@ export default function UpdateDepartments({ facultyDepartments }: Props) {
   const handleSave = async () => {
     if (toSaveFacultyDepartments.length === facultyDepartments.length) return;
     const res = await updateFacultyDepartments(
-      facultyDepartments[0].faculty_id,
+      faculty_id,
       toSaveFacultyDepartments
     );
 
@@ -56,7 +71,10 @@ export default function UpdateDepartments({ facultyDepartments }: Props) {
 
   const handleCleck = (id: string, checked: boolean) => {
     if (checked) {
-      setToSaveFacultyDepartments((prev) => [...prev, { dep_id: id }]);
+      setToSaveFacultyDepartments((prev) => [
+        ...prev,
+        { dep_id: id, faculty_id: faculty_id },
+      ]);
     } else {
       setToSaveFacultyDepartments((prev) => {
         return prev.filter((dep) => dep.dep_id !== id);
@@ -71,7 +89,7 @@ export default function UpdateDepartments({ facultyDepartments }: Props) {
           departments.map((dep) => {
             return {
               dep_id: dep.dep_id,
-              faculty_id: facultyDepartments[0].faculty_id,
+              faculty_id: faculty_id,
             };
           })
         );

@@ -32,7 +32,7 @@ export default function UpdateDetailsForm({ faculty }: Props) {
   const [state, formAction] = useFormState(updateFaculty, {
     message: "",
   });
-
+  console.log(faculty);
   const form = useForm<z.infer<typeof updateFacultySchema>>({
     resolver: zodResolver(updateFacultySchema),
     defaultValues: {
@@ -146,29 +146,31 @@ export default function UpdateDetailsForm({ faculty }: Props) {
             <span className="text-sm font-semibold text-muted-foreground">
               Departments
             </span>
-
-            <UpdateDepartments facultyDepartments={faculty?.departments} />
+            <UpdateDepartments
+              faculty_id={faculty?.faculty_id}
+              facultyDepartments={faculty?.departments}
+            />
           </div>
           <ul className="w-full flex flex-col mt-5">
-            {faculty?.departments.length >= 1 ? (
-              faculty?.departments.map((department: TFacultyDepartments) => {
+            {faculty.departments.length >= 1 ? (
+              faculty.departments.map((dep) => {
                 return (
                   <li
-                    key={department.dep_id}
+                    key={dep.department.dep_id}
                     className="flex  items-center space-x-8 w-full h-fit min-h-11   px-3 text-sm"
                   >
                     <span className="font-semibold">
-                      {department.department.acronym}
+                      {dep.department.acronym}
                     </span>
                     <span className="text-muted-foreground !ml-5">
-                      {department.department.department}
+                      {dep.department.department}
                     </span>
                   </li>
                 );
               })
             ) : (
               <span className="text-sm text-muted-foreground">
-                s No departments found!
+                No departments found!
               </span>
             )}
           </ul>

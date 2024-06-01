@@ -9,6 +9,7 @@ export default async function page({ params }: { params: { slug: string } }) {
     throw new Error("Failed to get faculty details!");
   }
   const faculty = res?.data as TFacultyData;
+
   return (
     <section className="w-full h-full flex justify-center overflow-y-auto">
       <main className="w-full relative h-fit px-4 py-8 flex-col md:my-5 md:w-[95%] lg:max-w-[75rem] bg-background flex items-center md:rounded-lg md:border">

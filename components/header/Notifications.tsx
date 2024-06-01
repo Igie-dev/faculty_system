@@ -9,11 +9,11 @@ export default function Notifications() {
       <Button
         onClick={() => setIsOpen((prev) => !prev)}
         size="icon"
-        variant="ghost"
+        variant="outline"
         className={` ${
           isOpen
             ? "bg-primary text-background hover:text-background hover:bg-primary"
-            : "bg-background text-muted-foreground"
+            : "text-muted-foreground"
         }`}
       >
         <Bell absoluteStrokeWidth size={20} />
