@@ -1,5 +1,5 @@
 import { ESubmussitionStatus } from "@/enum";
-import { InferSelectModel } from "drizzle-orm";
+import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import {
   announcement,
   category,
@@ -8,6 +8,7 @@ import {
   faculty,
   facultyArchiveAnnoucement,
   facultyDepartment,
+  facultyRelations,
   facultyRole,
   file,
   fileDepartment,
@@ -15,6 +16,7 @@ import {
   submission,
   submissionDepartment,
   task,
+  facultyArchiveAnnouncement,
 } from "@/db/schema";
 declare global {
   type TCreateFaculty = {
@@ -26,33 +28,40 @@ declare global {
     confirmPassword?: string;
     contact: string;
     role: string;
-    departments: (typeof facultyDepartment)[];
+    departments: TCreateFacultyDep[];
   };
 
   type TCreateFacultyDep = InferSelectModel<typeof facultyDepartment>;
 
-  type TFacultyData = InferSelectModel<
-    typeof faculty & {
-      departments?: (typeof department)[];
-      announcements?: (typeof announcement)[];
-      submissions?: (typeof submission)[];
-      tasks?: (typeof task)[];
-      archiveAnnouncements?: (typeof facultyArchiveAnnoucement)[];
-      nitifications?: (typeof notification)[];
-    }
-  >;
+  type TFacultyData = {
+    faculty_id: string;
+    name: string;
+    email: string;
+    password?: string;
+    contact: string;
+    role: string;
+    departments?: TFacultyDepartment[];
+    announcements?: TAnnouncementData[];
+    submissions?: TSubmissionData[];
+    tasks?: TTaskData[];
+    files?: TFileData[];
+    archiveAnnouncements?: TFacultyArchiveAnnouncement[];
+    notifications?: TNotificationData[];
+  };
+
+  type TFacultyDepartment = InferSelectModel<typeof facultyDepartment> & {
+    department: InferSelectModel<typeof department>;
+  };
 
   type TCreateDepartment = {
     acronym: string;
-    department?: string;
+    department: string;
   };
-
-  type TDepartmentData = InferSelectModel<
-    typeof department & {
-      announcements?: typeof departmentAnnouncement;
-      faculties?: typeof facultyDepartment;
-    }
+  type TFacultyArchiveAnnouncement = InferInsertModel<
+    typeof facultyArchiveAnnoucement
   >;
+
+  type TDepartmentData = InferSelectModel<typeof department>;
 
   type TCreateAnnouncement = {
     id?: number;
@@ -63,13 +72,32 @@ declare global {
     files?: TUploadFile[];
   };
 
-  type TAnnouncementData = InferSelectModel<
-    typeof announcement & {
-      faculty?: typeof faculty;
-      departments?: (typeof departmentAnnouncement)[];
-      files?: (typeof file)[];
-    }
-  >;
+  type TAnnouncementData = InferSelectModel<typeof announcement> & {
+    faculty?: InferSelectModel<typeof faculty>;
+    departments?: InferSelectModel<typeof departmentAnnouncement>[];
+    files?: InferSelectModel<typeof file>[];
+  };
+
+  type TFileData = InferSelectModel<typeof file> & {
+    faculty?: InferSelectModel<typeof faculty>;
+    departments?: InferSelectModel<typeof fileDepartment>;
+  };
+
+  type TTaskData = InferSelectModel<typeof task> & {
+    faculty?: InferSelectModel<typeof faculty>;
+  };
+
+  type TSubmissionData = InferSelectModel<submission> & {
+    faculty?: InferSelectModel<typeof faculty>;
+    departments?: InferSelectModel<typeof submissionDepartment>[];
+    category?: InferSelectModel<typeof category>[];
+  };
+
+  type TNotificationData = InferSelectModel<typeof notification> & {
+    faculty?: InferSelectModel<typeof faculty>;
+  };
+
+  type TCategoryData = InferSelectModel<typeof category>;
 
   type TUploadFile = {
     file_id?: string;
@@ -79,34 +107,6 @@ declare global {
     filePath?: string;
   };
 
-  type TFileData = InferSelectModel<
-    typeof file & {
-      faculty?: typeof faculty;
-      departments?: (typeof fileDepartment)[];
-    }
-  >;
-
-  type TTaskData = InferSelectModel<
-    typeof task & {
-      faculty?: typeof faculty;
-    }
-  >;
-
-  type TSubmissionData = InferSelectModel<
-    submission & {
-      faculty?: typeof faculty;
-      departments?: (typeof submissionDepartment)[];
-      category?: (typeof category)[];
-    }
-  >;
-
-  type TNotificationData = InferSelectModel<
-    typeof notification & {
-      faculty: typeof faculty;
-    }
-  >;
-
-  type TCategoryData = InferSelectModel<typeof category>;
   type TPostFilter = {
     filtererDepartments: string[];
   };
