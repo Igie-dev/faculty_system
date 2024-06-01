@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useRef, useEffect } from "react";
 type Props = {
   faculty: TFacultyData;
 };
@@ -24,15 +24,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { updateFacultySchema } from "@/lib/helper";
 import { z } from "zod";
 import { useFormState } from "react-dom";
-import { updateFaculty } from "@/actions/faculties";
-import UpdateDepartments from "./UpdateDepartments";
-import FormButtons from "./FormButtons";
+import { updateFaculty } from "@/server/actions/faculties";
+import FormButtons from "@/components/FormButtons";
+import FacultyDepartments from "./FacultyDepartments";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function UpdateDetailsForm({ faculty }: Props) {
+  const { toast } = useToast();
+  const formRef = useRef<HTMLFormElement>(null);
   const [state, formAction] = useFormState(updateFaculty, {
     message: "",
   });
-  console.log(faculty);
   const form = useForm<z.infer<typeof updateFacultySchema>>({
     resolver: zodResolver(updateFacultySchema),
     defaultValues: {
@@ -43,6 +45,19 @@ export default function UpdateDetailsForm({ faculty }: Props) {
       ...(state?.fields ?? {}),
     },
   });
+  useEffect(() => {
+    if (state.message || state.error) {
+      toast({
+        variant: state.error ? "destructive" : "default",
+        title: state.message
+          ? "Update account success!"
+          : state.error
+          ? "Create account failed!"
+          : "",
+        description: state.message ?? state.error ?? "",
+      });
+    }
+  }, [state, toast]);
 
   return (
     <Form {...form}>
@@ -51,8 +66,23 @@ export default function UpdateDetailsForm({ faculty }: Props) {
           <p className="font-normal">Error: {` ${state?.error}`}</p>
         ) : null}
       </span>
-
-      <form className="w-full flex flex-col space-y-4 mt-5">
+      <form
+        ref={formRef}
+        onSubmit={(evt) => {
+          evt.preventDefault();
+          form.handleSubmit(() => {
+            const formData = new FormData(formRef.current!);
+            formData.append("faculty_id", faculty.faculty_id);
+            formAction(formData);
+          })(evt);
+        }}
+        action={(form: FormData) => {
+          const formData = form;
+          formData.append("faculty_id", faculty.faculty_id);
+          formAction(formData);
+        }}
+        className="w-full flex flex-col space-y-4 mt-5"
+      >
         <span className="text-sm font-semibold text-muted-foreground">
           Details
         </span>
@@ -138,45 +168,13 @@ export default function UpdateDetailsForm({ faculty }: Props) {
             </div>
           </div>
         </div>
-        <div
-          className="w-full flex flex-col border-t pt-5
-    !mt-10"
-        >
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-muted-foreground">
-              Departments
-            </span>
-            <UpdateDepartments
-              faculty_id={faculty?.faculty_id}
-              facultyDepartments={faculty?.departments}
-            />
-          </div>
-          <ul className="w-full flex flex-col mt-5">
-            {faculty.departments.length >= 1 ? (
-              faculty.departments.map((dep) => {
-                return (
-                  <li
-                    key={dep.department.dep_id}
-                    className="flex  items-center space-x-8 w-full h-fit min-h-11   px-3 text-sm"
-                  >
-                    <span className="font-semibold">
-                      {dep.department.acronym}
-                    </span>
-                    <span className="text-muted-foreground !ml-5">
-                      {dep.department.department}
-                    </span>
-                  </li>
-                );
-              })
-            ) : (
-              <span className="text-sm text-muted-foreground">
-                No departments found!
-              </span>
-            )}
-          </ul>
-        </div>
+        <FacultyDepartments faculty_id={faculty?.faculty_id} />
         <div className="flex items-center !mt-10 flex-row-reverse">
-          <FormButtons />
+          <FormButtons
+            cancelLink="/faculties"
+            cancelText="cancel"
+            submitText="submit"
+          />
         </div>
       </form>
     </Form>

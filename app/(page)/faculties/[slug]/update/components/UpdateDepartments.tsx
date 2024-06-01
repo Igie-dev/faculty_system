@@ -9,34 +9,37 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { getDepartments } from "@/actions/departments";
+import { getDepartments } from "@/server/actions/departments";
 import { Checkbox } from "@/components/ui/checkbox";
-import { updateFacultyDepartments } from "@/actions/faculties";
+import { updateFacultyDepartments } from "@/server/actions/faculties";
 import { useToast } from "@/components/ui/use-toast";
-import { InferSelectModel } from "drizzle-orm";
-import { department } from "@/db/schema";
 type Props = {
   faculty_id: string;
-  facultyDepartments: TFacultyDepartment[];
+  facultyCurrentDepartments: TFacultyDepartment[];
 };
 export default function UpdateDepartments({
   faculty_id,
-  facultyDepartments,
+  facultyCurrentDepartments,
 }: Props) {
   const [open, setOpen] = useState(false);
   const { toast } = useToast();
   const [departments, setDepartments] = useState<TDepartmentData[]>([]);
   const [toSaveFacultyDepartments, setToSaveFacultyDepartments] = useState<
     TCreateFacultyDep[]
-  >(
-    facultyDepartments.map((dep: TFacultyDepartment) => {
-      const department = dep.department;
-      return {
-        dep_id: dep.dep_id,
-        faculty_id: faculty_id,
-      };
-    })
-  );
+  >([]);
+
+  useEffect(() => {
+    if (facultyCurrentDepartments?.length >= 1) {
+      setToSaveFacultyDepartments(
+        facultyCurrentDepartments.map((dep) => {
+          return {
+            dep_id: dep.dep_id,
+            faculty_id: faculty_id,
+          };
+        })
+      );
+    }
+  }, [facultyCurrentDepartments, faculty_id]);
 
   useEffect(() => {
     if (open && departments?.length <= 0) {
@@ -50,7 +53,7 @@ export default function UpdateDepartments({
   }, [open, departments]);
 
   const handleSave = async () => {
-    if (toSaveFacultyDepartments.length === facultyDepartments.length) return;
+    if (toSaveFacultyDepartments.length <= 0) return;
     const res = await updateFacultyDepartments(
       faculty_id,
       toSaveFacultyDepartments
@@ -106,7 +109,7 @@ export default function UpdateDepartments({
           Update departments
         </Button>
       </DialogTrigger>
-      <DialogContent className="min-w-full md:!min-w-[90%] lg:!min-w-[50rem]">
+      <DialogContent className="min-w-full min-h-[10rem] md:!min-w-[90%] lg:!min-w-[50rem]">
         <DialogHeader>
           <DialogTitle>Update departments</DialogTitle>
           <DialogDescription>
@@ -156,9 +159,7 @@ export default function UpdateDepartments({
         <DialogFooter>
           <Button
             type="button"
-            disabled={
-              toSaveFacultyDepartments.length === facultyDepartments.length
-            }
+            disabled={toSaveFacultyDepartments.length <= 0}
             onClick={handleSave}
           >
             Save changes
