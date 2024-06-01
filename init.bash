@@ -10,6 +10,8 @@ npm run db:migrate & PID=$!
 
 wait $PID
 
-# npm run db:seed
+npm run db:push
+
+npm run db:seed
 
 npm run dev
