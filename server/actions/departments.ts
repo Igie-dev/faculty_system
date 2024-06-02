@@ -11,7 +11,6 @@ import {
 import { FormState } from "./faculties";
 import { v4 as uuid } from "uuid";
 import { revalidatePath } from "next/cache";
-
 export const getAllDepartmentsQuery = async (): Promise<{
   data?: TDepartmentData[];
   error?: string;
