@@ -7,7 +7,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { ERole } from "@/@types/enums";
 import { revalidatePath } from "next/cache";
 import { faculty, facultyDepartment } from "@/server/db/schema";
-import { createFacultySchema, updateFacultySchema } from "@/lib/helper";
+import { createFacultySchema, updateFacultySchema } from "@/server/db/schema";
 const saltRound = 9;
 //Get all faculty data fields
 
@@ -98,19 +98,18 @@ export const createFaculty = async (
       formData.password as string,
       saltRound
     );
-    const facultyData = {
-      faculty_id: generateId,
-      name: `${formData.first_name} ${formData.last_name}`,
-      email: formData.email as string,
-      contact: formData.contact as string,
-      role: formData.role as any,
-      password: hashedPassword,
-    };
 
     const save = await db
       .insert(faculty)
-      .values(facultyData)
-      .returning({ id: faculty.id });
+      .values({
+        faculty_id: generateId,
+        name: `${formData.first_name} ${formData.last_name}`,
+        email: formData.email as string,
+        contact: formData.contact as string,
+        role: formData.role as any,
+        password: hashedPassword,
+      })
+      .returning({ id: faculty.id, faculty_id: faculty.faculty_id });
 
     if (!save[0]?.id) {
       return {
@@ -119,7 +118,7 @@ export const createFaculty = async (
     }
     for (const department of facultyDepartments) {
       await db.insert(facultyDepartment).values({
-        faculty_id: facultyData.faculty_id,
+        faculty_id: save[0]?.faculty_id,
         dep_id: department.dep_id,
       });
     }
