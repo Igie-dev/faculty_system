@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { getDepartments } from "@/server/actions/departments";
+import { getAllDepartmentsQuery } from "@/server/actions/departments";
 type Props = {
   facultyDep: TCreateFacultyDep[];
   setFacultyDep: Dispatch<SetStateAction<TCreateFacultyDep[]>>;
@@ -34,7 +34,7 @@ export default function DepartmentsList({ facultyDep, setFacultyDep }: Props) {
   useEffect(() => {
     if (departments?.length <= 0) {
       (async () => {
-        const res = await getDepartments();
+        const res = await getAllDepartmentsQuery();
         if (res?.data) {
           setDepartments(res.data);
         }

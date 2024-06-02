@@ -136,7 +136,7 @@ export const createFaculty = async (
 };
 
 //Get all faculties
-export const getFaculties = async (): Promise<{
+export const getAllFacultyQuery = async (): Promise<{
   data?: TFacultyData[];
   error?: string;
 }> => {
@@ -189,7 +189,7 @@ export const getFaculties = async (): Promise<{
   }
 };
 
-export const getFaculty = async (
+export const getFacultyQuery = async (
   id: string
 ): Promise<{ data?: TFacultyData; error?: string }> => {
   try {

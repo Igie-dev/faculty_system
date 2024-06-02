@@ -24,7 +24,7 @@ import { useFormState } from "react-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-import { createFacultySchema } from "@/lib/helper";
+import { createFacultySchema } from "@/server/db/schema";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
