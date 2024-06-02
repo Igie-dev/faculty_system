@@ -1,9 +1,9 @@
 import React from "react";
 import Faculties from "./table/Faculties";
 import TableLoader from "./table/TableLoader";
-import { getFaculties } from "@/server/actions/faculties";
+import { getAllFacultyQuery } from "@/server/actions/faculties";
 export default async function page() {
-  const res = await getFaculties();
+  const res = await getAllFacultyQuery();
   if (res?.error) {
     throw new Error(res.error);
   }

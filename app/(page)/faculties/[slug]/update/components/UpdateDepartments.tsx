@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { getDepartments } from "@/server/actions/departments";
+import { getAllDepartmentsQuery } from "@/server/actions/departments";
 import { Checkbox } from "@/components/ui/checkbox";
 import { updateFacultyDepartments } from "@/server/actions/faculties";
 import { useToast } from "@/components/ui/use-toast";
@@ -44,7 +44,7 @@ export default function UpdateDepartments({
   useEffect(() => {
     if (open && departments?.length <= 0) {
       (async () => {
-        const res = await getDepartments();
+        const res = await getAllDepartmentsQuery();
         if (res?.data) {
           setDepartments(res.data);
         }

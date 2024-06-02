@@ -1,10 +1,10 @@
 import React from "react";
-import { getFaculty } from "@/server/actions/faculties";
+import { getFacultyQuery } from "@/server/actions/faculties";
 import UpdateDetailsForm from "./components/UpdateDetailsForm";
 import { X } from "lucide-react";
 import Link from "next/link";
 export default async function page({ params }: { params: { slug: string } }) {
-  const res = await getFaculty(params.slug);
+  const res = await getFacultyQuery(params.slug);
   if (res?.error) {
     throw new Error("Failed to get faculty details!");
   }
