@@ -4,7 +4,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/server/db";
 import { sql } from "drizzle-orm";
 import { facultyDepartment } from "@/server/db/schema";
-export const getDepartments = async (): Promise<{
+export const getAllDepartmentsQuery = async (): Promise<{
   data?: TDepartmentData[];
   error?: string;
 }> => {
