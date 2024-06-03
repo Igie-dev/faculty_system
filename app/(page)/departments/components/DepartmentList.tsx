@@ -1,38 +1,42 @@
-"use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import DepartmentCard from "./DepartmentCard";
-import { getAllDepartmentsQuery } from "@/server/actions/departments";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import DepartmentListLoader from "./DepartmentListLoader";
-export default function DepartmentList() {
-  const {
-    data: departments,
-    error,
-    isLoading,
-  } = useSuspenseQuery({
-    queryKey: ["departments"],
-    queryFn: async (): Promise<TDepartmentData[]> => {
-      const res = await getAllDepartmentsQuery();
-      if (res?.error) {
-        throw new Error(res.error);
-      }
-      return res?.data as TDepartmentData[];
-    },
-  });
+import { useSearchParams } from "next/navigation";
+import EmptyBox from "@/components/EmptyBox";
+import { debounce } from "lodash";
+type Props = {
+  departments: TDepartmentData[];
+};
+export default function DepartmentList({ departments }: Props) {
+  const searchParams = useSearchParams();
+  const [filteredDep, setFilteredDep] = useState<TDepartmentData[]>([]);
+  const filter = searchParams.get("dep");
 
-  return (
-    <div className="w-full min-h-0 flex-1 justify-center p-2 overflow-y-auto">
-      {isLoading ? (
-        <DepartmentListLoader />
-      ) : departments.length >= 1 ? (
-        <ul className="flex flex-wrap w-full gap-2">
-          {departments?.map((dep) => {
-            return <DepartmentCard key={dep.id} department={dep} />;
-          })}
-        </ul>
-      ) : (
-        <p>Empty</p>
-      )}
-    </div>
+  useEffect(() => {
+    if (!filter) {
+      setFilteredDep(departments);
+    } else {
+      const filterDepartments = () => {
+        const filtered = departments.filter((dep) => {
+          const lCaseAcro = dep.acronym.toLowerCase();
+          const lCaseDep = dep.department.toLowerCase();
+          const lCaseFil = filter.toLowerCase();
+          return lCaseAcro.includes(lCaseFil) || lCaseDep.includes(lCaseFil);
+        });
+        setFilteredDep(filtered);
+      };
+      const debouncedFilterDepartments = debounce(filterDepartments, 1000);
+      debouncedFilterDepartments();
+    }
+  }, [departments, filter]);
+
+  if (departments.length <= 0) return <EmptyBox classNames="mt-10" />;
+  return filteredDep.length >= 1 ? (
+    <ul className="flex flex-wrap w-full h-fit py-2 gap-2 md:p-2">
+      {filteredDep?.map((dep) => {
+        return <DepartmentCard key={dep.id} department={dep} />;
+      })}
+    </ul>
+  ) : (
+    <p className="mt-10 text-sm">No result!</p>
   );
 }
