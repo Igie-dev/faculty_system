@@ -16,13 +16,30 @@ import Table from "./Table";
 import Header from "./Header";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-type Props = {
-  faculties: TFacultyData[];
-};
-export default function Faculties({ faculties }: Props) {
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getAllFacultyQuery } from "@/server/actions/faculties";
+import TableLoader from "./TableLoader";
+
+export default function Faculties() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+
+  const {
+    data: faculties,
+    error,
+    isLoading,
+  } = useSuspenseQuery({
+    queryKey: ["faculties"],
+    queryFn: async (): Promise<TFacultyData[]> => {
+      const res = await getAllFacultyQuery();
+      if (res?.error) {
+        throw new Error(res?.error);
+      }
+      return res?.data as TFacultyData[];
+    },
+  });
+
   const col = columns as ColumnDef<unknown, any>[];
   const table = useReactTable({
     data: faculties,
@@ -47,34 +64,36 @@ export default function Faculties({ faculties }: Props) {
     },
   });
 
-  return (
-    <section className="flex flex-col items-center w-full h-full">
-      <Header table={table} facultiesLength={faculties.length} />
-      <Table table={table} column={col} />
-      {faculties?.length >= 20 ? (
-        <footer className="flex w-full px-4 items-center justify-end py-4 space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            className="flex items-center gap-1 py-2 pl-2 pr-3"
-          >
-            <ChevronLeft size={20} />
-            <span>Previous</span>
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            className="flex items-center gap-1 py-2 pl-3 pr-2"
-          >
-            <span>Next</span>
-            <ChevronRight size={20} />
-          </Button>
-        </footer>
-      ) : null}
-    </section>
-  );
+  if (isLoading) return <TableLoader />;
+  if (faculties)
+    return (
+      <section className="flex flex-col items-center w-full h-full">
+        <Header table={table} facultiesLength={faculties.length} />
+        <Table table={table} column={col} />
+        {faculties?.length >= 20 ? (
+          <footer className="flex w-full px-4 items-center justify-end py-4 space-x-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.previousPage()}
+              disabled={!table.getCanPreviousPage()}
+              className="flex items-center gap-1 py-2 pl-2 pr-3"
+            >
+              <ChevronLeft size={20} />
+              <span>Previous</span>
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => table.nextPage()}
+              disabled={!table.getCanNextPage()}
+              className="flex items-center gap-1 py-2 pl-3 pr-2"
+            >
+              <span>Next</span>
+              <ChevronRight size={20} />
+            </Button>
+          </footer>
+        ) : null}
+      </section>
+    );
 }
