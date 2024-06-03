@@ -24,10 +24,10 @@ export default function NavLinkWrapper({
       size="lg"
       asChild
       data-title={title}
-      className={`nav_link relative gap-4 flex items-center w-full lg:w-full text-sm rounded-none ${
+      className={`nav_link relative gap-4 flex items-center h-14 w-full lg:w-full text-sm rounded-none ${
         isExpanded
           ? "px-4 rounded-md justify-start"
-          : "justify-center rounded-none px-0"
+          : "justify-center rounded-md px-0"
       } ${
         pathname.startsWith(`${path}`)
           ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
