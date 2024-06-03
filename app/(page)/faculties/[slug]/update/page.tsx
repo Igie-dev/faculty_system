@@ -23,8 +23,9 @@ export default async function page({ params }: { params: { slug: string } }) {
           <div className="flex flex-col">
             <span className="text-xl font-semibold">Update account</span>
             <span className="text-sm text-muted-foreground">
-              This action will update the faculty members details. Please review
-              all changes carefully before proceeding.
+              Use this form to update the details of an existing faculty
+              account. Please modify the necessary information and click{" "}
+              <strong>Update</strong> to save the changes.
             </span>
           </div>
         </header>

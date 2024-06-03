@@ -172,8 +172,8 @@ export default function UpdateDetailsForm({ faculty }: Props) {
         <div className="flex items-center !mt-10 flex-row-reverse">
           <FormButtons
             cancelLink="/faculties"
-            cancelText="cancel"
-            submitText="submit"
+            cancelText="Cancel"
+            submitText="Update"
           />
         </div>
       </form>

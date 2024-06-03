@@ -15,7 +15,7 @@ type Props = {
 };
 export default function Header({ table, facultiesLength }: Props) {
   return (
-    <header className="flex flex-col items-start justify-between w-full gap-5 p-2 border-b bg-background">
+    <header className="flex flex-col items-start justify-between w-full gap-10 p-2 pb-5 border-b md:p-4 bg-background">
       <h1 className="text-lg font-extrabold fancy_font md:text-2xl">
         Faculties
       </h1>
@@ -59,9 +59,9 @@ export default function Header({ table, facultiesLength }: Props) {
             </p>
           </div>
         </div>
-        <Button size="sm" asChild>
+        <Button asChild>
           <Link href="/faculties/createaccount">
-            <span>Create account</span>
+            <span>Create</span>
           </Link>
         </Button>
       </div>

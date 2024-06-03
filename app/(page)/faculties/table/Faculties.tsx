@@ -18,18 +18,14 @@ import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getAllFacultyQuery } from "@/server/actions/faculties";
-import TableLoader from "./TableLoader";
+import FacutiesTableLoader from "./FacutiesTableLoader";
 
 export default function Faculties() {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
-  const {
-    data: faculties,
-    error,
-    isLoading,
-  } = useSuspenseQuery({
+  const { data: faculties, isFetching } = useSuspenseQuery({
     queryKey: ["faculties"],
     queryFn: async (): Promise<TFacultyData[]> => {
       const res = await getAllFacultyQuery();
@@ -64,7 +60,7 @@ export default function Faculties() {
     },
   });
 
-  if (isLoading) return <TableLoader />;
+  if (isFetching) return <FacutiesTableLoader />;
   if (faculties)
     return (
       <section className="flex flex-col items-center w-full h-full">

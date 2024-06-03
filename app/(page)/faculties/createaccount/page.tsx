@@ -17,8 +17,9 @@ export default function page() {
           <div className="flex flex-col">
             <span className="text-xl font-semibold">Create new account</span>
             <span className="text-sm text-muted-foreground">
-              This action will create a new faculty account. Please ensure all
-              provided information is accurate before proceeding.
+              Use this form to create a new faculty account. Please provide the
+              necessary information and click <strong>Submit</strong> to add the
+              new faculty member.
             </span>
           </div>
         </header>

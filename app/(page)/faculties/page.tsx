@@ -1,14 +1,10 @@
 import React from "react";
 import Faculties from "./table/Faculties";
 import { getAllFacultyQuery } from "@/server/actions/faculties";
-import {
-  QueryClient,
-  HydrationBoundary,
-  dehydrate,
-} from "@tanstack/react-query";
-import makeQueryClient from "@/app/service/queryClient";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+import { getQueryClient } from "@/app/service/queryClient";
 export default async function page() {
-  const queryClient = makeQueryClient();
+  const queryClient = getQueryClient();
   await queryClient.prefetchQuery({
     queryKey: ["faculties"],
     queryFn: async (): Promise<TFacultyData[]> => {

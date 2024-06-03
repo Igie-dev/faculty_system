@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { getAllDepartmentsQuery } from "@/server/actions/departments";
 import { Checkbox } from "@/components/ui/checkbox";
-import { updateFacultyDepartments } from "@/server/actions/faculties";
+import { updateFacultyDepartments } from "@/server/actions/departments";
 import { useToast } from "@/components/ui/use-toast";
 type Props = {
   faculty_id: string;
@@ -63,9 +63,9 @@ export default function UpdateDepartments({
       toast({
         variant: res.error ? "destructive" : "default",
         title: res.message
-          ? "Create account success!"
+          ? "Update faculty department success!"
           : res.error
-          ? "Create account failed!"
+          ? "Update faculty department failed!"
           : "",
         description: res.message ?? res.error ?? "",
       });
