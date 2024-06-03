@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -23,22 +22,28 @@ import { createDepartmentSchema } from "@/server/db/schema";
 import { useFormState } from "react-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createDepartment } from "@/server/actions/departments";
+import { updateDepartment } from "@/server/actions/departments";
 import { useToast } from "@/components/ui/use-toast";
-
-export default function CreateDepartment() {
+import { Pencil } from "lucide-react";
+import { DialogDescription } from "@radix-ui/react-dialog";
+type Props = {
+  id: number;
+  acronym: string;
+  department: string;
+};
+export default function UpdateDepartment({ id, acronym, department }: Props) {
   const [open, setOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
-  const [state, formAction] = useFormState(createDepartment, {
+  const [state, formAction] = useFormState(updateDepartment, {
     message: "",
   });
 
   const form = useForm<z.infer<typeof createDepartmentSchema>>({
     resolver: zodResolver(createDepartmentSchema),
     defaultValues: {
-      acronym: "",
-      department: "",
+      acronym: acronym,
+      department: department,
       ...(state?.fields ?? {}),
     },
   });
@@ -48,9 +53,9 @@ export default function CreateDepartment() {
       toast({
         variant: state.error ? "destructive" : "default",
         title: state.message
-          ? "Create department success!"
+          ? "Update department success!"
           : state.error
-          ? "Create department failed!"
+          ? "Update department failed!"
           : "",
         description: state.message ?? state.error ?? "",
       });
@@ -59,7 +64,6 @@ export default function CreateDepartment() {
       }
     }
   }, [state, toast]);
-
   return (
     <Form {...form}>
       <Dialog
@@ -70,7 +74,9 @@ export default function CreateDepartment() {
         }}
       >
         <DialogTrigger asChild>
-          <Button>Create</Button>
+          <Button size="icon" variant="ghost">
+            <Pencil size={20} />
+          </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <form
@@ -83,12 +89,12 @@ export default function CreateDepartment() {
             <DialogHeader>
               <DialogTitle>Create new department</DialogTitle>
               <DialogDescription>
-                Use this form to create a new department. Please provide the
-                necessary information and click <strong>Create</strong> to add
-                the department.
+                Use this form to update the details of an existing department.
+                Please modify the necessary information and click{" "}
+                <strong>Update</strong> to save the changes.
               </DialogDescription>
             </DialogHeader>
-            <span className="text-sm text-destructive h-5 w-fit font-semibold flex">
+            <span className="text-sm text-destructive  h-5 w-fit font-semibold flex">
               {state?.error ? (
                 <p className="font-normal">Error: {` ${state?.error}`}</p>
               ) : null}
@@ -139,10 +145,11 @@ export default function CreateDepartment() {
                 onClick={async (evt) => {
                   evt.preventDefault();
                   const formData = new FormData(formRef.current!);
+                  formData.append("id", JSON.stringify(id));
                   formAction(formData);
                 }}
               >
-                Create
+                Update
               </Button>
             </DialogFooter>
           </form>

@@ -8,9 +8,9 @@ import {
   primaryKey,
   uuid,
 } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
 import { facultyDepartment } from "./faculty";
 import { announcement } from "./announcement";
+import { z } from "zod";
 export const department = pgTable(
   "department",
   {
@@ -71,4 +71,15 @@ export const departmentRelations = relations(department, ({ many }) => ({
 }));
 
 ///Type schema
-export const createDepartmentSchema = createInsertSchema(department);
+export const createDepartmentSchema = z.object({
+  acronym: z
+    .string({
+      invalid_type_error: "Last name must be string!",
+    })
+    .min(1, { message: "This field must be filled in!" }),
+  department: z
+    .string({
+      invalid_type_error: "Last name must be string!",
+    })
+    .min(1, { message: "This field must be filled in!" }),
+});
