@@ -75,7 +75,7 @@ export default function FacultyDepartments({ faculty_id }: Props) {
               >
                 <span className="font-semibold">{dep.department.acronym}</span>
                 <span className="text-muted-foreground !ml-5">
-                  {dep.department.department}
+                  {dep.department.name}
                 </span>
               </li>
             );

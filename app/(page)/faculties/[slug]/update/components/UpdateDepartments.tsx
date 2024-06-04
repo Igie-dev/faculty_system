@@ -144,7 +144,7 @@ export default function UpdateDepartments({
                     />
                     <span className="font-semibold">{dep.acronym}</span>
                     <span className="text-muted-foreground !ml-5">
-                      {dep.department}
+                      {dep.name}
                     </span>
                   </li>
                 );

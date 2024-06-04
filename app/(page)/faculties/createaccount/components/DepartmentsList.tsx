@@ -67,9 +67,7 @@ export default function DepartmentsList({ facultyDep, setFacultyDep }: Props) {
                   onCheckedChange={(e) => handleCleck(dep.dep_id, e as boolean)}
                 />
                 <span className="font-semibold">{dep.acronym}</span>
-                <span className="text-muted-foreground !ml-5">
-                  {dep.department}
-                </span>
+                <span className="text-muted-foreground !ml-5">{dep.name}</span>
               </li>
             );
           })}
