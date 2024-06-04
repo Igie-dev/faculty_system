@@ -14,7 +14,7 @@ export default function DesktopNav() {
   return (
     <div
       className={`hidden lg:flex py-2 flex-col ${
-        isExpanded ? "lg:w-[15rem]" : "lg:w-[4rem] px-1"
+        isExpanded ? "lg:w-[15rem]" : "lg:w-[5rem] px-1"
       }`}
     >
       <div
