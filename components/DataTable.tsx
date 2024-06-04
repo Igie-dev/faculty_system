@@ -60,7 +60,10 @@ export default function DataTable<TData, TValue>({
           ))
         ) : (
           <TableRow>
-            <TableCell colSpan={columns?.length} className="h-24 text-center">
+            <TableCell
+              colSpan={columns?.length}
+              className="pt-10 text-center text-sm font-semibold text-muted-foreground"
+            >
               No results.
             </TableCell>
           </TableRow>

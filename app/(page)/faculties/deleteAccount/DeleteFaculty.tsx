@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
-import { deleteFaculty } from "@/server/actions/faculties";
+import { deleteFacultyByFacultyId } from "@/server/actions/faculties";
 import { useToast } from "@/components/ui/use-toast";
 type Props = {
   facultyId: string;
@@ -30,7 +30,7 @@ export default function DeleteFaculty({
 }: Props) {
   const { toast } = useToast();
   const deleteAccount = async () => {
-    const res = await deleteFaculty(facultyId);
+    const res = await deleteFacultyByFacultyId(facultyId);
     if (res?.message || res?.error) {
       toast({
         variant: res.error ? "destructive" : "default",
