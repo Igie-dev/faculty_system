@@ -157,15 +157,6 @@ export default function Nav({ isExpanded, session }: Props) {
         </NavLinkWrapper>
       ) : null}
       <div className="flex flex-col gap-2 pt-5 mt-5 border-t h-fit">
-        <NavLinkWrapper isExpanded={isExpanded} path="/profile" title="Profile">
-          <>
-            <CircleUserRound absoluteStrokeWidth size={22} />
-            <span className={` ${isExpanded ? "flex" : "hidden"}`}>
-              Profile
-            </span>
-          </>
-        </NavLinkWrapper>
-
         {isDean || isTeacher ? (
           <NavLinkWrapper isExpanded={isExpanded} path="/mytask" title="MyTask">
             <>
@@ -191,6 +182,14 @@ export default function Nav({ isExpanded, session }: Props) {
             </>
           </NavLinkWrapper>
         ) : null}
+        <NavLinkWrapper isExpanded={isExpanded} path="/profile" title="Profile">
+          <>
+            <CircleUserRound absoluteStrokeWidth size={22} />
+            <span className={` ${isExpanded ? "flex" : "hidden"}`}>
+              Profile
+            </span>
+          </>
+        </NavLinkWrapper>
       </div>
       <div className="flex flex-col gap-2 pt-5 mt-10 flex-1  justify-end pb-5 h-fit">
         <SignOutDialog>
