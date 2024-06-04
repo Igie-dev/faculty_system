@@ -160,19 +160,19 @@ export const getAllFacultyQuery = async (): Promise<{
         updatedAt: true,
         role: true,
       },
-      with: {
-        departments: {
-          with: {
-            department: true,
-          },
-        },
-        announcements: true,
-        submissions: true,
-        tasks: true,
-        files: true,
-        archiveAnnouncements: true,
-        notifications: true,
-      },
+      // with: {
+      //   departments: {
+      //     with: {
+      //       department: true,
+      //     },
+      //   },
+      //   announcements: true,
+      //   submissions: true,
+      //   tasks: true,
+      //   files: true,
+      //   archiveAnnouncements: true,
+      //   notifications: true,
+      // },
     });
 
     if (faculties?.length <= 0) {
@@ -306,7 +306,7 @@ export const updateFaculty = async (
   }
 };
 
-export const deleteFaculty = async (
+export const deleteFacultyByFacultyId = async (
   id: string
 ): Promise<{ message?: string; error?: string }> => {
   try {
@@ -338,15 +338,7 @@ export const deleteFaculty = async (
       };
     }
 
-    const deletFaculty = await db
-      .delete(faculty)
-      .where(sql`${faculty.faculty_id} = ${id}`);
-
-    if (!deletFaculty) {
-      return {
-        error: "Something went wrong!",
-      };
-    }
+    await db.delete(faculty).where(sql`${faculty.faculty_id} = ${id}`);
 
     revalidatePath("/faculties");
     return {

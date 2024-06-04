@@ -10,34 +10,7 @@ import {
   faculty,
 } from "@/server/db/schema";
 import { FormState } from "./faculties";
-import { v4 as uuid } from "uuid";
 import { revalidatePath } from "next/cache";
-export const getAllDepartmentsQuery = async (): Promise<{
-  data?: TDepartmentData[];
-  error?: string;
-}> => {
-  try {
-    const { role: userRole } = await getCurrentUser();
-
-    if (userRole !== ERole.IS_ADMIN) {
-      return {
-        error: "Unauthorized user!",
-      };
-    }
-    const departments = await db.query.department.findMany({
-      with: {
-        faculties: true,
-        announcements: true,
-      },
-    });
-
-    return { data: departments };
-  } catch (error) {
-    return {
-      error: "Something went wrong!",
-    };
-  }
-};
 
 export const createDepartment = async (
   prevState: FormState,
@@ -95,7 +68,6 @@ export const createDepartment = async (
     const save = await db
       .insert(department)
       .values({
-        dep_id: uuid(),
         acronym: formData.acronym as string,
         name: formData.name as string,
       })
@@ -108,7 +80,7 @@ export const createDepartment = async (
     revalidatePath("/departments");
     if (!save[0]?.id) {
       return {
-        error: "Something went wrong!",
+        error: "Failed to save department!",
       };
     }
     return {
@@ -116,6 +88,28 @@ export const createDepartment = async (
     };
   } catch (error) {
     console.log(error);
+    return {
+      error: "Something went wrong!",
+    };
+  }
+};
+
+export const getAllDepartmentsQuery = async (): Promise<{
+  data?: TDepartmentData[];
+  error?: string;
+}> => {
+  try {
+    const { role: userRole } = await getCurrentUser();
+
+    if (userRole !== ERole.IS_ADMIN) {
+      return {
+        error: "Unauthorized user!",
+      };
+    }
+    const departments = await db.query.department.findMany();
+
+    return { data: departments };
+  } catch (error) {
     return {
       error: "Something went wrong!",
     };
@@ -140,15 +134,7 @@ export const deleteDepartmentById = async (
       };
     }
 
-    const deleted = await db
-      .delete(department)
-      .where(sql`${department.id} = ${id}`);
-
-    if (!deleted) {
-      return {
-        error: "Failed to delete faculty!",
-      };
-    }
+    await db.delete(department).where(eq(department.id, id));
 
     await db
       .delete(facultyDepartment)
