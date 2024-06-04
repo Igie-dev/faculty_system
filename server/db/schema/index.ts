@@ -3,9 +3,11 @@ import * as departmentSchema from "./department";
 import * as announcementSchema from "./announcement";
 import * as fileSchema from "./file";
 import * as submissionSchema from "./submission";
-import * as categorySchema from "./category";
+import * as fileCategorySchema from "./filecategory";
 import * as taskSchema from "./task";
 import * as notificationSchema from "./notification";
+import * as semesterSchema from "./semester";
+import * as schoolyearSchema from "./schoolyear";
 
 export const {
   facultyRole,
@@ -38,8 +40,12 @@ export const {
   submissionRelations,
 } = submissionSchema;
 
-export const { category } = categorySchema;
+export const { fileCategory, categoryRelations } = fileCategorySchema;
 
 export const { task, taskRelations } = taskSchema;
+
+export const { schoolyear, schoolyearRelations } = schoolyearSchema;
+
+export const { semester, semesterRelations } = semesterSchema;
 
 export const { notification, notificationRelations } = notificationSchema;

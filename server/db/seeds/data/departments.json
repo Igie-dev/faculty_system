@@ -1,0 +1,34 @@
+[
+  {
+    "acronym": "CCS",
+    "name": "College of Computer Studies"
+  },
+  {
+    "acronym": "CHS",
+    "name": "College of Health Science"
+  },
+  {
+    "acronym": "ISHTM",
+    "name": "International School of Hotel Tourism Management"
+  },
+  {
+    "acronym": "CoTE",
+    "name": "College of Teacher Education"
+  },
+  {
+    "acronym": "CoE",
+    "name": "College of Engineering"
+  },
+  {
+    "acronym": "CBA",
+    "name": "College of Business & Accountancy"
+  },
+  {
+    "acronym": "CoCA",
+    "name": "College of Criminology & Administration"
+  },
+  {
+    "acronym": "CAS",
+    "name": "College of Arts and Science"
+  }
+]

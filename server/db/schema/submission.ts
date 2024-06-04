@@ -10,9 +10,10 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { faculty } from "./faculty";
-import { category } from "./category";
+import { fileCategory } from "./filecategory";
 import { department } from "./department";
-
+import { semester } from "./semester";
+import { schoolyear } from "./schoolyear";
 export const submissionStatus = pgEnum("submissionStatus", [
   "Pending",
   "Disapproved",
@@ -28,6 +29,12 @@ export const submission = pgTable(
     description: text("description").notNull(),
     remarks: text("remarks"),
     status: submissionStatus("status").default("Pending"),
+    school_year_id: uuid("school_year_id")
+      .notNull()
+      .references(() => schoolyear.school_year_id, { onDelete: "cascade" }),
+    semester_id: uuid("semester_id").references(() => semester.semester_id, {
+      onDelete: "cascade",
+    }),
     createdAt: timestamp("createdAt", { mode: "string" })
       .notNull()
       .defaultNow(),
@@ -38,7 +45,7 @@ export const submission = pgTable(
       () => faculty.faculty_id,
       { onDelete: "cascade" }
     ),
-    category_id: uuid("category_id").references(() => category.category_id),
+    category_id: uuid("category_id").references(() => fileCategory.category_id),
   },
   (t) => {
     return {
@@ -62,6 +69,17 @@ export const submissionRelations = relations(submission, ({ one, many }) => ({
     fields: [submission.faculty_id],
     references: [faculty.faculty_id],
   }),
+  filecategory: one(fileCategory, {
+    fields: [submission.category_id],
+    references: [fileCategory.category_id],
+  }),
+  schoolyear: one(schoolyear, {
+    fields: [submission.school_year_id],
+    references: [schoolyear.school_year_id],
+  }),
+  semester: one(semester, {
+    fields: [submission.semester_id],
+    references: [semester.semester_id],
+  }),
   departments: many(submissionDepartment),
-  category: many(category),
 }));

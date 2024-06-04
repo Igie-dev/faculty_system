@@ -1,0 +1,38 @@
+[
+  {
+    "name": "Course Materials",
+    "description": "Documents and resources used for teaching and facilitating courses, including syllabi, lecture notes, and assignments."
+  },
+  {
+    "name": "Assessment Materials",
+    "description": "Tools and documents used to evaluate and grade student performance, such as exams, quizzes, and grading rubrics."
+  },
+  {
+    "name": "Research Materials",
+    "description": "Documents related to faculty research activities, including proposals, data sets, and published papers."
+  },
+  {
+    "name": "Administrative Documents",
+    "description": "Papers and records necessary for departmental administration, including meeting minutes, annual reports, and budget reports."
+  },
+  {
+    "name": "Professional Development",
+    "description": "Materials and records related to faculty professional growth and skill enhancement, including workshop materials and certificates."
+  },
+  {
+    "name": "Service and Outreach",
+    "description": "Documents pertaining to faculty involvement in community service and outreach activities, such as community engagement plans and partnership agreements."
+  },
+  {
+    "name": "Faculty Evaluation and Development",
+    "description": "Records and materials related to the evaluation and development of faculty performance, including self-evaluation reports and teaching portfolios."
+  },
+  {
+    "name": "Student Supervision",
+    "description": "Documents and logs related to the supervision of student research and academic progress, such as thesis proposals and progress reports."
+  },
+  {
+    "name": "Miscellaneous",
+    "description": "Various other documents that do not fit into the above categories, including correspondence, newsletters, and policy documents."
+  }
+]

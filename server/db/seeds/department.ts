@@ -1,20 +1,18 @@
-import departments from "@/server/db/seeds/data/department.json";
+import departments from "./data/departments.json";
 import { department } from "@/server/db/schema";
-import { v4 as uuid } from "uuid";
-export default async function seed(db: any) {
-  return await Promise.all(
-    departments.map(async (departmentData) => {
-      const saveDepartment = await db
-        .insert(department)
-        .values({
-          dep_id: uuid(),
-          acronym: departmentData.acronym,
-          department: departmentData.department,
-        })
-        .returning({ id: department.id });
-      if (!saveDepartment[0]?.id) {
-        throw Error(`Failed to save department ${departmentData.acronym}!`);
-      }
-    })
-  );
+import type { db } from "@/server/db/seed";
+
+export default async function seed(db: db) {
+  for (let dep of departments) {
+    const saveDepartment = await db
+      .insert(department)
+      .values({
+        acronym: dep.acronym,
+        name: dep.name,
+      })
+      .returning({ id: department.id });
+    if (!saveDepartment[0]?.id) {
+      throw Error(`Failed to save department ${dep.acronym}!`);
+    }
+  }
 }

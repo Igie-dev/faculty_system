@@ -15,9 +15,9 @@ export const department = pgTable(
   "department",
   {
     id: serial("id").primaryKey(),
-    dep_id: uuid("dep_id").notNull().unique(),
+    dep_id: uuid("dep_id").defaultRandom().notNull().unique(),
     acronym: varchar("acronym", { length: 255 }).notNull().unique(),
-    department: varchar("department", { length: 255 }).notNull().unique(),
+    name: varchar("department", { length: 255 }).notNull().unique(),
     createdAt: timestamp("createdAt", { mode: "string" })
       .notNull()
       .defaultNow(),
@@ -77,7 +77,7 @@ export const createDepartmentSchema = z.object({
       invalid_type_error: "Last name must be string!",
     })
     .min(1, { message: "This field must be filled in!" }),
-  department: z
+  name: z
     .string({
       invalid_type_error: "Last name must be string!",
     })

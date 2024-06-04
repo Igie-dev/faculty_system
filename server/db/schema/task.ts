@@ -30,7 +30,7 @@ export const task = pgTable(
   },
   (t) => {
     return {
-      taskIndex: uniqueIndex("taslIndex").on(t.task_id),
+      taskIndex: uniqueIndex("taskIndex").on(t.task_id),
     };
   }
 );

@@ -1,9 +1,13 @@
 import pg from "pg";
 import { Table, getTableName, sql } from "drizzle-orm";
-import faculty from "./seeds/faculty.js";
-import department from "./seeds/department";
 import * as schema from "@/server/db/schema";
 import { drizzle } from "drizzle-orm/node-postgres";
+import faculty from "./seeds/faculty.js";
+import department from "./seeds/department";
+import schoolyear from "./seeds/schoolyear";
+import semester from "./seeds/semester";
+import filecategory from "./seeds/filecategory.js";
+
 import "dotenv/config";
 
 const pool = new pg.Pool({
@@ -20,17 +24,24 @@ async function resetTable(db: db, table: Table) {
 }
 
 (async () => {
-  console.log("Reset table started");
-  for (const table of [schema.faculty, schema.department]) {
-    await resetTable(db, table);
+  try {
+    console.log("Reset table started");
+    for (const table of [schema.faculty, schema.department]) {
+      await resetTable(db, table);
+    }
+    console.log("Seeding started");
+    await Promise.all([
+      department(db),
+      faculty(db),
+      schoolyear(db),
+      semester(db),
+      filecategory(db),
+    ]);
+    console.log("Seeding done");
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  } finally {
+    await pool.end();
   }
-  console.log("Seeding started");
-  await faculty(db);
-
-  await department(db);
-  console.log("Seeding done");
-  await pool.end();
-})().catch((error) => {
-  console.log(error);
-  process.exit(0);
-});
+})();

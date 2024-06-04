@@ -6,13 +6,14 @@ import {
   varchar,
   timestamp,
   text,
+  uuid,
 } from "drizzle-orm/pg-core";
 import { faculty } from "./faculty";
 export const notification = pgTable(
   "notification",
   {
     id: serial("id").primaryKey(),
-    notif_id: varchar("notif_id", { length: 255 }).notNull().unique(),
+    notif_id: uuid("notif_id").defaultRandom().notNull().unique(),
     title: varchar("title", { length: 255 }).notNull().unique(),
     description: text("description").notNull(),
     createdAt: timestamp("createdAt", { mode: "string" })
@@ -25,7 +26,7 @@ export const notification = pgTable(
   },
   (t) => {
     return {
-      notifIndex: uniqueIndex("notidIndex").on(t.notif_id),
+      notifIndex: uniqueIndex("notifIndex").on(t.notif_id),
     };
   }
 );
