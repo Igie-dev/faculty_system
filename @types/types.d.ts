@@ -2,7 +2,6 @@ import { ESubmussitionStatus } from "@/enum";
 import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import {
   announcement,
-  category,
   department,
   departmentAnnouncement,
   faculty,
@@ -17,6 +16,9 @@ import {
   submissionDepartment,
   task,
   facultyArchiveAnnouncement,
+  fileCategory,
+  schoolyear,
+  semester,
 } from "@/server/db/schema";
 declare global {
   type TCreateFaculty = {
@@ -90,14 +92,22 @@ declare global {
   type TSubmissionData = InferSelectModel<submission> & {
     faculty?: InferSelectModel<typeof faculty>;
     departments?: InferSelectModel<typeof submissionDepartment>[];
-    category?: InferSelectModel<typeof category>[];
+    filecategory?: InferSelectModel<typeof fileCategory>;
+    schoolyear?: InferSelectModel<typeof schoolyear>;
+    semester?: InferSelectModel<typeof semester>;
   };
 
   type TNotificationData = InferSelectModel<typeof notification> & {
     faculty?: InferSelectModel<typeof faculty>;
   };
 
-  type TCategoryData = InferSelectModel<typeof category>;
+  type TFileCategoryData = InferSelectModel<typeof fileCategory> & {
+    submissions?: InferSelectModel<typeof submission>[];
+  };
+
+  type TSemesterData = InferSelectModel<typeof semester>;
+
+  type TSchoolYearData = InferSelectModel<typeof schoolyear>;
 
   type TUploadFile = {
     file_id?: string;
