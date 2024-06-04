@@ -17,9 +17,9 @@ import { useToast } from "@/components/ui/use-toast";
 type Props = {
   id: number;
   acronym: string;
-  department: string;
+  name: string;
 };
-export default function DeleteDepartment({ id, acronym, department }: Props) {
+export default function DeleteDepartment({ id, acronym, name }: Props) {
   const { toast } = useToast();
   const handleDelete = async () => {
     const res = await deleteDepartmentById(id);
@@ -54,7 +54,7 @@ export default function DeleteDepartment({ id, acronym, department }: Props) {
           <span className="text-sm text-muted-foreground">Details </span>
           <div className="flex flex-col items-start mt-2 gap-2 text-sm">
             <span className="font-semibold text-lg">{acronym}</span>
-            <span>{department}</span>
+            <span>{name}</span>
           </div>
         </div>
         <AlertDialogFooter>

@@ -29,9 +29,9 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 type Props = {
   id: number;
   acronym: string;
-  department: string;
+  name: string;
 };
-export default function UpdateDepartment({ id, acronym, department }: Props) {
+export default function UpdateDepartment({ id, acronym, name }: Props) {
   const [open, setOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
@@ -43,7 +43,7 @@ export default function UpdateDepartment({ id, acronym, department }: Props) {
     resolver: zodResolver(createDepartmentSchema),
     defaultValues: {
       acronym: acronym,
-      department: department,
+      name: name,
       ...(state?.fields ?? {}),
     },
   });
@@ -122,7 +122,7 @@ export default function UpdateDepartment({ id, acronym, department }: Props) {
               <div className="w-full flex flex-col">
                 <FormField
                   control={form.control}
-                  name="department"
+                  name="name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Department</FormLabel>

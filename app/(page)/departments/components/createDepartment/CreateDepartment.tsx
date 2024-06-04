@@ -38,7 +38,7 @@ export default function CreateDepartment() {
     resolver: zodResolver(createDepartmentSchema),
     defaultValues: {
       acronym: "",
-      department: "",
+      name: "",
       ...(state?.fields ?? {}),
     },
   });
@@ -116,7 +116,7 @@ export default function CreateDepartment() {
               <div className="w-full flex flex-col">
                 <FormField
                   control={form.control}
-                  name="department"
+                  name="name"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Department</FormLabel>

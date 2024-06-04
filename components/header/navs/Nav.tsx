@@ -3,9 +3,11 @@ import React, { useLayoutEffect, useState } from "react";
 import { Button } from "../../ui/button";
 import {
   CalendarClock,
+  CalendarDays,
   CircleUserRound,
   Download,
   FileText,
+  GraduationCap,
   Grid2X2,
   Home,
   List,
@@ -86,13 +88,41 @@ export default function Nav({ isExpanded, session }: Props) {
       {isAdmin ? (
         <NavLinkWrapper
           isExpanded={isExpanded}
-          path="/categories"
-          title="Categories"
+          path="/filecategory"
+          title="File Category"
         >
           <>
             <List absoluteStrokeWidth size={22} />
             <span className={` ${isExpanded ? "flex" : "hidden"}`}>
-              Categories
+              File Category
+            </span>
+          </>
+        </NavLinkWrapper>
+      ) : null}
+      {isAdmin ? (
+        <NavLinkWrapper
+          isExpanded={isExpanded}
+          path="/schoolyear"
+          title="School year"
+        >
+          <>
+            <CalendarDays absoluteStrokeWidth size={22} />
+            <span className={` ${isExpanded ? "flex" : "hidden"}`}>
+              School Year
+            </span>
+          </>
+        </NavLinkWrapper>
+      ) : null}
+      {isAdmin ? (
+        <NavLinkWrapper
+          isExpanded={isExpanded}
+          path="/semesters"
+          title="Semesters"
+        >
+          <>
+            <GraduationCap absoluteStrokeWidth size={22} />
+            <span className={` ${isExpanded ? "flex" : "hidden"}`}>
+              Semesters
             </span>
           </>
         </NavLinkWrapper>

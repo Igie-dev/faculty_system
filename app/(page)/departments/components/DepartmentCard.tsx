@@ -12,12 +12,12 @@ export default function DepartmentCard({ department }: Props) {
         <UpdateDepartment
           id={department.id}
           acronym={department.acronym}
-          department={department.department}
+          name={department.name}
         />
         <DeleteDepartment
           id={department.id}
           acronym={department.acronym}
-          department={department.department}
+          name={department.name}
         />
       </div>
       <div className="flex w-full flex-col p-2 space-y-2">
@@ -25,7 +25,7 @@ export default function DepartmentCard({ department }: Props) {
           {department.acronym}
         </span>
         <span className="text-sm truncate w-full overflow-x-hidden">
-          {department.department}
+          {department.name}
         </span>
       </div>
     </li>

@@ -18,7 +18,7 @@ export default function DepartmentList({ departments }: Props) {
       const filterDepartments = () => {
         const filtered = departments.filter((dep) => {
           const lCaseAcro = dep.acronym.toLowerCase();
-          const lCaseDep = dep.department.toLowerCase();
+          const lCaseDep = dep.name.toLowerCase();
           const lCaseFil = filter.toLowerCase();
           return lCaseAcro.includes(lCaseFil) || lCaseDep.includes(lCaseFil);
         });
