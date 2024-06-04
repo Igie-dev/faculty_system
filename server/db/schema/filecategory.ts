@@ -8,7 +8,7 @@ import {
   text,
 } from "drizzle-orm/pg-core";
 import { submission } from "./submission";
-
+import { z } from "zod";
 export const fileCategory = pgTable("fileCategory", {
   id: serial("id").primaryKey(),
   category_id: uuid("category_id").defaultRandom().notNull().unique(),
@@ -21,3 +21,16 @@ export const fileCategory = pgTable("fileCategory", {
 export const categoryRelations = relations(fileCategory, ({ many }) => ({
   submissions: many(submission),
 }));
+
+export const createFileCategorySchema = z.object({
+  name: z
+    .string({
+      invalid_type_error: "Category must be string!",
+    })
+    .min(1, { message: "This field must be filled in!" }),
+  description: z
+    .string({
+      invalid_type_error: "Description must be string!",
+    })
+    .min(1, { message: "This field must be filled in!" }),
+});
