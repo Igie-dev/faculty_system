@@ -7,7 +7,7 @@ type Props = {
 };
 export default function DepartmentCard({ department }: Props) {
   return (
-    <li className=" p-2 flex flex-col border w-full h-fit lg:max-w-[22rem] bg-background rounded-md">
+    <li className="p-2 flex flex-col border w-full h-fit lg:max-w-[22rem] bg-background rounded-md">
       <div className="flex items-center justify-end">
         <UpdateDepartment
           id={department.id}
@@ -20,11 +20,11 @@ export default function DepartmentCard({ department }: Props) {
           name={department.name}
         />
       </div>
-      <div className="flex w-full flex-col p-2 space-y-2">
+      <div className="flex w-full flex-col min-h-[5rem] px-2 space-y-1">
         <span className="text-lg font-semibold w-full truncate overflow-x-hidden">
           {department.acronym}
         </span>
-        <span className="text-sm truncate w-full overflow-x-hidden">
+        <span className="text-sm text-wrap w-full overflow-x-hidden">
           {department.name}
         </span>
       </div>
