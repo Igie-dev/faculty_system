@@ -75,7 +75,7 @@ export default function UpdateDepartment({ id, acronym, department }: Props) {
       >
         <DialogTrigger asChild>
           <Button size="icon" variant="ghost">
-            <Pencil size={20} />
+            <Pencil size={16} />
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">

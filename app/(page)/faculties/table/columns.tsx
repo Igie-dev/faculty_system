@@ -94,20 +94,20 @@ export const columns: ColumnDef<TFacultyData>[] = [
               asChild
               size="sm"
               variant="ghost"
-              className="w-full flex items-center space-x-2  justify-start text-muted-foreground"
+              className="w-full flex items-center space-x-3  justify-start text-muted-foreground"
             >
               <Link href={`/faculties/${faculty.faculty_id}/view`}>
-                <Eye size={20} /> <span>View</span>
+                <Eye size={16} /> <span>View</span>
               </Link>
             </Button>
             <Button
               asChild
               size="sm"
               variant="ghost"
-              className="w-full flex items-center space-x-2  justify-start text-muted-foreground"
+              className="w-full flex items-center space-x-3  justify-start text-muted-foreground"
             >
               <Link href={`/faculties/${faculty.faculty_id}/update`}>
-                <PencilLine size={20} /> <span>Update</span>
+                <PencilLine size={16} /> <span>Update</span>
               </Link>
             </Button>
 

@@ -49,9 +49,9 @@ export default function DeleteFaculty({
         <Button
           size="sm"
           variant="ghost"
-          className="w-full flex items-center space-x-2 hover:text-destructive justify-start text-muted-foreground"
+          className="w-full flex items-center space-x-3 hover:text-destructive justify-start text-muted-foreground"
         >
-          <Trash2 size={20} />
+          <Trash2 size={16} />
           <span>Delete</span>
         </Button>
       </AlertDialogTrigger>

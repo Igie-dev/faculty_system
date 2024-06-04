@@ -39,7 +39,7 @@ export default function DeleteDepartment({ id, acronym, department }: Props) {
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button size="icon" variant="ghost" className="hover:text-destructive">
-          <Trash size={20} />
+          <Trash size={16} />
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
