@@ -74,12 +74,12 @@ export const departmentRelations = relations(department, ({ many }) => ({
 export const createDepartmentSchema = z.object({
   acronym: z
     .string({
-      invalid_type_error: "Last name must be string!",
+      invalid_type_error: "Acronym must string!",
     })
     .min(1, { message: "This field must be filled in!" }),
   name: z
     .string({
-      invalid_type_error: "Last name must be string!",
+      invalid_type_error: "Department name must be string!",
     })
     .min(1, { message: "This field must be filled in!" }),
 });
