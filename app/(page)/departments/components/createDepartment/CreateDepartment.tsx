@@ -72,7 +72,7 @@ export default function CreateDepartment() {
         <DialogTrigger asChild>
           <Button>Create</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[30rem]">
           <form
             ref={formRef}
             onSubmit={(evt) => {
@@ -124,7 +124,7 @@ export default function CreateDepartment() {
                         <Input
                           {...field}
                           type="text"
-                          placeholder="Enter Department"
+                          placeholder="Enter department"
                         />
                       </FormControl>
                       <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />

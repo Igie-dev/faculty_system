@@ -7,10 +7,10 @@ export default function DepartmentLoader() {
   }
   return (
     <section className="flex flex-col items-center w-full h-full">
-      <header className="flex flex-col items-start justify-between w-full gap-10 p-2 pb-5  md:p-4 border-b bg-background">
-        <h1 className="text-lg font-extrabold fancy_font md:text-2xl">
+      <header className="flex flex-col items-start justify-between w-full gap-5 p-2 pb-5 border-b md:p-4 bg-background">
+        <span className="text-xl font-extrabold fancy_font md:text-2xl">
           Departments
-        </h1>
+        </span>
         <div className="flex items-center gap-2 justify-between w-full">
           <span className="flex-1  h-11 max-w-[30rem] rounded-md flex items-center px-2 text-muted-foreground text-sm border bg-primary-foreground">
             Loading...

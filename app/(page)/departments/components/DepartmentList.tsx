@@ -31,12 +31,14 @@ export default function DepartmentList({ departments }: Props) {
 
   if (departments.length <= 0) return <EmptyBox classNames="mt-10" />;
   return filteredDep.length >= 1 ? (
-    <ul className="flex flex-wrap w-full h-fit py-2 gap-2 md:p-2">
+    <ul className="flex flex-wrap w-full h-fit py-1 gap-1 md:p-1">
       {filteredDep?.map((dep) => {
         return <DepartmentCard key={dep.id} department={dep} />;
       })}
     </ul>
   ) : (
-    <p className="mt-10 text-sm">No result!</p>
+    <p className="mt-10 text-sm font-semibold text-muted-foreground">
+      No result!
+    </p>
   );
 }

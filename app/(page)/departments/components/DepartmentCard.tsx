@@ -7,8 +7,8 @@ type Props = {
 };
 export default function DepartmentCard({ department }: Props) {
   return (
-    <li className="p-2 flex flex-col border w-full h-fit lg:max-w-[22rem] bg-background rounded-md">
-      <div className="flex items-center justify-end">
+    <li className="p-2 flex flex-col border w-full gap-2 min-h-[8rem] h-fit lg:max-w-[22rem] bg-background rounded-sm relative">
+      <div className="flex items-center justify-end absolute top-2 right-2">
         <UpdateDepartment
           id={department.id}
           acronym={department.acronym}
@@ -20,14 +20,12 @@ export default function DepartmentCard({ department }: Props) {
           name={department.name}
         />
       </div>
-      <div className="flex w-full flex-col min-h-[5rem] px-2 space-y-1">
-        <span className="text-lg font-semibold w-full truncate overflow-x-hidden">
-          {department.acronym}
-        </span>
-        <span className="text-sm text-wrap w-full overflow-x-hidden">
-          {department.name}
-        </span>
-      </div>
+      <h5 className="text-lg h-fit font-semibold mt-5 break-words text-wrap w-[75%]">
+        {department.acronym}
+      </h5>
+      <p className="text-sm break-words text-wrap w-full h-fit text-muted-foreground">
+        {department.name}
+      </p>
     </li>
   );
 }

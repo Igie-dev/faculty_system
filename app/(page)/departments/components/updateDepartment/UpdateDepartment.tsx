@@ -78,7 +78,7 @@ export default function UpdateDepartment({ id, acronym, name }: Props) {
             <Pencil size={16} />
           </Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[30rem]">
           <form
             ref={formRef}
             onSubmit={(evt) => {
@@ -87,8 +87,8 @@ export default function UpdateDepartment({ id, acronym, name }: Props) {
             className="flex flex-col space-y-4"
           >
             <DialogHeader>
-              <DialogTitle>Create new department</DialogTitle>
-              <DialogDescription>
+              <DialogTitle>Update department</DialogTitle>
+              <DialogDescription className="text-muted-foreground text-sm">
                 Use this form to update the details of an existing department.
                 Please modify the necessary information and click{" "}
                 <strong>Update</strong> to save the changes.
@@ -130,7 +130,7 @@ export default function UpdateDepartment({ id, acronym, name }: Props) {
                         <Input
                           {...field}
                           type="text"
-                          placeholder="Enter Department"
+                          placeholder="Enter department"
                         />
                       </FormControl>
                       <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
