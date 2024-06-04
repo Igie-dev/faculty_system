@@ -80,7 +80,7 @@ export const createDepartment = async (
     }
 
     const foundDepDescrip = await db.query.department.findFirst({
-      where: () => sql`${department.department} = ${formData.department}`,
+      where: () => sql`${department.name} = ${formData.name}`,
       columns: {
         id: true,
       },
@@ -97,12 +97,12 @@ export const createDepartment = async (
       .values({
         dep_id: uuid(),
         acronym: formData.acronym as string,
-        department: formData.acronym as string,
+        name: formData.name as string,
       })
       .returning({
         id: department.id,
         dep_id: department.dep_id,
-        department: department.department,
+        name: department.name,
       });
 
     revalidatePath("/departments");
@@ -199,7 +199,7 @@ export const updateDepartment = async (
         id: true,
         dep_id: true,
         acronym: true,
-        department: true,
+        name: true,
       },
     });
 
@@ -229,9 +229,9 @@ export const updateDepartment = async (
         .where(eq(department.id, Number(formData.id)));
     }
 
-    if (foundDepartment?.department !== formData.department) {
+    if (foundDepartment?.name !== formData.name) {
       const foundExistDep = await db.query.department.findFirst({
-        where: () => sql`${department.department} = ${formData.department}`,
+        where: () => sql`${department.name} = ${formData.name}`,
         columns: {
           id: true,
         },
@@ -244,7 +244,7 @@ export const updateDepartment = async (
       await db
         .update(department)
         .set({
-          department: formData.department as string,
+          name: formData.name as string,
         })
         .where(eq(department.id, Number(formData.id)));
     }
