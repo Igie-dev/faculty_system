@@ -23,9 +23,9 @@ export const createFaculty = async (
   prevState: FormState,
   data: FormData
 ): Promise<FormState> => {
-  const { role: userRole } = await getCurrentUser();
   try {
-    if (userRole !== ERole.IS_ADMIN) {
+    const user: any = await getCurrentUser();
+    if (user?.role !== ERole.IS_ADMIN) {
       return {
         error: "Unauthorized user!",
       };
@@ -140,14 +140,6 @@ export const getAllFacultyQuery = async (): Promise<{
   error?: string;
 }> => {
   try {
-    const { role: userRole } = await getCurrentUser();
-
-    if (userRole !== ERole.IS_ADMIN) {
-      return {
-        error: "Unauthorized user!",
-      };
-    }
-
     const faculties = await db.query.faculty.findMany({
       columns: {
         id: true,
@@ -239,13 +231,12 @@ export const updateFaculty = async (
   data: FormData
 ): Promise<FormState> => {
   try {
-    const { role: userRole } = await getCurrentUser();
-    if (userRole !== ERole.IS_ADMIN) {
+    const user: any = await getCurrentUser();
+    if (user?.role !== ERole.IS_ADMIN) {
       return {
         error: "Unauthorized user!",
       };
     }
-
     const formData = Object.fromEntries(data);
 
     //Validate data with zod
@@ -310,9 +301,8 @@ export const deleteFacultyByFacultyId = async (
   id: string
 ): Promise<{ message?: string; error?: string }> => {
   try {
-    const { role: userRole } = await getCurrentUser();
-
-    if (userRole !== ERole.IS_ADMIN) {
+    const user: any = await getCurrentUser();
+    if (user?.role !== ERole.IS_ADMIN) {
       return {
         error: "Unauthorized user!",
       };

@@ -1,6 +1,4 @@
 "use server";
-import { ERole } from "@/@types/enums";
-import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
 import {
@@ -11,14 +9,15 @@ import {
 } from "@/server/db/schema";
 import { FormState } from "./faculties";
 import { revalidatePath } from "next/cache";
-
+import { ERole } from "@/@types/enums";
+import { getCurrentUser } from "@/lib/auth";
 export const createDepartment = async (
   prevState: FormState,
   data: FormData
 ): Promise<FormState> => {
   try {
-    const { role: userRole } = await getCurrentUser();
-    if (userRole !== ERole.IS_ADMIN) {
+    const user = await getCurrentUser();
+    if (user?.role !== ERole.IS_ADMIN) {
       return {
         error: "Unauthorized user!",
       };
@@ -99,13 +98,6 @@ export const getAllDepartmentsQuery = async (): Promise<{
   error?: string;
 }> => {
   try {
-    const { role: userRole } = await getCurrentUser();
-
-    if (userRole !== ERole.IS_ADMIN) {
-      return {
-        error: "Unauthorized user!",
-      };
-    }
     const departments = await db.query.department.findMany();
 
     return { data: departments };
@@ -120,6 +112,13 @@ export const deleteDepartmentById = async (
   id: number
 ): Promise<{ message?: string; error?: string }> => {
   try {
+    const user = await getCurrentUser();
+    if (user?.role !== ERole.IS_ADMIN) {
+      return {
+        error: "Unauthorized user!",
+      };
+    }
+
     const foundDepartment = await db.query.department.findFirst({
       where: () => sql`${department.id} = ${id}`,
       columns: {
@@ -157,8 +156,8 @@ export const updateDepartment = async (
   data: FormData
 ): Promise<FormState> => {
   try {
-    const { role: userRole } = await getCurrentUser();
-    if (userRole !== ERole.IS_ADMIN) {
+    const user = await getCurrentUser();
+    if (user?.role !== ERole.IS_ADMIN) {
       return {
         error: "Unauthorized user!",
       };
@@ -270,9 +269,8 @@ export const updateFacultyDepartments = async (
   departments: TCreateFacultyDep[]
 ): Promise<{ message?: string; error?: string }> => {
   try {
-    const { role: userRole } = await getCurrentUser();
-
-    if (userRole !== ERole.IS_ADMIN) {
+    const user = await getCurrentUser();
+    if (user?.role !== ERole.IS_ADMIN) {
       return {
         error: "Unauthorized user!",
       };

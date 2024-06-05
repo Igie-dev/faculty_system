@@ -1,11 +1,12 @@
 "use server";
-import { ERole } from "@/@types/enums";
-import { getCurrentUser } from "@/lib/auth";
+
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
 import { fileCategory, createFileCategorySchema } from "@/server/db/schema";
 import { FormState } from "./faculties";
 import { revalidatePath } from "next/cache";
+import { ERole } from "@/@types/enums";
+import { getCurrentUser } from "@/lib/auth";
 
 export const createFileCategory = async (
   prevState: FormState,
@@ -78,15 +79,7 @@ export const getAllFileCategory = async (): Promise<{
   error?: string;
 }> => {
   try {
-    const { role: userRole } = await getCurrentUser();
-
-    if (userRole !== ERole.IS_ADMIN) {
-      return {
-        error: "Unauthorized user!",
-      };
-    }
     const foundFileCategories = await db.query.fileCategory.findMany();
-
     return { data: foundFileCategories };
   } catch (error) {
     return {
@@ -106,7 +99,6 @@ export const updateFileCategory = async (
         error: "Unauthorized user!",
       };
     }
-
     const formData = Object.fromEntries(data);
 
     const parsed = createFileCategorySchema.safeParse(formData);
@@ -182,7 +174,6 @@ export const updateFileCategory = async (
 export const deleteFileCategoryById = async (id: number) => {
   try {
     const { role: userRole } = await getCurrentUser();
-
     if (userRole !== ERole.IS_ADMIN) {
       return {
         error: "Unauthorized user!",
