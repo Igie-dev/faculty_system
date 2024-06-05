@@ -1,17 +1,29 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { ERole } from "./@types/enums";
 
 const privatePath = [
   "dashboard",
   "departments",
   "faculties",
+  "filecategory",
+  "schoolyear",
+  "semesters",
   "announcements",
   "profile",
   "submissions",
   "downloadables",
   "mytask",
 ];
+const adminPath = [
+  "faculties",
+  "departments",
+  "filecategory",
+  "schoolyear",
+  "semesters",
+];
+
 const apiEndpoint = ["faculty", "department"];
 
 export async function middleware(req: NextRequest) {
@@ -28,7 +40,7 @@ export async function middleware(req: NextRequest) {
   }
 
   //Blocking api call without token
-  if (token) {
+  if (!token) {
     if (path.startsWith("/api")) {
       const isPrivateApi = apiEndpoint.some(
         (apiPath) => apiPath === path.split("/")[2]
@@ -36,6 +48,16 @@ export async function middleware(req: NextRequest) {
       if (isPrivateApi) {
         return NextResponse.json({ error: "Unauthorized!" }, { status: 401 });
       }
+    }
+  }
+
+  //Block non admin to route admin pages
+  if (token?.role !== ERole.IS_ADMIN) {
+    const goingToAdminPath = adminPath.some((path) =>
+      splitedPath.startsWith(path)
+    );
+    if (goingToAdminPath) {
+      return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
     }
   }
 
