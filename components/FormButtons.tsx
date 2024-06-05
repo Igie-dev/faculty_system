@@ -18,7 +18,7 @@ export default function FormButton({
   const status = useFormStatus();
   return (
     <div className="flex items-center gap-2">
-      <Button variant="ghost" asChild disabled={status.pending}>
+      <Button variant="outline" asChild disabled={status.pending}>
         <Link href={cancelLink}>{cancelText}</Link>
       </Button>
       <Button type="submit" disabled={status.pending}>

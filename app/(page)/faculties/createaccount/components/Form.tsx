@@ -294,8 +294,8 @@ export default function CreateForm() {
         <div className="flex items-center !mt-10 flex-row-reverse">
           <FormButtons
             cancelLink="/faculties"
-            cancelText="cancel"
-            submitText="submit"
+            cancelText="Cancel"
+            submitText="Submit"
           />
         </div>
       </form>
