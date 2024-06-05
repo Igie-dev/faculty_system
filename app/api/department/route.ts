@@ -6,9 +6,9 @@ import { sql } from "drizzle-orm";
 
 export async function POST(req: NextRequest) {
   try {
-    const { acronym, department: departmentData } = await req.json();
+    const { acronym, name } = await req.json();
 
-    if (!acronym || !departmentData) {
+    if (!acronym || !name) {
       return NextResponse.json(
         { message: "All field are required!" },
         { status: 400 }
@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 
     const exist = await db.query.department.findFirst({
       where: () =>
-        sql`${department.acronym} = ${acronym} OR ${department.department} = ${departmentData}`,
+        sql`${department.acronym} = ${acronym} OR ${department.name} = ${name}`,
       columns: {
         dep_id: true,
       },
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
       .values({
         dep_id: uuid(),
         acronym,
-        department: departmentData,
+        name: name,
       })
       .returning({ id: department.id });
 

@@ -12,8 +12,7 @@ export default function FacultyDepartments({ faculty_id }: Props) {
   >([]);
 
   useEffect(() => {
-    if (!faculty_id || facultyDepartments.length >= 1) return;
-    console.log(isFetching);
+    if (!faculty_id) return;
     (async () => {
       setIsFetching(true);
       const deps = await getFacultyDepartmentsQuery(faculty_id);
@@ -24,7 +23,7 @@ export default function FacultyDepartments({ faculty_id }: Props) {
         setIsFetching(false);
       }
     })();
-  }, []);
+  }, [faculty_id]);
 
   return (
     <div className="w-full flex flex-col border-t pt-5 !mt-10">

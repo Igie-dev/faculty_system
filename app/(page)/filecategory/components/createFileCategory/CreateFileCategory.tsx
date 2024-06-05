@@ -137,7 +137,7 @@ export default function CreateFileCategory() {
                 </Button>
               </DrawerClose>
               <Button type="submit" className="w-[50%]">
-                Update
+                Create
               </Button>
             </DrawerFooter>
           </form>
