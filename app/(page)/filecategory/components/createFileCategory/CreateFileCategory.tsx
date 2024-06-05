@@ -1,14 +1,16 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import {
   Form,
   FormControl,
@@ -28,7 +30,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function CreateFileCategory() {
-  const [open, setOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
   const [state, formAction] = useFormState(createFileCategory, {
@@ -56,39 +57,38 @@ export default function CreateFileCategory() {
         description: state.message ?? state.error ?? "",
       });
       if (state.message) {
-        setOpen((prev) => !prev);
+        form.reset();
       }
     }
-  }, [state, toast]);
+  }, [state, toast, form]);
 
   return (
-    <Form {...form}>
-      <Dialog
-        open={open}
-        onOpenChange={() => {
-          form.reset();
-          setOpen((prev) => !prev);
-        }}
-      >
-        <DialogTrigger asChild>
-          <Button>Create</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[40rem]">
+    <Drawer direction="right">
+      <DrawerTrigger asChild>
+        <Button>Create</Button>
+      </DrawerTrigger>
+      <DrawerContent className="h-full top-0 right-0 left-auto mt-0 w-full p-2  md:max-w-[30rem] rounded-lg md:px-4">
+        <Form {...form}>
           <form
             ref={formRef}
             onSubmit={(evt) => {
               evt.preventDefault();
+              form.handleSubmit(() => {
+                const formData = new FormData(formRef.current!);
+                formAction(formData);
+              })(evt);
             }}
+            action={formAction}
             className="flex flex-col space-y-4"
           >
-            <DialogHeader>
-              <DialogTitle>Create new file category</DialogTitle>
-              <DialogDescription>
+            <DrawerHeader>
+              <DrawerTitle>Create new file category</DrawerTitle>
+              <DrawerDescription>
                 Use this form to create a new department. Please provide the
                 necessary information and click <strong>Create</strong> to add
                 the category.
-              </DialogDescription>
-            </DialogHeader>
+              </DrawerDescription>
+            </DrawerHeader>
             <span className="text-sm text-destructive h-5 w-fit font-semibold flex">
               {state?.error ? (
                 <p className="font-normal">Error: {` ${state?.error}`}</p>
@@ -109,7 +109,7 @@ export default function CreateFileCategory() {
                           placeholder="Enter name"
                         />
                       </FormControl>
-                      <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -124,27 +124,25 @@ export default function CreateFileCategory() {
                       <FormControl>
                         <Textarea {...field} placeholder="Enter description" />
                       </FormControl>
-                      <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
             </div>
-            <DialogFooter>
-              <Button
-                type="button"
-                onClick={async (evt) => {
-                  evt.preventDefault();
-                  const formData = new FormData(formRef.current!);
-                  formAction(formData);
-                }}
-              >
-                Create
+            <DrawerFooter className="flex-row gap-4 px-0">
+              <DrawerClose asChild className="w-[50%]">
+                <Button type="button" variant="outline">
+                  Cancel
+                </Button>
+              </DrawerClose>
+              <Button type="submit" className="w-[50%]">
+                Update
               </Button>
-            </DialogFooter>
+            </DrawerFooter>
           </form>
-        </DialogContent>
-      </Dialog>{" "}
-    </Form>
+        </Form>
+      </DrawerContent>
+    </Drawer>
   );
 }

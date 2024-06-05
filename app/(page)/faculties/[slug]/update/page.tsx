@@ -19,16 +19,7 @@ export default async function page({ params }: { params: { slug: string } }) {
         >
           <X absoluteStrokeWidth size={22} />
         </Link>
-        <header className="w-full flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="text-xl font-semibold">Update account</span>
-            <span className="text-sm text-muted-foreground">
-              Use this form to update the details of an existing faculty
-              account. Please modify the necessary information and click{" "}
-              <strong>Update</strong> to save the changes.
-            </span>
-          </div>
-        </header>
+
         <UpdateDetailsForm faculty={faculty} />
       </main>
     </section>

@@ -7,7 +7,7 @@ type Props = {
 };
 export default function FileCategoryCard({ category }: Props) {
   return (
-    <li className="flex flex-col w-full h-fit rounded-sm gap-4 border bg-background p-4 relative">
+    <li className="flex flex-col w-full h-fit rounded-sm gap-2 border bg-background p-4 relative">
       <div className="flex items-center  w-fit absolute top-2 right-2">
         <UpdateFileCategory
           id={category.id}

@@ -13,16 +13,7 @@ export default function page() {
         >
           <X absoluteStrokeWidth size={22} />
         </Link>
-        <header className="w-full flex items-center justify-between">
-          <div className="flex flex-col">
-            <span className="text-xl font-semibold">Create new account</span>
-            <span className="text-sm text-muted-foreground">
-              Use this form to create a new faculty account. Please provide the
-              necessary information and click <strong>Submit</strong> to add the
-              new faculty member.
-            </span>
-          </div>
-        </header>
+
         <Form />
       </main>
     </section>

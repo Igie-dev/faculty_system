@@ -85,6 +85,16 @@ export default function CreateForm() {
 
   return (
     <Form {...form}>
+      <header className="w-full flex items-center justify-between">
+        <div className="flex flex-col">
+          <span className="text-xl font-semibold">Create new account</span>
+          <span className="text-sm text-muted-foreground md:max-w-[30rem]">
+            Use this form to create a new faculty account. Please provide the
+            necessary information and click <strong>Submit</strong> to add the
+            new faculty member.
+          </span>
+        </div>
+      </header>
       <form
         ref={formRef}
         onSubmit={(evt) => {
@@ -108,8 +118,8 @@ export default function CreateForm() {
           ) : null}
         </span>
         <div className="flex flex-col w-full h-fit md:flex-row justify-between md:gap-4">
-          <div className="w-full flex flex-col md:h-full md:w-[45%] space-y-7">
-            <div className="w-full flex flex-col space-y-2 relative ">
+          <div className="w-full flex flex-col md:h-full md:w-[45%] space-y-3">
+            <div className="w-full flex flex-col">
               <FormField
                 control={form.control}
                 name="first_name"
@@ -123,12 +133,12 @@ export default function CreateForm() {
                         placeholder="Enter first name"
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <div className="w-full flex flex-col space-y-2 relative ">
+            <div className="w-full flex flex-col ">
               <FormField
                 control={form.control}
                 name="last_name"
@@ -142,12 +152,12 @@ export default function CreateForm() {
                         placeholder="Enter last name"
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <div className="w-full flex flex-col space-y-2 relative ">
+            <div className="w-full flex flex-col ">
               <FormField
                 control={form.control}
                 name="email"
@@ -161,12 +171,12 @@ export default function CreateForm() {
                         placeholder="Enter email"
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <div className="w-full flex flex-col space-y-2 relative ">
+            <div className="w-full flex flex-col">
               <FormField
                 control={form.control}
                 name="contact"
@@ -180,13 +190,13 @@ export default function CreateForm() {
                         placeholder="Enter contact number"
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
 
-            <div className="w-full flex flex-col space-y-2 relative ">
+            <div className="w-full flex flex-col">
               <FormField
                 control={form.control}
                 name="role"
@@ -208,13 +218,13 @@ export default function CreateForm() {
                         <SelectItem value="Teacher">Teacher</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
 
-            <div className="w-full flex flex-col space-y-2 relative ">
+            <div className="w-full flex flex-col ">
               <FormField
                 control={form.control}
                 name="password"
@@ -228,12 +238,12 @@ export default function CreateForm() {
                         placeholder="Create password"
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <div className="w-full flex flex-col space-y-2 relative ">
+            <div className="w-full flex flex-col">
               <FormField
                 control={form.control}
                 name="confirmPassword"
@@ -247,7 +257,7 @@ export default function CreateForm() {
                         placeholder="Confirm password"
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />

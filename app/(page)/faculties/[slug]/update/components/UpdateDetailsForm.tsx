@@ -61,6 +61,16 @@ export default function UpdateDetailsForm({ faculty }: Props) {
 
   return (
     <Form {...form}>
+      <header className="w-full flex items-center justify-between">
+        <div className="flex flex-col">
+          <span className="text-xl font-semibold">Update account</span>
+          <span className="text-sm text-muted-foreground md:max-w-[40rem]">
+            Use this form to update the details of an existing faculty account.
+            Please modify the necessary information and click{" "}
+            <strong>Update</strong> to save the changes.
+          </span>
+        </div>
+      </header>
       <span className="text-sm text-destructive my-5 w-full  h-5 justify-start font-semibold flex">
         {state?.error ? (
           <p className="font-normal">Error: {` ${state?.error}`}</p>
@@ -87,8 +97,8 @@ export default function UpdateDetailsForm({ faculty }: Props) {
           Details
         </span>
         <div className="w-full flex flex-col  space-y-4">
-          <div className="flex flex-col gap-4  md:items-center md:flex-row md:justify-between">
-            <div className="flex flex-col gap-1 md:w-[48%] ">
+          <div className="flex flex-col gap-3  md:items-start md:flex-row md:justify-between">
+            <div className="flex flex-col  md:w-[48%] ">
               <FormField
                 control={form.control}
                 name="name"
@@ -98,12 +108,12 @@ export default function UpdateDetailsForm({ faculty }: Props) {
                     <FormControl>
                       <Input {...field} type="text" placeholder="Enter name" />
                     </FormControl>
-                    <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                    <FormMessage className="" />
                   </FormItem>
                 )}
               />
             </div>
-            <div className="flex flex-col gap-1 md:w-[48%] ">
+            <div className="flex flex-col  md:w-[48%] ">
               <FormField
                 control={form.control}
                 name="email"
@@ -113,14 +123,14 @@ export default function UpdateDetailsForm({ faculty }: Props) {
                     <FormControl>
                       <Input {...field} type="text" placeholder="Enter email" />
                     </FormControl>
-                    <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
           </div>
-          <div className="flex flex-col gap-4  md:items-center md:flex-row md:justify-between">
-            <div className="flex flex-col gap-1 md:w-[48%] ">
+          <div className="flex flex-col gap-4  md:flex-row md:justify-between md:items-start">
+            <div className="flex flex-col md:w-[48%] ">
               <FormField
                 control={form.control}
                 name="contact"
@@ -134,12 +144,12 @@ export default function UpdateDetailsForm({ faculty }: Props) {
                         placeholder="Enter contact number"
                       />
                     </FormControl>
-                    <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            <div className="flex flex-col gap-1 md:w-[48%]">
+            <div className="flex flex-col  md:w-[48%]">
               <FormField
                 control={form.control}
                 name="role"
@@ -161,7 +171,7 @@ export default function UpdateDetailsForm({ faculty }: Props) {
                         <SelectItem value="Teacher">Teacher</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                    <FormMessage />
                   </FormItem>
                 )}
               />

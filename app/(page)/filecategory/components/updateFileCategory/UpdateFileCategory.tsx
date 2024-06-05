@@ -1,13 +1,16 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+
 import {
   Form,
   FormControl,
@@ -16,6 +19,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { createFileCategorySchema } from "@/server/db/schema";
@@ -24,7 +28,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/components/ui/use-toast";
 import { Pencil } from "lucide-react";
-import { DialogDescription } from "@radix-ui/react-dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { updateFileCategory } from "@/server/actions/filecategory";
 
@@ -35,7 +38,6 @@ type Props = {
 };
 
 export default function UpdateFileCategory({ id, name, description }: Props) {
-  const [open, setOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
   const [state, formAction] = useFormState(updateFileCategory, {
@@ -63,41 +65,44 @@ export default function UpdateFileCategory({ id, name, description }: Props) {
         description: state.message ?? state.error ?? "",
       });
       if (state.message) {
-        setOpen((prev) => !prev);
+        form.reset();
       }
     }
-  }, [state, toast]);
+  }, [state, toast, form]);
 
   return (
-    <Form {...form}>
-      <Dialog
-        open={open}
-        onOpenChange={() => {
-          form.reset();
-          setOpen((prev) => !prev);
-        }}
-      >
-        <DialogTrigger asChild>
-          <Button size="icon" variant="ghost" className="text-muted-foreground">
-            <Pencil size={16} />
-          </Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[40rem]">
+    <Drawer direction="right">
+      <DrawerTrigger asChild>
+        <Button size="icon" variant="ghost" className="text-muted-foreground">
+          <Pencil size={16} />
+        </Button>
+      </DrawerTrigger>
+      <DrawerContent className="h-full top-0 right-0 left-auto mt-0 w-full p-2  md:max-w-[30rem] rounded-lg md:px-4">
+        <Form {...form}>
           <form
             ref={formRef}
             onSubmit={(evt) => {
               evt.preventDefault();
+              form.handleSubmit(() => {
+                const formData = new FormData(formRef.current!);
+                formData.append("id", JSON.stringify(id));
+                formAction(formData);
+              })(evt);
+            }}
+            action={(form: FormData) => {
+              form.append("id", JSON.stringify(id));
+              formAction(form);
             }}
             className="flex flex-col space-y-4"
           >
-            <DialogHeader>
-              <DialogTitle>Update Category</DialogTitle>
-              <DialogDescription className="text-muted-foreground text-sm">
+            <DrawerHeader>
+              <DrawerTitle>Update Category</DrawerTitle>
+              <DrawerDescription>
                 Use this form to update the details of an existing file
                 category. Please modify the necessary information and click{" "}
                 <strong>Update</strong> to save the changes.
-              </DialogDescription>
-            </DialogHeader>
+              </DrawerDescription>
+            </DrawerHeader>
             <span className="text-sm text-destructive  h-5 w-fit font-semibold flex">
               {state?.error ? (
                 <p className="font-normal">Error: {` ${state?.error}`}</p>
@@ -118,7 +123,7 @@ export default function UpdateFileCategory({ id, name, description }: Props) {
                           placeholder="Enter name"
                         />
                       </FormControl>
-                      <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
@@ -133,28 +138,25 @@ export default function UpdateFileCategory({ id, name, description }: Props) {
                       <FormControl>
                         <Textarea {...field} placeholder="Enter description" />
                       </FormControl>
-                      <FormMessage className="text-xs text-destructive  absolute left-0 -bottom-5" />
+                      <FormMessage />
                     </FormItem>
                   )}
                 />
               </div>
             </div>
-            <DialogFooter>
-              <Button
-                type="button"
-                onClick={async (evt) => {
-                  evt.preventDefault();
-                  const formData = new FormData(formRef.current!);
-                  formData.append("id", JSON.stringify(id));
-                  formAction(formData);
-                }}
-              >
+            <DrawerFooter className="flex-row gap-4 px-0">
+              <DrawerClose asChild className="w-[50%]">
+                <Button type="button" variant="outline">
+                  Cancel
+                </Button>
+              </DrawerClose>
+              <Button type="submit" className="w-[50%]">
                 Update
               </Button>
-            </DialogFooter>
+            </DrawerFooter>
           </form>
-        </DialogContent>
-      </Dialog>
-    </Form>
+        </Form>
+      </DrawerContent>
+    </Drawer>
   );
 }
