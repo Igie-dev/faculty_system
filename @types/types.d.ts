@@ -120,6 +120,13 @@ declare global {
   type TPostFilter = {
     filtererDepartments: string[];
   };
+  type TSessionUser = {
+    faculty_id: string;
+    role: string;
+    email: string;
+    name: string;
+    avatar_url: string;
+  };
 }
 
 export {};
