@@ -74,7 +74,7 @@ export default function UpdateDepartment({ id, acronym, name }: Props) {
         }}
       >
         <DialogTrigger asChild>
-          <Button size="icon" variant="ghost">
+          <Button size="icon" variant="ghost" className="text-muted-foreground">
             <Pencil size={16} />
           </Button>
         </DialogTrigger>

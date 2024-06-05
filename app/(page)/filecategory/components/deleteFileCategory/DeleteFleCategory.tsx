@@ -39,7 +39,11 @@ export default function DeleteFleCategory({ id, name, description }: Props) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button size="icon" variant="ghost" className="hover:text-destructive">
+        <Button
+          size="icon"
+          variant="ghost"
+          className="text-muted-foreground hover:text-destructive"
+        >
           <Trash size={16} />
         </Button>
       </AlertDialogTrigger>

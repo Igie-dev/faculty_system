@@ -78,7 +78,7 @@ export default function UpdateFileCategory({ id, name, description }: Props) {
         }}
       >
         <DialogTrigger asChild>
-          <Button size="icon" variant="ghost">
+          <Button size="icon" variant="ghost" className="text-muted-foreground">
             <Pencil size={16} />
           </Button>
         </DialogTrigger>
