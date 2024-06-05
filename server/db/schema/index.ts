@@ -40,7 +40,7 @@ export const {
   submissionRelations,
 } = submissionSchema;
 
-export const { fileCategory, categoryRelations, createFileCategorySchema } =
+export const { fileCategory, fileCategoryRelations, createFileCategorySchema } =
   fileCategorySchema;
 
 export const { task, taskRelations } = taskSchema;

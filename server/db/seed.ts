@@ -18,15 +18,28 @@ const db = drizzle(pool);
 export type db = typeof db;
 
 async function resetTable(db: db, table: Table) {
-  return db.execute(
-    sql.raw(`TRUNCATE TABLE ${getTableName(table)} RESTART IDENTITY CASCADE`)
-  );
+  const tableName = getTableName(table);
+  const query = `TRUNCATE TABLE ${tableName} RESTART IDENTITY CASCADE`;
+  try {
+    await db.execute(sql.raw(query));
+    console.log(`Table ${tableName} reset successfully`);
+  } catch (error) {
+    console.error(`Failed to reset table ${tableName}:`, error);
+    throw error;
+  }
 }
 
 (async () => {
   try {
     console.log("Reset table started");
-    for (const table of [schema.faculty, schema.department]) {
+    const tables = [
+      schema.faculty,
+      schema.department,
+      schema.schoolyear,
+      schema.semester,
+      schema.fileCategory,
+    ];
+    for (let table of tables) {
       await resetTable(db, table);
     }
     console.log("Seeding started");

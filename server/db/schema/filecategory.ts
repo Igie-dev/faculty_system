@@ -9,7 +9,8 @@ import {
 } from "drizzle-orm/pg-core";
 import { submission } from "./submission";
 import { z } from "zod";
-export const fileCategory = pgTable("fileCategory", {
+
+export const fileCategory = pgTable("filecategory", {
   id: serial("id").primaryKey(),
   category_id: uuid("category_id").defaultRandom().notNull().unique(),
   name: varchar("name", { length: 255 }).notNull().unique(),
@@ -18,7 +19,7 @@ export const fileCategory = pgTable("fileCategory", {
   updatedAt: timestamp("updatedAt", { mode: "string" }).notNull().defaultNow(),
 });
 
-export const categoryRelations = relations(fileCategory, ({ many }) => ({
+export const fileCategoryRelations = relations(fileCategory, ({ many }) => ({
   submissions: many(submission),
 }));
 
