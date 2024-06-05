@@ -9,7 +9,7 @@ export default function FacutiesTableLoader() {
         </span>
         <div className="flex items-end justify-between w-full">
           <div className="flex flex-col w-full gap-2">
-            <span className="w-[90%] h-11 max-w-[30rem] rounded-md flex items-center px-2 text-muted-foreground text-sm border bg-primary-foreground">
+            <span className="w-[90%] h-10 max-w-[30rem] rounded-md flex items-center px-2 text-muted-foreground text-sm border bg-primary-foreground">
               Loading...
             </span>
             <div className="flex items-center gap-5">

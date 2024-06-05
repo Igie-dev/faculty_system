@@ -14,7 +14,7 @@ export default function FileCategoryLoader() {
           File Category
         </span>
         <div className="flex items-center gap-2 justify-between w-full">
-          <span className="flex-1  h-11 max-w-[30rem] rounded-md flex items-center px-2 text-muted-foreground text-sm border bg-primary-foreground">
+          <span className="flex-1  h-10 max-w-[30rem] rounded-md flex items-center px-2 text-muted-foreground text-sm border bg-primary-foreground">
             Loading...
           </span>
           <div className="px-4 py-2 bg-primary text-sm text-white rounded-md">
