@@ -45,7 +45,7 @@ export const { fileCategory, fileCategoryRelations, createFileCategorySchema } =
 
 export const { task, taskRelations } = taskSchema;
 
-export const { schoolyear, schoolyearRelations } = schoolyearSchema;
+export const { schoolyear, schoolyearRelations,createSchoolyearSchema } = schoolyearSchema;
 
 export const { semester, semesterRelations } = semesterSchema;
 

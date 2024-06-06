@@ -3,15 +3,15 @@
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
 import { fileCategory, createFileCategorySchema } from "@/server/db/schema";
-import { FormState } from "./faculties";
+import { TFormState } from "@/server/actions";
 import { revalidatePath } from "next/cache";
 import { ERole } from "@/@types/enums";
 import { getCurrentUser } from "@/lib/auth";
 
 export const createFileCategory = async (
-  prevState: FormState,
+  prevState: TFormState,
   data: FormData
-): Promise<FormState> => {
+): Promise<TFormState> => {
   try {
     const { role: userRole } = await getCurrentUser();
     if (userRole !== ERole.IS_ADMIN) {
@@ -74,7 +74,7 @@ export const createFileCategory = async (
   }
 };
 
-export const getAllFileCategory = async (): Promise<{
+export const getAllFileCategoryQuery = async (): Promise<{
   data?: TFileCategoryData[];
   error?: string;
 }> => {
@@ -89,9 +89,9 @@ export const getAllFileCategory = async (): Promise<{
 };
 
 export const updateFileCategory = async (
-  prevState: FormState,
+  prevState: TFormState,
   data: FormData
-): Promise<FormState> => {
+): Promise<TFormState> => {
   try {
     const { role: userRole } = await getCurrentUser();
     if (userRole !== ERole.IS_ADMIN) {

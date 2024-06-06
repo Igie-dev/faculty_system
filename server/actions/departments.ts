@@ -7,14 +7,14 @@ import {
   createDepartmentSchema,
   faculty,
 } from "@/server/db/schema";
-import { FormState } from "./faculties";
+import { TFormState } from "@/server/actions";
 import { revalidatePath } from "next/cache";
 import { ERole } from "@/@types/enums";
 import { getCurrentUser } from "@/lib/auth";
 export const createDepartment = async (
-  prevState: FormState,
+  prevState: TFormState,
   data: FormData
-): Promise<FormState> => {
+): Promise<TFormState> => {
   try {
     const user = await getCurrentUser();
     if (user?.role !== ERole.IS_ADMIN) {
@@ -152,9 +152,9 @@ export const deleteDepartmentById = async (
 };
 
 export const updateDepartment = async (
-  prevState: FormState,
+  prevState: TFormState,
   data: FormData
-): Promise<FormState> => {
+): Promise<TFormState> => {
   try {
     const user = await getCurrentUser();
     if (user?.role !== ERole.IS_ADMIN) {

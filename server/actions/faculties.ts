@@ -8,21 +8,15 @@ import { ERole } from "@/@types/enums";
 import { revalidatePath } from "next/cache";
 import { faculty, facultyDepartment } from "@/server/db/schema";
 import { createFacultySchema, updateFacultySchema } from "@/server/db/schema";
+import {TFormState} from "@/server/actions"
 const saltRound = 9;
 //Get all faculty data fields
 
-export type FormState = {
-  message?: string;
-  error?: string;
-  fields?: Record<string, string>;
-  issues?: string[];
-};
-
 //Create new faculty account
 export const createFaculty = async (
-  prevState: FormState,
+  prevState: TFormState,
   data: FormData
-): Promise<FormState> => {
+): Promise<TFormState> => {
   try {
     const user: any = await getCurrentUser();
     if (user?.role !== ERole.IS_ADMIN) {
@@ -227,9 +221,9 @@ export const getFacultyQuery = async (
 
 //Update
 export const updateFaculty = async (
-  prevState: FormState,
+  prevState: TFormState,
   data: FormData
-): Promise<FormState> => {
+): Promise<TFormState> => {
   try {
     const user: any = await getCurrentUser();
     if (user?.role !== ERole.IS_ADMIN) {
