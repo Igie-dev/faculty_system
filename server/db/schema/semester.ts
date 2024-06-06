@@ -8,6 +8,11 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { submission } from "./submission";
+import { z } from "zod";
+const numberOnlyRegEx = new RegExp(
+  /^\d+$/
+);
+
 export const semester = pgTable(
   "semester",
   {
@@ -31,3 +36,15 @@ export const semester = pgTable(
 export const semesterRelations = relations(semester, ({ many }) => ({
   submissions: many(submission),
 }));
+
+
+
+///Type schema
+export const createSemesterSchema = z.object({
+  semester: z
+    .string({
+      invalid_type_error: "Semester must string!",
+    })
+    .min(1, { message: "This field must be filled in!" }).regex(numberOnlyRegEx, "Invalid semester!"),
+
+});
