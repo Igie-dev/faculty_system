@@ -1,5 +1,5 @@
 import { ESubmussitionStatus } from "@/enum";
-import { InferInsertModel, InferSelectModel } from "drizzle-orm";
+import {  InferSelectModel } from "drizzle-orm";
 import {
   announcement,
   department,
@@ -59,7 +59,7 @@ declare global {
     acronym: string;
     department: string;
   };
-  type TFacultyArchiveAnnouncement = InferInsertModel<
+  type TFacultyArchiveAnnouncement = InferSelectModel<
     typeof facultyArchiveAnnoucement
   >;
 
@@ -105,9 +105,13 @@ declare global {
     submissions?: InferSelectModel<typeof submission>[];
   };
 
-  type TSemesterData = InferSelectModel<typeof semester>;
+  type TSemesterData = InferSelectModel<typeof semester>  & {
+    submissions?: InferSelectModel<typeof submission>[];
+  };;
 
-  type TSchoolYearData = InferSelectModel<typeof schoolyear>;
+  type TSchoolYearData = InferSelectModel<typeof schoolyear> & {
+    submissions?: InferSelectModel<typeof submission>[];
+  };
 
   type TUploadFile = {
     file_id?: string;
