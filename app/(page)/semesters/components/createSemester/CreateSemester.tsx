@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from "react";
+
+import React, { useRef, useEffect,useState } from "react";
 import { Button } from "@/components/ui/button";
 
 import {
@@ -21,24 +22,30 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { createSchoolyearSchema } from "@/server/db/schema";
+import { createSemesterSchema } from "@/server/db/schema";
 import { useFormState } from "react-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createSchoolYear } from "@/server/actions";
+import { createSemester } from "@/server/actions";
 import { useToast } from "@/components/ui/use-toast";
-
-export default function CreateSchoolyear() {
-    const formRef = useRef<HTMLFormElement>(null);
+const ordinalIndicators = [
+  "st", 
+  "nd", 
+  "rd", 
+  "th", 
+];
+export default function CreateSemester() {
+  const [ordinal,setOrdinal] = useState("")
+  const formRef = useRef<HTMLFormElement>(null);
     const { toast } = useToast();
-    const [state, formAction] = useFormState(createSchoolYear, {
+    const [state, formAction] = useFormState(createSemester, {
       message: "",
     });
   
-    const form = useForm<z.infer<typeof createSchoolyearSchema>>({
-      resolver: zodResolver(createSchoolyearSchema),
+    const form = useForm<z.infer<typeof createSemesterSchema>>({
+      resolver: zodResolver(createSemesterSchema),
       defaultValues: {
-       schoolyear:"",
+       semester:"",
         ...(state?.fields ?? {}),
       },
     });
@@ -59,6 +66,8 @@ export default function CreateSchoolyear() {
         }
       }
     }, [state, toast, form]);
+
+
   return (
     <Drawer direction="right">
     <DrawerTrigger asChild>
@@ -81,7 +90,7 @@ export default function CreateSchoolyear() {
           <DrawerHeader>
             <DrawerTitle>Create new file category</DrawerTitle>
             <DrawerDescription>
-              Use this form to create a new school year. Please provide the
+              Use this form to create a new semester. Please provide the
               necessary information and click <strong>Create</strong> to add
               the category.
             </DrawerDescription>
@@ -93,23 +102,39 @@ export default function CreateSchoolyear() {
           </span>
           <div className="flex flex-col gap-3">
             <div className="w-full flex flex-col">
-              <FormField
+              <div className="w-fit h-fit flex items-end gap-2">
+                <FormField
                 control={form.control}
-                name="schoolyear"
+                name="semester"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Year</FormLabel>
+                    <FormLabel>Semester</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
-                        type="text"
-                        placeholder="Enter a year"
+                        type="number"
+                        onChange={(e) => {
+                          if(e.currentTarget.value){
+                           const value = e.currentTarget.value;
+                           form.setValue("semester",value);
+                            if(Number(value) >= 4){
+                              setOrdinal("th");
+                            }else{
+                              setOrdinal(ordinalIndicators[Number(value)-1])
+                            }
+                          }
+                       
+                        }}
+                        className="w-20"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+              <span className="h-10 border rounded-md flex items-center justify-center w-16">{ordinal}</span>
+              </div>
+             
             </div>
           </div>
           <DrawerFooter className="flex-row gap-4 px-0">

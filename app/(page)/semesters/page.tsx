@@ -1,5 +1,22 @@
 import React from "react";
-
-export default function page() {
-  return <section>Semester</section>;
+import Semesters from "./components/Semesters";
+import { getQueryClient } from "@/app/service/queryClient";
+import { getAllSemesterQuery } from "@/server/actions";
+import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+export default async function page() {
+const queryClient = getQueryClient();
+await queryClient.prefetchQuery({
+  queryKey:["semesters"],
+  queryFn:async() => {
+    const res = await getAllSemesterQuery();
+    if(res?.error){
+      throw new Error(res.error)
+    }
+    return res?.data as TSemesterData[];
+  }
+})
+  return <HydrationBoundary state={dehydrate(queryClient)}>
+     <Semesters/>
+  </HydrationBoundary>
+ 
 }

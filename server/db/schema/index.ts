@@ -47,6 +47,6 @@ export const { task, taskRelations } = taskSchema;
 
 export const { schoolyear, schoolyearRelations,createSchoolyearSchema } = schoolyearSchema;
 
-export const { semester, semesterRelations } = semesterSchema;
+export const { semester, semesterRelations,createSemesterSchema } = semesterSchema;
 
 export const { notification, notificationRelations } = notificationSchema;
