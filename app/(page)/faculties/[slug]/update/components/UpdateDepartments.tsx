@@ -9,9 +9,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { getAllDepartmentsQuery } from "@/server/actions/departments";
+import { getAllDepartmentsQuery , updateFacultyDepartments } from "@/server/actions";
 import { Checkbox } from "@/components/ui/checkbox";
-import { updateFacultyDepartments } from "@/server/actions/departments";
 import { useToast } from "@/components/ui/use-toast";
 type Props = {
   faculty_id: string;

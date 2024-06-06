@@ -25,7 +25,7 @@ import { createFileCategorySchema } from "@/server/db/schema";
 import { useFormState } from "react-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileCategory } from "@/server/actions/filecategory";
+import { createFileCategory } from "@/server/actions";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 

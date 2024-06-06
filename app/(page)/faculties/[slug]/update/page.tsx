@@ -1,5 +1,5 @@
 import React from "react";
-import { getFacultyQuery } from "@/server/actions/faculties";
+import { getFacultyQuery } from "@/server/actions";
 import UpdateDetailsForm from "./components/UpdateDetailsForm";
 import { X } from "lucide-react";
 import Link from "next/link";

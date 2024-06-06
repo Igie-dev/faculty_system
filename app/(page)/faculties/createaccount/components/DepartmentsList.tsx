@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { getAllDepartmentsQuery } from "@/server/actions/departments";
+import { getAllDepartmentsQuery } from "@/server/actions";
 type Props = {
   facultyDep: TCreateFacultyDep[];
   setFacultyDep: Dispatch<SetStateAction<TCreateFacultyDep[]>>;

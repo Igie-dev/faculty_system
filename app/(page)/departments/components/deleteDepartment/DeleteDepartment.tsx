@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
-import { deleteDepartmentById } from "@/server/actions/departments";
+import { deleteDepartmentById } from "@/server/actions";
 import { useToast } from "@/components/ui/use-toast";
 type Props = {
   id: number;

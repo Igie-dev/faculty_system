@@ -1,6 +1,6 @@
 import React from "react";
 import Faculties from "./table/Faculties";
-import { getAllFacultyQuery } from "@/server/actions/faculties";
+import { getAllFacultyQuery } from "@/server/actions";
 import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
 import { getQueryClient } from "@/app/service/queryClient";
 export default async function page() {

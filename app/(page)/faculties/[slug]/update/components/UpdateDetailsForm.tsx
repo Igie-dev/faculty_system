@@ -24,7 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { updateFacultySchema } from "@/server/db/schema";
 import { z } from "zod";
 import { useFormState } from "react-dom";
-import { updateFaculty } from "@/server/actions/faculties";
+import { updateFaculty } from "@/server/actions";
 import FormButtons from "@/components/FormButtons";
 import FacultyDepartments from "./FacultyDepartments";
 import { useToast } from "@/components/ui/use-toast";

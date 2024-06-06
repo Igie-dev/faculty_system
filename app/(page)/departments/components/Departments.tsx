@@ -2,7 +2,7 @@
 import React from "react";
 import Header from "./Header";
 import DepartmentList from "./DepartmentList";
-import { getAllDepartmentsQuery } from "@/server/actions/departments";
+import { getAllDepartmentsQuery } from "@/server/actions";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import DepartmentLoader from "./DepartmentLoader";
 export default function Departments() {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import UpdateDepartments from "./UpdateDepartments";
-import { getFacultyDepartmentsQuery } from "@/server/actions/departments";
+import { getFacultyDepartmentsQuery } from "@/server/actions";
 import { Skeleton } from "@/components/ui/skeleton";
 type Props = {
   faculty_id: string;

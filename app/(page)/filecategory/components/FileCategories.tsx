@@ -1,5 +1,5 @@
 "use client";
-import { getAllFileCategory } from "@/server/actions/filecategory";
+import { getAllFileCategoryQuery } from "@/server/actions";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import React from "react";
 import Header from "./Header";
@@ -10,7 +10,7 @@ export default function FileCategories() {
   const { data: fileCategories, isFetching } = useSuspenseQuery({
     queryKey: ["file_category"],
     queryFn: async (): Promise<TFileCategoryData[]> => {
-      const res = await getAllFileCategory();
+      const res = await getAllFileCategoryQuery();
       if (res?.error) {
         throw new Error(res.error);
       }

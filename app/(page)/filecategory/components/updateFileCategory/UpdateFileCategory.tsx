@@ -29,7 +29,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/components/ui/use-toast";
 import { Pencil } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { updateFileCategory } from "@/server/actions/filecategory";
+import { updateFileCategory } from "@/server/actions";
 
 type Props = {
   id: number;

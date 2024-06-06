@@ -17,7 +17,7 @@ import Header from "./Header";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
-import { getAllFacultyQuery } from "@/server/actions/faculties";
+import { getAllFacultyQuery } from "@/server/actions";
 import FacutiesTableLoader from "./FacutiesTableLoader";
 
 export default function Faculties() {

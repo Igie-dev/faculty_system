@@ -26,7 +26,7 @@ import { createDepartmentSchema } from "@/server/db/schema";
 import { useFormState } from "react-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateDepartment } from "@/server/actions/departments";
+import { updateDepartment } from "@/server/actions";
 import { useToast } from "@/components/ui/use-toast";
 import { Pencil } from "lucide-react";
 type Props = {

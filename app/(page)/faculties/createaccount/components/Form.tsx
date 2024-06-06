@@ -19,7 +19,7 @@ import {
 import { Input } from "@/components/ui/input";
 import FormButtons from "@/components/FormButtons";
 import DepartmentsList from "./DepartmentsList";
-import { createFaculty } from "@/server/actions/faculties";
+import { createFaculty } from "@/server/actions";
 import { useFormState } from "react-dom";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/components/ui/use-toast";

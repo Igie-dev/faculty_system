@@ -25,7 +25,7 @@ import { createDepartmentSchema } from "@/server/db/schema";
 import { useFormState } from "react-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createDepartment } from "@/server/actions/departments";
+import { createDepartment } from "@/server/actions";
 import { useToast } from "@/components/ui/use-toast";
 
 export default function CreateDepartment() {
