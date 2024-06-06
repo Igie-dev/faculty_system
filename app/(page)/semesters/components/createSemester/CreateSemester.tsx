@@ -55,9 +55,9 @@ export default function CreateSemester() {
         toast({
           variant: state.error ? "destructive" : "default",
           title: state.message
-            ? "Create file category success!"
+            ? "Create semester success!"
             : state.error
-            ? "Create file category failed!"
+            ? "Create semester failed!"
             : "",
           description: state.message ?? state.error ?? "",
         });
@@ -88,7 +88,7 @@ export default function CreateSemester() {
           className="flex flex-col space-y-4"
         >
           <DrawerHeader>
-            <DrawerTitle>Create new file category</DrawerTitle>
+            <DrawerTitle>Create new semester</DrawerTitle>
             <DrawerDescription>
               Use this form to create a new semester. Please provide the
               necessary information and click <strong>Create</strong> to add

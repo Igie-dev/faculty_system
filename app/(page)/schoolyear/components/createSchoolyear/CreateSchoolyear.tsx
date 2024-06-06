@@ -48,9 +48,9 @@ export default function CreateSchoolyear() {
         toast({
           variant: state.error ? "destructive" : "default",
           title: state.message
-            ? "Create file category success!"
+            ? "Create school year success!"
             : state.error
-            ? "Create file category failed!"
+            ? "Create school year failed!"
             : "",
           description: state.message ?? state.error ?? "",
         });
@@ -79,7 +79,7 @@ export default function CreateSchoolyear() {
           className="flex flex-col space-y-4"
         >
           <DrawerHeader>
-            <DrawerTitle>Create new file category</DrawerTitle>
+            <DrawerTitle>Create new school year</DrawerTitle>
             <DrawerDescription>
               Use this form to create a new school year. Please provide the
               necessary information and click <strong>Create</strong> to add
