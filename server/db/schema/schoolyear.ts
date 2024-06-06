@@ -8,6 +8,10 @@ import {
   uniqueIndex,
 } from "drizzle-orm/pg-core";
 import { submission } from "./submission";
+import { z } from "zod";
+const numberOnlyRegEx = new RegExp(
+  /^\d+$/
+);
 
 export const schoolyear = pgTable(
   "schoolyear",
@@ -32,3 +36,14 @@ export const schoolyear = pgTable(
 export const schoolyearRelations = relations(schoolyear, ({ many }) => ({
   submissions: many(submission),
 }));
+
+
+///Type schema
+export const createSchoolyearSchema = z.object({
+  schoolyear: z
+    .string({
+      invalid_type_error: "School year must string!",
+    })
+    .min(1, { message: "This field must be filled in!" }).regex(numberOnlyRegEx, "Invalid school year!"),
+
+});
