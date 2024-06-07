@@ -20,10 +20,12 @@ export default function Departments() {
 
   if (isFetching) return <DepartmentLoader />;
   return (
-    <section className="flex flex-col items-center w-full h-full">
-      <Header />
-      <div className="w-full flex flex-1 min-h-0 justify-center overflow-y-auto">
-        <DepartmentList departments={departments} />
+    <section className="flex flex-col items-center w-full h-full md:py-2">
+      <div className="w-full flex flex-1 flex-col min-h-0  md:w-[98%] rounded-lg border bg-background">
+        <Header />
+        <div className="w-full flex flex-1 min-h-0 justify-center overflow-y-auto bg-secondary">
+          <DepartmentList departments={departments} />
+        </div>
       </div>
     </section>
   );

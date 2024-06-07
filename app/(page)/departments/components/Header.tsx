@@ -16,18 +16,17 @@ export default function Header() {
     }
   }, [deferred, router]);
   return (
-    <header className="flex flex-col items-start justify-between w-full gap-5 p-2 pb-5 border-b md:p-4 bg-background">
-      <span className="text-xl font-extrabold fancy_font md:text-2xl">
+    <header className="w-full flex flex-col py-2 space-y-5 ">
+      <span className="text-xl px-2  font-extrabold fancy_font  md:text-2xl">
         Departments
       </span>
-      <div className="flex items-end justify-between w-full">
-        <div className="flex flex-col w-full gap-2 ">
-          <Input
-            placeholder="Search..."
-            onChange={(e) => setInputSearch(e.target.value)}
-            className="w-[90%] max-w-[30rem] bg-primary-foreground"
-          />
-        </div>
+      <div className="w-full flex items-center h-fit gap-4 px-2">
+        <Input
+          type="text"
+          className="w-[70%] md:max-w-[20rem]"
+          placeholder="Search..."
+          onChange={(e) => setInputSearch(e.target.value)}
+        />
         <CreateDepartment />
       </div>
     </header>
