@@ -1,16 +1,39 @@
-import EmptyBox from '@/components/EmptyBox';
-import React from 'react'
-import SchoolYearCard from './SchoolYearCard';
+import EmptyBox from "@/components/EmptyBox";
+import React, { useEffect, useState } from "react";
+import SchoolYearCard from "./SchoolYearCard";
+import { useSearchParams } from "next/navigation";
+import { debounce } from "lodash";
+type Props = {
+  schoolyear: TSchoolYearData[];
+};
+export default function SchoolYearList({ schoolyear }: Props) {
+  const searchParams = useSearchParams();
+  const [filteredSchoolYear, setFilteredSchoolYear] = useState<
+    TSchoolYearData[]
+  >([]);
+  const filter = searchParams.get("sy");
 
-type Props ={
-    schoolyear:TSchoolYearData[]
-}
-export default function SchoolYearList({schoolyear}:Props) {
-    if (schoolyear.length <= 0) return <EmptyBox classNames="mt-10" />;
-  return schoolyear.length >= 1 ? (
+  useEffect(() => {
+    if (!filter) {
+      setFilteredSchoolYear(schoolyear);
+    } else {
+      const filterSchoolYear = () => {
+        const filtered = schoolyear.filter((s) => {
+          const semname = s.school_year.toLowerCase();
+          const lCaseFil = filter.toLowerCase();
+          return semname.includes(lCaseFil);
+        });
+        setFilteredSchoolYear(filtered);
+      };
+      const debouncedFilterSchoolYear = debounce(filterSchoolYear, 1000);
+      debouncedFilterSchoolYear();
+    }
+  }, [schoolyear, filter]);
+  if (schoolyear.length <= 0) return <EmptyBox classNames="mt-10" />;
+  return filteredSchoolYear.length >= 1 ? (
     <ul className="flex flex-wrap w-full h-fit py-1 gap-1 md:p-1">
-      {schoolyear?.map((year) => {
-        return <SchoolYearCard key={year.id} schoolyear={year}/>
+      {filteredSchoolYear?.map((year) => {
+        return <SchoolYearCard key={year.id} schoolyear={year} />;
       })}
     </ul>
   ) : (
