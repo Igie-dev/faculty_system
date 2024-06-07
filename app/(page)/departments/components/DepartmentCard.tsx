@@ -7,7 +7,7 @@ type Props = {
 };
 export default function DepartmentCard({ department }: Props) {
   return (
-    <li className="p-2 flex flex-col border w-full gap-2 pb-4 h-fit  bg-background rounded-sm relative">
+    <li className="p-4 flex flex-col border w-full gap-2  h-fit  bg-background rounded-sm relative">
       <div className="flex items-center justify-end absolute top-2 right-2">
         <UpdateDepartment
           id={department.id}
