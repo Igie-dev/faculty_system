@@ -27,7 +27,7 @@ export default function Header({ table, facultiesLength }: Props) {
             onChange={(event) =>
               table.getColumn("name")?.setFilterValue(event.target.value)
             }
-            className="w-[90%] max-w-[30rem] bg-primary-foreground"
+            className="w-[90%] max-w-[30rem]"
           />
           <div className="flex items-center gap-5">
             <DropdownMenu>
