@@ -86,7 +86,7 @@ export default function CreateFileCategory() {
               <DrawerDescription>
                 Use this form to create a new department. Please provide the
                 necessary information and click <strong>Create</strong> to add
-                the category.
+                new file category.
               </DrawerDescription>
             </DrawerHeader>
             <span className="text-sm text-destructive h-5 w-fit font-semibold flex">

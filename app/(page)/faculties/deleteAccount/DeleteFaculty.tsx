@@ -59,26 +59,26 @@ export default function DeleteFaculty({
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. It will permanently delete the account
-            and remove all associated data from our servers.
+            This action cannot be undone. It will permanently delete this
+            account and remove all associated data from our servers.
           </AlertDialogDescription>
         </AlertDialogHeader>
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-4">
           <span className="text-sm text-muted-foreground">Details</span>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="font-semibold">Name: </span>
+          <div className="flex items-start gap-1 text-sm flex-col">
+            <span className="font-semibold">Name</span>
             <span>{name}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="font-semibold">Email: </span>
+          <div className="flex items-start gap-1 text-sm flex-col">
+            <span className="font-semibold">Email</span>
             <span>{email}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="font-semibold">Contact Number: </span>
+          <div className="flex items-start gap-1 text-sm flex-col">
+            <span className="font-semibold">Contact Number</span>
             <span>{contact}</span>
           </div>
-          <div className="flex items-center gap-2 text-sm">
-            <span className="font-semibold">Role: </span>
+          <div className="flex items-start gap-1 text-sm flex-col">
+            <span className="font-semibold">Role</span>
             <span>{role}</span>
           </div>
         </div>

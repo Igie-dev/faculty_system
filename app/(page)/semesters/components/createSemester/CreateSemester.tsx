@@ -85,7 +85,7 @@ export default function CreateSemester() {
               <DrawerDescription>
                 Use this form to create a new semester. Please provide the
                 necessary information and click <strong>Create</strong> to add
-                the category.
+                new semester.
               </DrawerDescription>
             </DrawerHeader>
             <span className="text-sm text-destructive h-5 w-fit font-semibold flex">

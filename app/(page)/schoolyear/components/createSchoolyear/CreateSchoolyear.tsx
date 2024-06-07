@@ -83,7 +83,7 @@ export default function CreateSchoolyear() {
               <DrawerDescription>
                 Use this form to create a new school year. Please provide the
                 necessary information and click <strong>Create</strong> to add
-                the category.
+                new school year.
               </DrawerDescription>
             </DrawerHeader>
             <span className="text-sm text-destructive h-5 w-fit font-semibold flex">

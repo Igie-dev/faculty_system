@@ -18,7 +18,7 @@ export default function SemesterLoader() {
             <span className="w-[70%] md:max-w-[20rem] h-10 text-sm border rounded-lg flex items-center px-4">
               Loading...
             </span>
-            <span className="bg-primary text-white text-sm h-10 border rounded-lg flex items-center px-x">
+            <span className="bg-primary text-white text-sm h-10 border rounded-lg flex items-center px-4">
               Loading...
             </span>
           </div>

@@ -50,7 +50,7 @@ export default function DeleteDepartment({ id, acronym, name }: Props) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. It will permanently delete the
+            This action cannot be undone. It will permanently delete this
             department and remove all associated data from our servers.
           </AlertDialogDescription>
         </AlertDialogHeader>

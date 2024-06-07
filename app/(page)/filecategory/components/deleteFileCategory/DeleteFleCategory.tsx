@@ -51,7 +51,7 @@ export default function DeleteFleCategory({ id, name, description }: Props) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. It will permanently delete the
+            This action cannot be undone. It will permanently delete this
             category and remove all associated data from our servers.
           </AlertDialogDescription>
         </AlertDialogHeader>
