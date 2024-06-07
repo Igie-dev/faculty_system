@@ -19,7 +19,7 @@ export default function FacutiesTableLoader() {
               <p className="text-sm font-semibold opacity-70">0 Faculties</p>
             </div>
           </div>
-          <div className="border h-10 w-fit px-6 rounded-lg text-sm flex items-center bg-primary text-background">
+          <div className="border h-10 w-fit px-4 rounded-lg text-sm flex items-center bg-primary text-background">
             Loading...
           </div>
         </div>

@@ -64,7 +64,7 @@ export default function CreateDepartment() {
   return (
     <Drawer direction="right">
       <DrawerTrigger asChild>
-        <Button className="rounded-lg"> Create</Button>
+        <Button> Create</Button>
       </DrawerTrigger>
       <DrawerContent className="h-full top-0 right-0 left-auto mt-0 w-full p-2  md:max-w-[30rem] rounded-lg md:px-4">
         <Form {...form}>

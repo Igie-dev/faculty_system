@@ -13,7 +13,6 @@ export default function page() {
         >
           <X absoluteStrokeWidth size={22} />
         </Link>
-
         <Form />
       </main>
     </section>
