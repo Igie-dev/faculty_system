@@ -1,11 +1,10 @@
-"use client"
-import React from 'react'
-import SemesterList from './SemesterList';
-import Header from './Header'
-import SemesterLoader from './SemesterLoader';
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { getAllSemesterQuery } from '@/server/actions';
-
+"use client";
+import React from "react";
+import SemesterList from "./SemesterList";
+import Header from "./Header";
+import SemesterLoader from "./SemesterLoader";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { getAllSemesterQuery } from "@/server/actions";
 export default function Semesters() {
   const { data: semesters, isFetching } = useSuspenseQuery({
     queryKey: ["semesters"],
@@ -19,13 +18,15 @@ export default function Semesters() {
     },
   });
 
-  if (isFetching) return <SemesterLoader/>;
+  if (isFetching) return <SemesterLoader />;
   return (
-    <section className="flex flex-col items-center w-full h-full">
-      <Header />
-      <div className="w-full flex flex-1 min-h-0 justify-center overflow-y-auto">
-      <SemesterList semesters={semesters}/>
+    <section className="flex flex-col items-center w-full h-full md:py-2">
+      <div className="w-full flex flex-1 flex-col min-h-0  md:w-[98%] rounded-lg border bg-background">
+        <Header />
+        <div className="w-full flex flex-1 min-h-0 justify-center overflow-y-auto bg-secondary">
+          <SemesterList semesters={semesters} />
+        </div>
       </div>
     </section>
-  )
+  );
 }
