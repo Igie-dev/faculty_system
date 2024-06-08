@@ -9,7 +9,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/_components/ui/select";
 import {
   Form,
   FormControl,
@@ -17,17 +17,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/app/_components/ui/form";
+import { Input } from "@/app/_components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { updateFacultySchema } from "@/server/db/schema";
 import { z } from "zod";
 import { useFormState } from "react-dom";
 import { updateFaculty } from "@/server/actions";
-import FormButtons from "@/components/FormButtons";
+import FormButtons from "@/app/_components/FormButtons";
 import FacultyDepartments from "./FacultyDepartments";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/app/_components/ui/use-toast";
 
 export default function UpdateDetailsForm({ faculty }: Props) {
   const { toast } = useToast();

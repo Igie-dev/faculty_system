@@ -5,7 +5,7 @@ import { Menu, X } from "lucide-react";
 import Nav from "./Nav";
 import BtnsLoaderSpinner, {
   BtnLoaderClassEnum,
-} from "@/components/loader/BtnLoaderSpinner";
+} from "@/app/_components/loader/BtnLoaderSpinner";
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
 

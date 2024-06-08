@@ -1,6 +1,6 @@
 import React from "react";
-import DataTable from "@/components/DataTable";
-import EmptyBox from "@/components/EmptyBox";
+import DataTable from "@/app/_components/DataTable";
+import EmptyBox from "@/app/_components/EmptyBox";
 import { Table } from "@tanstack/react-table";
 type Props = {
   table: Table<unknown>;

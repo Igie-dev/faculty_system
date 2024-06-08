@@ -7,7 +7,7 @@ import {
   createDepartmentSchema,
   faculty,
 } from "@/server/db/schema";
-import { TFormState } from "@/server/actions";
+import { zodSchemaValidator } from "@/utils/zodSchemaValidator";
 import { revalidatePath } from "next/cache";
 import { ERole } from "@/@types/enums";
 import { getCurrentUser } from "@/lib/auth";
@@ -25,17 +25,9 @@ export const createDepartment = async (
 
     const formData = Object.fromEntries(data);
 
-    const parsed = createDepartmentSchema.safeParse(formData);
-    if (!parsed.success) {
-      const fields: Record<string, string> = {};
-      for (const key of Object.keys(formData)) {
-        fields[key] = formData[key].toString();
-      }
-      return {
-        error: "Invalid form data",
-        fields,
-        issues: parsed.error.issues.map((issue) => issue.message),
-      };
+    const validate = zodSchemaValidator(formData, createDepartmentSchema);
+    if (validate?.error) {
+      return validate;
     }
 
     const foundDepAc = await db.query.department.findFirst({
@@ -165,19 +157,10 @@ export const updateDepartment = async (
 
     const formData = Object.fromEntries(data);
 
-    const parsed = createDepartmentSchema.safeParse(formData);
-    if (!parsed.success) {
-      const fields: Record<string, string> = {};
-      for (const key of Object.keys(formData)) {
-        fields[key] = formData[key].toString();
-      }
-      return {
-        error: "Invalid form data",
-        fields,
-        issues: parsed.error.issues.map((issue) => issue.message),
-      };
+    const validate = zodSchemaValidator(formData, createDepartmentSchema);
+    if (validate?.error) {
+      return validate;
     }
-
     const foundDepartment = await db.query.department.findFirst({
       where: () => sql`${department.id} = ${formData.id}`,
       columns: {

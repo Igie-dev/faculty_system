@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from "@/app/_components/ui/alert-dialog";
 import { signOut } from "next-auth/react";
 export default function SignOutDialog({
   children,

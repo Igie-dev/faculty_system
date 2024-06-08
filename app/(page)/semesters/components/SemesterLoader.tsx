@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/app/_components/ui/skeleton";
 import React from "react";
 
 export default function SemesterLoader() {
@@ -15,12 +15,12 @@ export default function SemesterLoader() {
             Semesters
           </span>
           <div className="w-full flex items-center h-fit gap-4 px-2">
-            <span className="w-[70%] md:max-w-[20rem] h-10 text-sm border rounded-lg flex items-center px-4">
+            <div className="w-[70%] md:max-w-[20rem] h-10 text-sm border rounded-lg flex items-center px-4">
               Loading...
-            </span>
-            <span className="bg-primary text-white text-sm h-10 border rounded-lg flex items-center px-4">
+            </div>
+            <div className="bg-primary text-white text-sm h-10 border rounded-lg flex items-center px-4">
               Loading...
-            </span>
+            </div>
           </div>
         </header>
         <div className="w-full flex flex-1 min-h-0 justify-center overflow-y-auto bg-secondary">

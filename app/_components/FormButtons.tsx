@@ -1,10 +1,10 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/_components/ui/button";
 import React from "react";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
 import BtnsLoaderSpinner, {
   BtnLoaderClassEnum,
-} from "@/components/loader/BtnLoaderSpinner";
+} from "@/app/_components/loader/BtnLoaderSpinner";
 type Props = {
   cancelLink: string;
   cancelText: string;

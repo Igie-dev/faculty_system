@@ -14,7 +14,7 @@ import {
 import { columns } from "./columns";
 import Table from "./Table";
 import Header from "./Header";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/_components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { getAllFacultyQuery } from "@/server/actions";

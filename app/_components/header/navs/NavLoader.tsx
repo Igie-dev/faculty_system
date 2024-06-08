@@ -2,7 +2,7 @@
 import React from "react";
 import BtnsLoaderSpinner, {
   BtnLoaderClassEnum,
-} from "@/components/loader/BtnLoaderSpinner";
+} from "@/app/_components/loader/BtnLoaderSpinner";
 
 export default function NavLoader() {
   return (

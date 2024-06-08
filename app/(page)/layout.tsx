@@ -1,5 +1,5 @@
-import MainHeader from "@/components/header/MainHeader";
-import DesktopNav from "@/components/header/navs/DesktopNav";
+import MainHeader from "@/app/_components/header/MainHeader";
+import DesktopNav from "@/app/_components/header/navs/DesktopNav";
 import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Faculty System",

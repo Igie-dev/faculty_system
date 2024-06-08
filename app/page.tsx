@@ -1,5 +1,5 @@
-import Logo from "@/components/Logo";
-import { Button } from "@/components/ui/button";
+import Logo from "@/app/_components/Logo";
+import { Button } from "@/app/_components/ui/button";
 import Link from "next/link";
 export default function Home() {
   return (

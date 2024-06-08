@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/_components/ui/button";
 import React from "react";
 import errorPng from "@/public/error.png";
 import Image from "next/image";

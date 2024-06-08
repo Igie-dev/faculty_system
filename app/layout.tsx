@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import AuthProvider from "@/components/Provider";
-import { Toaster } from "@/components/ui/toaster";
-import QueryProvider from "@/components/QueryProvider";
+import AuthProvider from "@/app/_components/Provider";
+import { Toaster } from "@/app/_components/ui/toaster";
+import QueryProvider from "@/app/_components/QueryProvider";
 export const metadata: Metadata = {
   title: "Faculty System",
   description: "Deliverables monitoring system",

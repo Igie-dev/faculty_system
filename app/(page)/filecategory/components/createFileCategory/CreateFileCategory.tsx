@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/_components/ui/button";
 
 import {
   Drawer,
@@ -10,7 +10,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@/app/_components/ui/drawer";
 import {
   Form,
   FormControl,
@@ -18,16 +18,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/app/_components/ui/form";
+import { Input } from "@/app/_components/ui/input";
 import { useForm } from "react-hook-form";
 import { createFileCategorySchema } from "@/server/db/schema";
 import { useFormState } from "react-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createFileCategory } from "@/server/actions";
-import { useToast } from "@/components/ui/use-toast";
-import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/app/_components/ui/use-toast";
+import { Textarea } from "@/app/_components/ui/textarea";
 
 export default function CreateFileCategory() {
   const formRef = useRef<HTMLFormElement>(null);

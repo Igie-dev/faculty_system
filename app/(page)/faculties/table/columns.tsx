@@ -7,8 +7,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+} from "@/app/_components/ui/dropdown-menu";
+import { Button } from "@/app/_components/ui/button";
 import { ERole } from "@/@types/enums";
 import DeleteFaculty from "../deleteAccount/DeleteFaculty";
 export const columns: ColumnDef<TFacultyData>[] = [

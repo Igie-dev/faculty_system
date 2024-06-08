@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/_components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -9,7 +9,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@/app/_components/ui/drawer";
 
 import {
   Form,
@@ -18,17 +18,17 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
+} from "@/app/_components/ui/form";
 
-import { Input } from "@/components/ui/input";
+import { Input } from "@/app/_components/ui/input";
 import { useForm } from "react-hook-form";
 import { createFileCategorySchema } from "@/server/db/schema";
 import { useFormState } from "react-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/app/_components/ui/use-toast";
 import { Pencil } from "lucide-react";
-import { Textarea } from "@/components/ui/textarea";
+import { Textarea } from "@/app/_components/ui/textarea";
 import { updateFileCategory } from "@/server/actions";
 
 type Props = {

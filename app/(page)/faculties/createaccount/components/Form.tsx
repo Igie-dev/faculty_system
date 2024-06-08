@@ -7,7 +7,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/app/_components/ui/select";
 import {
   Form,
   FormControl,
@@ -15,14 +15,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import FormButtons from "@/components/FormButtons";
+} from "@/app/_components/ui/form";
+import { Input } from "@/app/_components/ui/input";
+import FormButtons from "@/app/_components/FormButtons";
 import DepartmentsList from "./DepartmentsList";
 import { createFaculty } from "@/server/actions";
 import { useFormState } from "react-dom";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/components/ui/use-toast";
+import { Checkbox } from "@/app/_components/ui/checkbox";
+import { useToast } from "@/app/_components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { createFacultySchema } from "@/server/db/schema";
 import { useForm } from "react-hook-form";

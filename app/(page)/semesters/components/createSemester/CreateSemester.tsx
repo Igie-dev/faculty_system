@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/_components/ui/button";
 
 import {
   Drawer,
@@ -10,7 +10,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/components/ui/drawer";
+} from "@/app/_components/ui/drawer";
 import {
   Form,
   FormControl,
@@ -18,15 +18,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/app/_components/ui/form";
+import { Input } from "@/app/_components/ui/input";
 import { useForm } from "react-hook-form";
 import { createSemesterSchema } from "@/server/db/schema";
 import { useFormState } from "react-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createSemester } from "@/server/actions";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/app/_components/ui/use-toast";
 const ordinalIndicators = ["st", "nd", "rd", "th"];
 export default function CreateSemester() {
   const [ordinal, setOrdinal] = useState("");
@@ -103,11 +103,11 @@ export default function CreateSemester() {
                       <FormItem>
                         <FormLabel>Semester</FormLabel>
                         <FormControl>
-                          <Input
-                            {...field}
-                            type="number"
-                            onChange={(e) => {
-                              if (e.currentTarget.value) {
+                          <div className="flex flex-row gap-1 items-center">
+                            <Input
+                              {...field}
+                              type="text"
+                              onChange={(e) => {
                                 const value = e.currentTarget.value;
                                 form.setValue("semester", value);
                                 if (Number(value) >= 4) {
@@ -117,18 +117,18 @@ export default function CreateSemester() {
                                     ordinalIndicators[Number(value) - 1]
                                   );
                                 }
-                              }
-                            }}
-                            className="w-20"
-                          />
+                              }}
+                              className="w-20"
+                            />
+                            <span className="h-10 border rounded-md flex items-center justify-center w-16">
+                              {ordinal}
+                            </span>
+                          </div>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <span className="h-10 border rounded-md flex items-center justify-center w-16">
-                    {ordinal}
-                  </span>
                 </div>
               </div>
             </div>

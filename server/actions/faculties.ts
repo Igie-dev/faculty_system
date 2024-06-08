@@ -8,7 +8,7 @@ import { ERole } from "@/@types/enums";
 import { revalidatePath } from "next/cache";
 import { faculty, facultyDepartment } from "@/server/db/schema";
 import { createFacultySchema, updateFacultySchema } from "@/server/db/schema";
-import {TFormState} from "@/server/actions"
+import { zodSchemaValidator } from "@/utils/zodSchemaValidator";
 const saltRound = 9;
 //Get all faculty data fields
 
@@ -32,19 +32,9 @@ export const createFaculty = async (
     }[];
 
     //Validate data with zod
-    const parsed = createFacultySchema.safeParse(formData);
-
-    if (!parsed.success) {
-      const fields: Record<string, string> = {};
-      for (const key of Object.keys(formData)) {
-        fields[key] = formData[key].toString();
-      }
-
-      return {
-        error: "Invalid form data",
-        fields,
-        issues: parsed.error.issues.map((issue) => issue.message),
-      };
+    const validate = zodSchemaValidator(formData, createFacultySchema);
+    if (validate?.error) {
+      return validate;
     }
 
     if (facultyDepartments?.length <= 0) {
@@ -234,19 +224,9 @@ export const updateFaculty = async (
     const formData = Object.fromEntries(data);
 
     //Validate data with zod
-    const parsed = updateFacultySchema.safeParse(formData);
-
-    if (!parsed.success) {
-      const fields: Record<string, string> = {};
-      for (const key of Object.keys(formData)) {
-        fields[key] = formData[key].toString();
-      }
-
-      return {
-        error: "Invalid form data",
-        fields,
-        issues: parsed.error.issues.map((issue) => issue.message),
-      };
+    const validate = zodSchemaValidator(formData, updateFacultySchema);
+    if (validate?.error) {
+      return validate;
     }
 
     const foundFaculty = await db.query.faculty.findFirst({

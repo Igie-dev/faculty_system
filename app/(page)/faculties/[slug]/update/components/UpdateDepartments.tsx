@@ -7,11 +7,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { getAllDepartmentsQuery , updateFacultyDepartments } from "@/server/actions";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useToast } from "@/components/ui/use-toast";
+} from "@/app/_components/ui/dialog";
+import { Button } from "@/app/_components/ui/button";
+import {
+  getAllDepartmentsQuery,
+  updateFacultyDepartments,
+} from "@/server/actions";
+import { Checkbox } from "@/app/_components/ui/checkbox";
+import { useToast } from "@/app/_components/ui/use-toast";
 type Props = {
   faculty_id: string;
   facultyCurrentDepartments: TFacultyDepartment[];

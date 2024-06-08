@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/_components/ui/button";
 import { ServerCrash } from "lucide-react";
 type Props = {
   error: Error & { digest?: string };

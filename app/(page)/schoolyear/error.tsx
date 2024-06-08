@@ -1,6 +1,6 @@
 "use client"; // Error components must be Client Components
 import { useEffect } from "react";
-import ServerCrashError from "@/components/ServerCrashError";
+import ServerCrashError from "@/app/_components/ServerCrashError";
 export default function Error({
   error,
   reset,

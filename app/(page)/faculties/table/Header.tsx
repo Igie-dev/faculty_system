@@ -1,12 +1,12 @@
 import React from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/app/_components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+} from "@/app/_components/ui/dropdown-menu";
+import { Button } from "@/app/_components/ui/button";
 import Link from "next/link";
 import { Table } from "@tanstack/react-table";
 type Props = {

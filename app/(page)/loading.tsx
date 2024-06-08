@@ -1,4 +1,4 @@
-import LoadingSpinner from "@/components/loader/LoadingSpinner";
+import LoadingSpinner from "@/app/_components/loader/LoadingSpinner";
 import React from "react";
 
 export default function loading() {

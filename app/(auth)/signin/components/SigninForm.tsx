@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/app/_components/ui/button";
 import { useRouter } from "next/navigation";
 import {
   Form,
@@ -12,15 +12,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from "@/app/_components/ui/form";
+import { Input } from "@/app/_components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import googleIcon from "@/public/icons8-google-48.png";
 import BtnLoaderSpinner, {
   BtnLoaderClassEnum,
-} from "@/components/loader/BtnLoaderSpinner";
+} from "@/app/_components/loader/BtnLoaderSpinner";
 const formSchema = z.object({
   email: z
     .string()

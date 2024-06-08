@@ -3,7 +3,7 @@
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
 import { fileCategory, createFileCategorySchema } from "@/server/db/schema";
-import { TFormState } from "@/server/actions";
+import { zodSchemaValidator } from "@/utils/zodSchemaValidator";
 import { revalidatePath } from "next/cache";
 import { ERole } from "@/@types/enums";
 import { getCurrentUser } from "@/lib/auth";
@@ -22,17 +22,9 @@ export const createFileCategory = async (
 
     const formData = Object.fromEntries(data);
 
-    const parsed = createFileCategorySchema.safeParse(formData);
-    if (!parsed.success) {
-      const fields: Record<string, string> = {};
-      for (const key of Object.keys(formData)) {
-        fields[key] = formData[key].toString();
-      }
-      return {
-        error: "Invalid form data",
-        fields,
-        issues: parsed.error.issues.map((issue) => issue.message),
-      };
+    const validate = zodSchemaValidator(formData, createFileCategorySchema);
+    if (validate?.error) {
+      return validate;
     }
 
     const foundCategoryExist = await db.query.fileCategory.findFirst({
@@ -101,17 +93,9 @@ export const updateFileCategory = async (
     }
     const formData = Object.fromEntries(data);
 
-    const parsed = createFileCategorySchema.safeParse(formData);
-    if (!parsed.success) {
-      const fields: Record<string, string> = {};
-      for (const key of Object.keys(formData)) {
-        fields[key] = formData[key].toString();
-      }
-      return {
-        error: "Invalid form data",
-        fields,
-        issues: parsed.error.issues.map((issue) => issue.message),
-      };
+    const validate = zodSchemaValidator(formData, createFileCategorySchema);
+    if (validate?.error) {
+      return validate;
     }
 
     const foundExistFileCat = await db.query.fileCategory.findFirst({

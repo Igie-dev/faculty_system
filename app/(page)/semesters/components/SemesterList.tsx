@@ -1,4 +1,4 @@
-import EmptyBox from "@/components/EmptyBox";
+import EmptyBox from "@/app/_components/EmptyBox";
 import React, { useEffect, useState } from "react";
 import SemesterCard from "./SemesterCard";
 import { useSearchParams } from "next/navigation";

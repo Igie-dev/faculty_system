@@ -1,4 +1,4 @@
-import { Input } from "@/components/ui/input";
+import { Input } from "@/app/_components/ui/input";
 import React, { useEffect, useState } from "react";
 import CreateDepartment from "./createDepartment/CreateDepartment";
 import { useRouter } from "next/navigation";
