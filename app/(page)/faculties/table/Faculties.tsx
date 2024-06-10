@@ -52,33 +52,35 @@ export default function Faculties({ faculties }: Props) {
 
   if (faculties)
     return (
-      <section className="flex flex-col items-center w-full h-full">
-        <Header table={table} facultiesLength={faculties.length} />
-        <Table table={table} column={col} />
-        {faculties?.length >= 20 ? (
-          <footer className="flex w-full px-4 items-center justify-end py-4 space-x-2">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-              className="flex items-center gap-1 py-2 pl-2 pr-3"
-            >
-              <ChevronLeft size={20} />
-              <span>Previous</span>
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-              className="flex items-center gap-1 py-2 pl-3 pr-2"
-            >
-              <span>Next</span>
-              <ChevronRight size={20} />
-            </Button>
-          </footer>
-        ) : null}
+      <section className="flex flex-col items-center w-full h-full md:py-2">
+        <div className="w-full flex flex-1 flex-col min-h-0  md:w-[98%] rounded-lg border bg-background">
+          <Header table={table} facultiesLength={faculties.length} />
+          <Table table={table} column={col} />
+          {faculties?.length >= 20 ? (
+            <footer className="flex w-full px-4 items-center justify-end py-4 space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.previousPage()}
+                disabled={!table.getCanPreviousPage()}
+                className="flex items-center gap-1 py-2 pl-2 pr-3"
+              >
+                <ChevronLeft size={20} />
+                <span>Previous</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => table.nextPage()}
+                disabled={!table.getCanNextPage()}
+                className="flex items-center gap-1 py-2 pl-3 pr-2"
+              >
+                <span>Next</span>
+                <ChevronRight size={20} />
+              </Button>
+            </footer>
+          ) : null}
+        </div>
       </section>
     );
 }
