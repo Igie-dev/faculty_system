@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import AuthProvider from "@/app/_components/Provider";
 import { Toaster } from "@/app/_components/ui/toaster";
-import QueryProvider from "@/app/_components/QueryProvider";
+import Provider from "./_components/Provider";
 export const metadata: Metadata = {
   title: "Faculty System",
   description: "Deliverables monitoring system",
@@ -16,9 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <QueryProvider>
-          <AuthProvider>{children}</AuthProvider>
-        </QueryProvider>
+        <Provider>{children}</Provider>
         <Toaster />
       </body>
     </html>

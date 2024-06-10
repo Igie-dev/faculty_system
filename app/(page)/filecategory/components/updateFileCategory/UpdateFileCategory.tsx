@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { Button } from "@/app/_components/ui/button";
 import {
   Drawer,
@@ -22,15 +22,15 @@ import {
 
 import { Input } from "@/app/_components/ui/input";
 import { useForm } from "react-hook-form";
-import { createFileCategorySchema } from "@/server/db/schema";
-import { useFormState } from "react-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useToast } from "@/app/_components/ui/use-toast";
 import { Pencil } from "lucide-react";
 import { Textarea } from "@/app/_components/ui/textarea";
-import { updateFileCategory } from "@/server/actions";
-
+import { createFileCategorySchema } from "@/utils/zodSchema";
+import { useRouter } from "next/navigation";
+import { api } from "@/trpc/react";
+import BtnLoader from "@/app/_components/BtnLoader";
 type Props = {
   id: number;
   name: string;
@@ -39,9 +39,27 @@ type Props = {
 
 export default function UpdateFileCategory({ id, name, description }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
   const { toast } = useToast();
-  const [state, formAction] = useFormState(updateFileCategory, {
-    message: "",
+  const { mutate, isPending, error } = api.filecategory.update.useMutation({
+    onSuccess: (context) => {
+      toast({
+        variant: "default",
+        title: "Update file category success!",
+        description: context.message ?? "Update file category cuccess",
+      });
+      router.refresh();
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Update file category failed!",
+        description:
+          error.data?.zodError?.formErrors[0] ??
+          error?.message ??
+          "Update file category failed",
+      });
+    },
   });
 
   const form = useForm<z.infer<typeof createFileCategorySchema>>({
@@ -49,26 +67,8 @@ export default function UpdateFileCategory({ id, name, description }: Props) {
     defaultValues: {
       name: name,
       description: description,
-      ...(state?.fields ?? {}),
     },
   });
-
-  useEffect(() => {
-    if (state.message || state.error) {
-      toast({
-        variant: state.error ? "destructive" : "default",
-        title: state.message
-          ? "Create file category success!"
-          : state.error
-          ? "Create file category failed!"
-          : "",
-        description: state.message ?? state.error ?? "",
-      });
-      if (state.message) {
-        form.reset();
-      }
-    }
-  }, [state, toast, form]);
 
   return (
     <Drawer direction="right">
@@ -85,13 +85,10 @@ export default function UpdateFileCategory({ id, name, description }: Props) {
               evt.preventDefault();
               form.handleSubmit(() => {
                 const formData = new FormData(formRef.current!);
-                formData.append("id", JSON.stringify(id));
-                formAction(formData);
+                const name = formData.get("name") as string;
+                const description = formData.get("description") as string;
+                mutate({ id, name, description });
               })(evt);
-            }}
-            action={(form: FormData) => {
-              form.append("id", JSON.stringify(id));
-              formAction(form);
             }}
             className="flex flex-col space-y-4"
           >
@@ -104,8 +101,11 @@ export default function UpdateFileCategory({ id, name, description }: Props) {
               </DrawerDescription>
             </DrawerHeader>
             <span className="text-sm text-destructive  h-5 w-fit font-semibold flex">
-              {state?.error ? (
-                <p className="font-normal">Error: {` ${state?.error}`}</p>
+              {error?.message ? (
+                <p className="font-normal">
+                  <strong>Error:</strong>
+                  {` ${error.data?.zodError?.formErrors[0] ?? error?.message}`}
+                </p>
               ) : null}
             </span>
             <div className="flex flex-col gap-3">
@@ -146,13 +146,24 @@ export default function UpdateFileCategory({ id, name, description }: Props) {
             </div>
             <DrawerFooter className="flex-row gap-4 px-0">
               <DrawerClose asChild className="w-[50%]">
-                <Button type="button" variant="outline">
+                <Button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => {
+                    form.reset();
+                  }}
+                  variant="outline"
+                >
                   Cancel
                 </Button>
               </DrawerClose>
-              <Button type="submit" className="w-[50%]">
-                Update
-              </Button>
+              {isPending ? (
+                <BtnLoader classNames="flex-1" />
+              ) : (
+                <Button disabled={isPending} type="submit" className="w-[50%]">
+                  Update
+                </Button>
+              )}
             </DrawerFooter>
           </form>
         </Form>

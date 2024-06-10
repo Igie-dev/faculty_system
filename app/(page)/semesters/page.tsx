@@ -1,22 +1,20 @@
 import React from "react";
-import Semesters from "./components/Semesters";
-import { getQueryClient } from "@/app/service/queryClient";
-import { getAllSemesterQuery } from "@/server/actions";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
+
+import SemesterLoader from "./components/SemesterLoader";
+import SemesterList from "./components/SemesterList";
+import Header from "./components/Header";
+import { api } from "@/trpc/server";
 export default async function page() {
-const queryClient = getQueryClient();
-await queryClient.prefetchQuery({
-  queryKey:["semesters"],
-  queryFn:async() => {
-    const res = await getAllSemesterQuery();
-    if(res?.error){
-      throw new Error(res.error)
-    }
-    return res?.data as TSemesterData[];
-  }
-})
-  return <HydrationBoundary state={dehydrate(queryClient)}>
-     <Semesters/>
-  </HydrationBoundary>
- 
+  const res = await api.semester.getAll();
+  if (!res?.data) return <SemesterLoader />;
+  return (
+    <section className="flex flex-col items-center w-full h-full md:py-2">
+      <div className="w-full flex flex-1 flex-col min-h-0  md:w-[98%] rounded-lg border bg-background">
+        <Header />
+        <div className="w-full flex flex-1 min-h-0 justify-center overflow-y-auto bg-secondary">
+          <SemesterList semesters={res?.data} />
+        </div>
+      </div>
+    </section>
+  );
 }

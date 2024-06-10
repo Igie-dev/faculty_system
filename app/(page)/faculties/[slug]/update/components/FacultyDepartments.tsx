@@ -1,29 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import UpdateDepartments from "./UpdateDepartments";
-import { getFacultyDepartmentsQuery } from "@/server/actions";
 import { Skeleton } from "@/app/_components/ui/skeleton";
+import { api } from "@/trpc/react";
+
 type Props = {
   faculty_id: string;
 };
 export default function FacultyDepartments({ faculty_id }: Props) {
-  const [isFetching, setIsFetching] = useState(false);
-  const [facultyDepartments, setFacultyDepartments] = useState<
-    TFacultyDepartment[]
-  >([]);
-
-  useEffect(() => {
-    if (!faculty_id) return;
-    (async () => {
-      setIsFetching(true);
-      const deps = await getFacultyDepartmentsQuery(faculty_id);
-      if (deps) {
-        if (deps?.data) {
-          setFacultyDepartments(deps.data);
-        }
-        setIsFetching(false);
-      }
-    })();
-  }, [faculty_id]);
+  const { data, isFetching } =
+    api.department.getFacultyDepartments.useQuery(faculty_id);
+  const departments = data?.data as TFacultyDepartment[];
 
   return (
     <div className="w-full flex flex-col border-t pt-5 !mt-10">
@@ -33,7 +19,7 @@ export default function FacultyDepartments({ faculty_id }: Props) {
         </span>
         <UpdateDepartments
           faculty_id={faculty_id}
-          facultyCurrentDepartments={facultyDepartments}
+          facultyCurrentDepartments={departments}
         />
       </div>
       <ul className="w-full flex flex-col mt-5">
@@ -60,13 +46,13 @@ export default function FacultyDepartments({ faculty_id }: Props) {
               <Skeleton className=" h-3 w-[70%] lg:max-w-[20rem]" />
             </li>
           </>
-        ) : !isFetching && facultyDepartments.length <= 0 ? (
+        ) : !isFetching && departments?.length <= 0 ? (
           <span className="text-sm text-muted-foreground">
             No departments found!
           </span>
         ) : (
           !isFetching &&
-          facultyDepartments.map((dep) => {
+          departments?.map((dep) => {
             return (
               <li
                 key={dep.department.dep_id}

@@ -1,24 +1,9 @@
 import React from "react";
 import Faculties from "./table/Faculties";
-import { getAllFacultyQuery } from "@/server/actions";
-import { HydrationBoundary, dehydrate } from "@tanstack/react-query";
-import { getQueryClient } from "@/app/service/queryClient";
+import { api } from "@/trpc/server";
+import FacutiesTableLoader from "./table/FacutiesTableLoader";
 export default async function page() {
-  const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["faculties"],
-    queryFn: async (): Promise<TFacultyData[]> => {
-      const res = await getAllFacultyQuery();
-      if (res?.error) {
-        throw new Error(res?.error);
-      }
-      return res?.data as TFacultyData[];
-    },
-  });
-
-  return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <Faculties />
-    </HydrationBoundary>
-  );
+  const res = await api.faculty.getAll();
+  if (!res?.data) return <FacutiesTableLoader />;
+  return <Faculties faculties={res?.data} />;
 }

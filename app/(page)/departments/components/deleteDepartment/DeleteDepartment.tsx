@@ -12,7 +12,9 @@ import {
 } from "@/app/_components/ui/alert-dialog";
 import { Button } from "@/app/_components/ui/button";
 import { Trash } from "lucide-react";
-import { deleteDepartmentById } from "@/server/actions";
+import { api } from "@/trpc/react";
+import BtnLoader from "@/app/_components/BtnLoader";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/app/_components/ui/use-toast";
 type Props = {
   id: number;
@@ -20,20 +22,30 @@ type Props = {
   name: string;
 };
 export default function DeleteDepartment({ id, acronym, name }: Props) {
+  const router = useRouter();
   const { toast } = useToast();
-  const handleDelete = async () => {
-    const res = await deleteDepartmentById(id);
-    if (res?.message || res?.error) {
+  const { mutate, isPending } = api.department.delete.useMutation({
+    onSuccess: (context) => {
       toast({
-        variant: res.error ? "destructive" : "default",
-        title: res.message
-          ? "Delete department success!"
-          : res.error
-          ? "Delete department failed!"
-          : "",
-        description: res.message ?? res.error ?? "",
+        variant: "default",
+        title: "Delete department success!",
+        description: context.message ?? "Delete department cuccess",
       });
-    }
+      router.refresh();
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Delete department failed!",
+        description:
+          error.data?.zodError?.formErrors[0] ??
+          error?.message ??
+          "Delete department failed",
+      });
+    },
+  });
+  const handleDelete = async () => {
+    mutate(id);
   };
   return (
     <AlertDialog>
@@ -62,8 +74,20 @@ export default function DeleteDepartment({ id, acronym, name }: Props) {
           </div>
         </div>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete}>Continue</AlertDialogAction>
+          <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
+          <AlertDialogAction asChild>
+            {isPending ? (
+              <BtnLoader classNames="px-8" />
+            ) : (
+              <Button
+                size="default"
+                disabled={isPending}
+                onClick={handleDelete}
+              >
+                Continue
+              </Button>
+            )}
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

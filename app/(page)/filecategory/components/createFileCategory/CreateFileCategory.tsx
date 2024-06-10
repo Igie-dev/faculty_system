@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { Button } from "@/app/_components/ui/button";
 
 import {
@@ -21,19 +21,38 @@ import {
 } from "@/app/_components/ui/form";
 import { Input } from "@/app/_components/ui/input";
 import { useForm } from "react-hook-form";
-import { createFileCategorySchema } from "@/server/db/schema";
-import { useFormState } from "react-dom";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createFileCategory } from "@/server/actions";
 import { useToast } from "@/app/_components/ui/use-toast";
 import { Textarea } from "@/app/_components/ui/textarea";
+import { z } from "zod";
+import { api } from "@/trpc/react";
+import BtnLoader from "@/app/_components/BtnLoader";
+import { useRouter } from "next/navigation";
+import { createFileCategorySchema } from "@/utils/zodSchema";
 
 export default function CreateFileCategory() {
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
   const { toast } = useToast();
-  const [state, formAction] = useFormState(createFileCategory, {
-    message: "",
+  const { mutate, isPending, error } = api.filecategory.create.useMutation({
+    onSuccess: (context) => {
+      toast({
+        variant: "default",
+        title: "Create file category success!",
+        description: context.message ?? "Create file category cuccess",
+      });
+      router.refresh();
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Create file category failed!",
+        description:
+          error.data?.zodError?.formErrors[0] ??
+          error?.message ??
+          "Create file category failed",
+      });
+    },
   });
 
   const form = useForm<z.infer<typeof createFileCategorySchema>>({
@@ -41,26 +60,8 @@ export default function CreateFileCategory() {
     defaultValues: {
       name: "",
       description: "",
-      ...(state?.fields ?? {}),
     },
   });
-
-  useEffect(() => {
-    if (state.message || state.error) {
-      toast({
-        variant: state.error ? "destructive" : "default",
-        title: state.message
-          ? "Create file category success!"
-          : state.error
-          ? "Create file category failed!"
-          : "",
-        description: state.message ?? state.error ?? "",
-      });
-      if (state.message) {
-        form.reset();
-      }
-    }
-  }, [state, toast, form]);
 
   return (
     <Drawer direction="right">
@@ -75,10 +76,11 @@ export default function CreateFileCategory() {
               evt.preventDefault();
               form.handleSubmit(() => {
                 const formData = new FormData(formRef.current!);
-                formAction(formData);
+                const name = formData.get("name") as string;
+                const description = formData.get("description") as string;
+                mutate({ name, description });
               })(evt);
             }}
-            action={formAction}
             className="flex flex-col space-y-4"
           >
             <DrawerHeader>
@@ -90,8 +92,11 @@ export default function CreateFileCategory() {
               </DrawerDescription>
             </DrawerHeader>
             <span className="text-sm text-destructive h-5 w-fit font-semibold flex">
-              {state?.error ? (
-                <p className="font-normal">Error: {` ${state?.error}`}</p>
+              {error?.message ? (
+                <p className="font-normal">
+                  <strong>Error:</strong>
+                  {` ${error.data?.zodError?.formErrors[0] ?? error?.message}`}
+                </p>
               ) : null}
             </span>
             <div className="flex flex-col gap-3">
@@ -132,13 +137,24 @@ export default function CreateFileCategory() {
             </div>
             <DrawerFooter className="flex-row gap-4 px-0">
               <DrawerClose asChild className="w-[50%]">
-                <Button type="button" variant="outline">
+                <Button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => {
+                    form.reset();
+                  }}
+                  variant="outline"
+                >
                   Cancel
                 </Button>
               </DrawerClose>
-              <Button type="submit" className="w-[50%]">
-                Create
-              </Button>
+              {isPending ? (
+                <BtnLoader classNames="flex-1" />
+              ) : (
+                <Button disabled={isPending} type="submit" className="w-[50%]">
+                  Create
+                </Button>
+              )}
             </DrawerFooter>
           </form>
         </Form>

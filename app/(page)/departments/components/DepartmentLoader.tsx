@@ -12,14 +12,14 @@ export default function DepartmentLoader() {
           <span className="text-xl px-2  font-extrabold fancy_font  md:text-2xl">
             Departments
           </span>
-          <div className="w-full flex items-center h-fit gap-4 px-2">
+          <nav className="w-full flex items-center h-fit gap-4 px-2">
             <div className="w-[70%] md:max-w-[20rem] h-10 text-sm border rounded-lg flex items-center px-4">
               Loading...
             </div>
             <div className="bg-primary text-white text-sm h-10 border rounded-lg flex items-center px-4">
               Loading...
             </div>
-          </div>
+          </nav>
         </header>
         <div className="w-full flex flex-1 min-h-0 justify-center overflow-y-auto bg-secondary">
           <ul className="flex flex-wrap w-full h-fit gap-2 md:p-2">

@@ -1,4 +1,4 @@
-import LoadingSpinner from "@/app/_components/loader/LoadingSpinner";
+import Loader from "@/app/_components/Loader";
 import React from "react";
 export default function FacutiesTableLoader() {
   return (
@@ -25,7 +25,7 @@ export default function FacutiesTableLoader() {
         </div>
       </header>
       <main className="flex relative flex-1 w-full">
-        <LoadingSpinner />
+        <Loader />
       </main>
     </section>
   );

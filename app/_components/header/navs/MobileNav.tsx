@@ -1,11 +1,8 @@
 "use client";
 import React, { useRef } from "react";
 import { Button } from "../../ui/button";
-import { Menu, X } from "lucide-react";
+import { LoaderCircle, Menu, X } from "lucide-react";
 import Nav from "./Nav";
-import BtnsLoaderSpinner, {
-  BtnLoaderClassEnum,
-} from "@/app/_components/loader/BtnLoaderSpinner";
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
 
@@ -34,7 +31,7 @@ export default function MobileNav() {
         className=" text-muted-foreground "
       >
         {!session ? (
-          <BtnsLoaderSpinner classNames={BtnLoaderClassEnum.BLACK_RING} />
+          <LoaderCircle size={20} className="animate-spin" />
         ) : (
           <Menu absoluteStrokeWidth size={20} />
         )}
@@ -53,7 +50,7 @@ export default function MobileNav() {
             className="absolute top-2 -right-5 text-muted-foreground z-50"
           >
             {!session ? (
-              <BtnsLoaderSpinner classNames={BtnLoaderClassEnum.BLACK_RING} />
+              <LoaderCircle size={20} className="animate-spin" />
             ) : (
               <X absoluteStrokeWidth size={20} />
             )}

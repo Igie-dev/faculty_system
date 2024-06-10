@@ -18,9 +18,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import googleIcon from "@/public/icons8-google-48.png";
-import BtnLoaderSpinner, {
-  BtnLoaderClassEnum,
-} from "@/app/_components/loader/BtnLoaderSpinner";
+import BtnLoader from "@/app/_components/BtnLoader";
 const formSchema = z.object({
   email: z
     .string()
@@ -149,13 +147,19 @@ export default function SigninForm() {
         >
           Forgot password
         </a>
-        <Button size="lg" disabled={isLoading} type="submit" className="!mt-5">
-          {isLoading ? (
-            <BtnLoaderSpinner classNames={BtnLoaderClassEnum.WHITE_RING} />
-          ) : (
-            "Sign In"
-          )}
-        </Button>
+        {isLoading ? (
+          <BtnLoader />
+        ) : (
+          <Button
+            size="lg"
+            disabled={isLoading}
+            type="submit"
+            className="!mt-5"
+          >
+            Sign In
+          </Button>
+        )}
+
         <div className="w-full flex flex-col items-center gap-5 relative border-t !mt-10">
           <span className="bg-background px-6 text-sm text-muted-foreground font-semibold absolute -top-3">
             or

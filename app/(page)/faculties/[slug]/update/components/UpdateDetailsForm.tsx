@@ -1,8 +1,5 @@
 "use client";
-import React, { useRef, useEffect } from "react";
-type Props = {
-  faculty: TFacultyData;
-};
+import React, { useRef } from "react";
 import {
   Select,
   SelectContent,
@@ -21,43 +18,60 @@ import {
 import { Input } from "@/app/_components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateFacultySchema } from "@/server/db/schema";
 import { z } from "zod";
-import { useFormState } from "react-dom";
-import { updateFaculty } from "@/server/actions";
-import FormButtons from "@/app/_components/FormButtons";
 import FacultyDepartments from "./FacultyDepartments";
 import { useToast } from "@/app/_components/ui/use-toast";
+import { api } from "@/trpc/react";
+import BtnLoader from "@/app/_components/BtnLoader";
+import { useRouter } from "next/navigation";
+import { Button } from "@/app/_components/ui/button";
+import { createFacultySchema } from "@/utils/zodSchema";
+
+const updateSchema = createFacultySchema
+  .pick({
+    email: true,
+    contact: true,
+    role: true,
+  })
+  .extend({ name: z.string() });
+
+type Props = {
+  faculty: any;
+};
 
 export default function UpdateDetailsForm({ faculty }: Props) {
   const { toast } = useToast();
   const formRef = useRef<HTMLFormElement>(null);
-  const [state, formAction] = useFormState(updateFaculty, {
-    message: "",
+  const router = useRouter();
+  const { mutate, isPending, error } = api.faculty.update.useMutation({
+    onSuccess: (context) => {
+      toast({
+        variant: "default",
+        title: "Update faculty account success!",
+        description: context.message ?? "Update faculty account cuccess",
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Update faculty account failed!",
+        description:
+          error.data?.zodError?.formErrors[0] ??
+          error?.message ??
+          "Update faculty account failed",
+      });
+    },
   });
-  const form = useForm<z.infer<typeof updateFacultySchema>>({
-    resolver: zodResolver(updateFacultySchema),
+
+  const form = useForm<z.infer<typeof updateSchema>>({
+    resolver: zodResolver(updateSchema),
     defaultValues: {
       name: faculty?.name,
       email: faculty?.email,
       contact: faculty?.contact,
       role: faculty?.role,
-      ...(state?.fields ?? {}),
     },
   });
-  useEffect(() => {
-    if (state.message || state.error) {
-      toast({
-        variant: state.error ? "destructive" : "default",
-        title: state.message
-          ? "Update account success!"
-          : state.error
-          ? "Create account failed!"
-          : "",
-        description: state.message ?? state.error ?? "",
-      });
-    }
-  }, [state, toast]);
 
   return (
     <Form {...form}>
@@ -72,8 +86,11 @@ export default function UpdateDetailsForm({ faculty }: Props) {
         </div>
       </header>
       <span className="text-sm text-destructive my-5 w-full  h-5 justify-start font-semibold flex">
-        {state?.error ? (
-          <p className="font-normal">Error: {` ${state?.error}`}</p>
+        {error?.message ? (
+          <p className="font-normal">
+            <strong>Error:</strong>
+            {` ${error.data?.zodError?.formErrors[0] ?? error?.message}`}
+          </p>
         ) : null}
       </span>
       <form
@@ -82,14 +99,18 @@ export default function UpdateDetailsForm({ faculty }: Props) {
           evt.preventDefault();
           form.handleSubmit(() => {
             const formData = new FormData(formRef.current!);
-            formData.append("faculty_id", faculty.faculty_id);
-            formAction(formData);
+            const name = formData.get("name") as string;
+            const email = formData.get("email") as string;
+            const contact = formData.get("contact") as string;
+            const role = formData.get("role") as string;
+            mutate({
+              facultyId: faculty.faculty_id,
+              name,
+              email,
+              contact,
+              role,
+            });
           })(evt);
-        }}
-        action={(form: FormData) => {
-          const formData = form;
-          formData.append("faculty_id", faculty.faculty_id);
-          formAction(formData);
         }}
         className="w-full flex flex-col space-y-4 mt-5"
       >
@@ -180,11 +201,26 @@ export default function UpdateDetailsForm({ faculty }: Props) {
         </div>
         <FacultyDepartments faculty_id={faculty?.faculty_id} />
         <div className="flex items-center !mt-10 flex-row-reverse">
-          <FormButtons
-            cancelLink="/faculties"
-            cancelText="Cancel"
-            submitText="Update"
-          />
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              disabled={isPending}
+              onClick={() => {
+                router.push("/faculties");
+              }}
+              variant="outline"
+            >
+              Cancel
+            </Button>
+
+            {isPending ? (
+              <BtnLoader classNames="flex-1" />
+            ) : (
+              <Button disabled={isPending} type="submit" className="w-[50%]">
+                Save
+              </Button>
+            )}
+          </div>
         </div>
       </form>
     </Form>

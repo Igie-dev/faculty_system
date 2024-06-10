@@ -1,25 +1,19 @@
-import { getQueryClient } from "@/app/service/queryClient";
-import { getAllFileCategoryQuery } from "@/server/actions";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import React from "react";
-import FileCategories from "./components/FileCategories";
-
+import FileCategoryList from "./components/FileCategoryList";
+import Header from "./components/Header";
+import FileCategoryLoader from "./components/FileCategoryLoader";
+import { api } from "@/trpc/server";
 export default async function page() {
-  const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["file_category"],
-    queryFn: async (): Promise<TFileCategoryData[]> => {
-      const res = await getAllFileCategoryQuery();
-      if (res?.error) {
-        throw new Error(res.error);
-      }
-
-      return res?.data as TFileCategoryData[];
-    },
-  });
+  const res = await api.filecategory.getAll();
+  if (!res?.data) return <FileCategoryLoader />;
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <FileCategories />
-    </HydrationBoundary>
+    <section className="flex flex-col items-center w-full h-full md:py-2">
+      <div className="w-full flex flex-1 flex-col min-h-0  md:w-[98%] rounded-lg border bg-background">
+        <Header />
+        <div className="w-full flex flex-1 min-h-0 justify-center overflow-y-auto bg-secondary">
+          <FileCategoryList fileCategories={res?.data} />
+        </div>
+      </div>
+    </section>
   );
 }

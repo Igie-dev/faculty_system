@@ -1,15 +1,17 @@
 import React from "react";
-import { getFacultyQuery } from "@/server/actions";
 import UpdateDetailsForm from "./components/UpdateDetailsForm";
 import { X } from "lucide-react";
 import Link from "next/link";
+import { api } from "@/trpc/server";
+import Loader from "@/app/_components/Loader";
 export default async function page({ params }: { params: { slug: string } }) {
-  const res = await getFacultyQuery(params.slug);
-  if (res?.error) {
-    throw new Error("Failed to get faculty details!");
-  }
-  const faculty = res?.data as TFacultyData;
-
+  const res = await api.faculty.getByFacultyId(params.slug);
+  if (!res?.data)
+    return (
+      <div className="w-full h-full relative">
+        <Loader />
+      </div>
+    );
   return (
     <section className="w-full h-full flex justify-center overflow-y-auto">
       <main className="w-full relative h-fit px-4 py-8 flex-col md:my-5 md:w-[95%] lg:max-w-[75rem] bg-background flex items-center md:rounded-lg md:border">
@@ -20,7 +22,7 @@ export default async function page({ params }: { params: { slug: string } }) {
           <X absoluteStrokeWidth size={22} />
         </Link>
 
-        <UpdateDetailsForm faculty={faculty} />
+        <UpdateDetailsForm faculty={res?.data} />
       </main>
     </section>
   );

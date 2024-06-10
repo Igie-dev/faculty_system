@@ -22,50 +22,52 @@ import {
 } from "@/app/_components/ui/form";
 import { Input } from "@/app/_components/ui/input";
 import { useForm } from "react-hook-form";
-import { createDepartmentSchema } from "@/server/db/schema";
-import { useFormState } from "react-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updateDepartment } from "@/server/actions";
 import { useToast } from "@/app/_components/ui/use-toast";
 import { Pencil } from "lucide-react";
+import { createDepartmentSchema } from "@/utils/zodSchema";
+import { api } from "@/trpc/react";
+import BtnLoader from "@/app/_components/BtnLoader";
+import { useRouter } from "next/navigation";
+
 type Props = {
   id: number;
   acronym: string;
   name: string;
 };
 export default function UpdateDepartment({ id, acronym, name }: Props) {
+  const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
-  const [state, formAction] = useFormState(updateDepartment, {
-    message: "",
+  const { mutate, isPending, error } = api.department.update.useMutation({
+    onSuccess: (context) => {
+      toast({
+        variant: "default",
+        title: "Update department success!",
+        description: context.message ?? "Update department cuccess",
+      });
+      router.refresh();
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Update department failed!",
+        description:
+          error.data?.zodError?.formErrors[0] ??
+          error?.message ??
+          "Update department failed",
+      });
+    },
   });
-
   const form = useForm<z.infer<typeof createDepartmentSchema>>({
     resolver: zodResolver(createDepartmentSchema),
     defaultValues: {
       acronym: acronym,
       name: name,
-      ...(state?.fields ?? {}),
     },
   });
 
-  useEffect(() => {
-    if (state.message || state.error) {
-      toast({
-        variant: state.error ? "destructive" : "default",
-        title: state.message
-          ? "Update department success!"
-          : state.error
-          ? "Update department failed!"
-          : "",
-        description: state.message ?? state.error ?? "",
-      });
-      if (state.message) {
-        form.reset();
-      }
-    }
-  }, [state, toast, form]);
   return (
     <Drawer direction="right">
       <DrawerTrigger asChild>
@@ -81,14 +83,10 @@ export default function UpdateDepartment({ id, acronym, name }: Props) {
               evt.preventDefault();
               form.handleSubmit(() => {
                 const formData = new FormData(formRef.current!);
-                formData.append("id", JSON.stringify(id));
-                formAction(formData);
+                const name = formData.get("name") as string;
+                const acronym = formData.get("acronym") as string;
+                mutate({ id, name, acronym });
               })(evt);
-            }}
-            action={(form: FormData) => {
-              const formData = form;
-              formData.append("id", JSON.stringify(id));
-              formAction(formData);
             }}
             className="flex flex-col space-y-4"
           >
@@ -101,8 +99,11 @@ export default function UpdateDepartment({ id, acronym, name }: Props) {
               </DrawerDescription>
             </DrawerHeader>
             <span className="text-sm text-destructive  h-5 w-fit font-semibold flex">
-              {state?.error ? (
-                <p className="font-normal">Error: {` ${state?.error}`}</p>
+              {error?.message ? (
+                <p className="font-normal">
+                  <strong>Error:</strong>
+                  {` ${error.data?.zodError?.formErrors[0] ?? error?.message}`}
+                </p>
               ) : null}
             </span>
             <div className="flex flex-col gap-3">
@@ -147,13 +148,24 @@ export default function UpdateDepartment({ id, acronym, name }: Props) {
             </div>
             <DrawerFooter className="flex-row gap-4 px-0">
               <DrawerClose asChild className="w-[50%]">
-                <Button type="button" variant="outline">
+                <Button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => {
+                    form.reset();
+                  }}
+                  variant="outline"
+                >
                   Cancel
                 </Button>
               </DrawerClose>
-              <Button type="submit" className="w-[50%]">
-                Update
-              </Button>
+              {isPending ? (
+                <BtnLoader classNames="flex-1" />
+              ) : (
+                <Button disabled={isPending} type="submit" className="w-[50%]">
+                  Update
+                </Button>
+              )}
             </DrawerFooter>
           </form>
         </Form>

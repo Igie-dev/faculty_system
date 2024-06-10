@@ -1,10 +1,11 @@
 "use client";
-import { ReactNode } from "react";
+import React from "react";
+import { TRPCReactProvider } from "@/trpc/react";
 import { SessionProvider } from "next-auth/react";
-type Props = {
-  children: ReactNode;
-};
-
-export default function Provider({ children }: Props) {
-  return <SessionProvider>{children}</SessionProvider>;
+export default function Provider({ children }: { children: React.ReactNode }) {
+  return (
+    <SessionProvider>
+      <TRPCReactProvider>{children}</TRPCReactProvider>
+    </SessionProvider>
+  );
 }

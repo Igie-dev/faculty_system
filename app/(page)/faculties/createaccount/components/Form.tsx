@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 
 import {
   Select,
@@ -17,29 +17,54 @@ import {
   FormMessage,
 } from "@/app/_components/ui/form";
 import { Input } from "@/app/_components/ui/input";
-import FormButtons from "@/app/_components/FormButtons";
 import DepartmentsList from "./DepartmentsList";
-import { createFaculty } from "@/server/actions";
-import { useFormState } from "react-dom";
 import { Checkbox } from "@/app/_components/ui/checkbox";
 import { useToast } from "@/app/_components/ui/use-toast";
-import { useRouter } from "next/navigation";
-import { createFacultySchema } from "@/server/db/schema";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { api } from "@/trpc/react";
+import BtnLoader from "@/app/_components/BtnLoader";
+import { useRouter } from "next/navigation";
+import { Button } from "@/app/_components/ui/button";
+import { createFacultySchema } from "@/utils/zodSchema";
+
+const schema = createFacultySchema.refine(
+  (data) => data.password === data.confirmPassword,
+  {
+    message: "Passwordm don't match!",
+    path: ["confirmPassword"],
+  }
+);
 export default function CreateForm() {
   const [facultyDep, setFacultyDep] = useState<TCreateFacultyDep[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
   const [inputPassType, setInputPassType] = useState("password");
   const { toast } = useToast();
   const router = useRouter();
-  const [state, formAction] = useFormState(createFaculty, {
-    message: "",
+  const { mutate, isPending, error } = api.faculty.create.useMutation({
+    onSuccess: (context) => {
+      toast({
+        variant: "default",
+        title: "Create faculty account success!",
+        description: context.message ?? "Create faculty account cuccess",
+      });
+      router.push("/faculties");
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Create faculty account failed!",
+        description:
+          error.data?.zodError?.formErrors[0] ??
+          error?.message ??
+          "Create faculty account failed",
+      });
+    },
   });
 
-  const form = useForm<z.infer<typeof createFacultySchema>>({
-    resolver: zodResolver(createFacultySchema),
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
     defaultValues: {
       first_name: "",
       last_name: "",
@@ -48,32 +73,8 @@ export default function CreateForm() {
       confirmPassword: "",
       contact: "",
       role: "",
-      ...(state?.fields ?? {}),
     },
   });
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    if (state.message || state.error) {
-      toast({
-        variant: state.error ? "destructive" : "default",
-        title: state.message
-          ? "Create account success!"
-          : state.error
-          ? "Create account failed!"
-          : "",
-        description: state.message ?? state.error ?? "",
-      });
-    }
-    if (state.message) {
-      timer = setTimeout(() => {
-        router.push("/faculties");
-      }, 500);
-    }
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [state, toast, router]);
 
   const handleShowPassword = (checked: boolean) => {
     if (checked) {
@@ -101,20 +102,33 @@ export default function CreateForm() {
           evt.preventDefault();
           form.handleSubmit(() => {
             const formData = new FormData(formRef.current!);
-            formData.append("departments", JSON.stringify(facultyDep));
-            formAction(formData);
+            const first_name = formData.get("first_name") as string;
+            const last_name = formData.get("last_name") as string;
+            const email = formData.get("email") as string;
+            const contact = formData.get("contact") as string;
+            const role = formData.get("role") as string;
+            const password = formData.get("password") as string;
+            const confirmPassword = formData.get("confirmPassword") as string;
+            mutate({
+              first_name,
+              last_name,
+              email,
+              contact,
+              role,
+              password,
+              confirmPassword,
+              departments: facultyDep,
+            });
           })(evt);
-        }}
-        action={(form: FormData) => {
-          const formData = form;
-          formData.append("departments", JSON.stringify(facultyDep));
-          formAction(formData);
         }}
         className="flex flex-col w-full h-fit"
       >
         <span className="text-sm text-destructive my-5  h-5 w-fit font-semibold flex">
-          {state?.error ? (
-            <p className="font-normal">Error: {` ${state?.error}`}</p>
+          {error?.message ? (
+            <p className="font-normal">
+              <strong>Error:</strong>
+              {` ${error.data?.zodError?.formErrors[0] ?? error?.message}`}
+            </p>
           ) : null}
         </span>
         <div className="flex flex-col w-full h-fit md:flex-row justify-between md:gap-4">
@@ -277,10 +291,10 @@ export default function CreateForm() {
                 Include faculty departments
               </span>
               <span className="text-sm text-destructive mt-5  h-5 w-fit font-semibold flex">
-                {state?.error &&
-                state?.error?.includes("Must include department!") ? (
+                {error &&
+                error?.message.includes("Must include department!") ? (
                   <>
-                    <p className="font-normal">Error: {` ${state?.error}`}</p>
+                    <p className="font-normal">Error: {` ${error?.message}`}</p>
                   </>
                 ) : null}
               </span>
@@ -292,11 +306,26 @@ export default function CreateForm() {
           </div>
         </div>
         <div className="flex items-center !mt-10 flex-row-reverse">
-          <FormButtons
-            cancelLink="/faculties"
-            cancelText="Cancel"
-            submitText="Submit"
-          />
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              disabled={isPending}
+              onClick={() => {
+                router.push("/faculties");
+              }}
+              variant="outline"
+            >
+              Cancel
+            </Button>
+
+            {isPending ? (
+              <BtnLoader classNames="flex-1" />
+            ) : (
+              <Button disabled={isPending} type="submit" className="w-[50%]">
+                Save
+              </Button>
+            )}
+          </div>
         </div>
       </form>
     </Form>

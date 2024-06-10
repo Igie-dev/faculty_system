@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect } from "react";
 import DepartmentCard from "./DepartmentCard";
 import { useSearchParams } from "next/navigation";

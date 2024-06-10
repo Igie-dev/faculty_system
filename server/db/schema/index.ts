@@ -26,7 +26,6 @@ export const {
   departmentAnnouncement,
   departmentAnnoucementsRelations,
   departmentRelations,
-  createDepartmentSchema,
 } = departmentSchema;
 
 export const { announcement, annoucementRelations } = announcementSchema;
@@ -40,13 +39,12 @@ export const {
   submissionRelations,
 } = submissionSchema;
 
-export const { fileCategory, fileCategoryRelations, createFileCategorySchema } =
-  fileCategorySchema;
+export const { fileCategory, fileCategoryRelations } = fileCategorySchema;
 
 export const { task, taskRelations } = taskSchema;
 
-export const { schoolyear, schoolyearRelations,createSchoolyearSchema } = schoolyearSchema;
+export const { schoolyear, schoolyearRelations } = schoolyearSchema;
 
-export const { semester, semesterRelations,createSemesterSchema } = semesterSchema;
+export const { semester, semesterRelations } = semesterSchema;
 
 export const { notification, notificationRelations } = notificationSchema;

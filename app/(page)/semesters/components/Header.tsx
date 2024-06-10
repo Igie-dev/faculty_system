@@ -1,3 +1,4 @@
+"use client";
 import React, { useDeferredValue, useEffect, useState } from "react";
 import CreateSemester from "./createSemester/CreateSemester";
 import { Input } from "@/app/_components/ui/input";

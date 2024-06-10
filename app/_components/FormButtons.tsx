@@ -2,9 +2,7 @@ import { Button } from "@/app/_components/ui/button";
 import React from "react";
 import Link from "next/link";
 import { useFormStatus } from "react-dom";
-import BtnsLoaderSpinner, {
-  BtnLoaderClassEnum,
-} from "@/app/_components/loader/BtnLoaderSpinner";
+import BtnLoader from "./BtnLoader";
 type Props = {
   cancelLink: string;
   cancelText: string;
@@ -21,15 +19,13 @@ export default function FormButton({
       <Button variant="outline" asChild disabled={status.pending}>
         <Link href={cancelLink}>{cancelText}</Link>
       </Button>
-      <Button type="submit" disabled={status.pending}>
-        {status.pending ? (
-          <div className="h-full flex items-center justify-center px-4">
-            <BtnsLoaderSpinner classNames={BtnLoaderClassEnum.WHITE_RING} />
-          </div>
-        ) : (
+      {status.pending ? (
+        <BtnLoader />
+      ) : (
+        <Button type="submit" disabled={status.pending}>
           `${submitText}`
-        )}
-      </Button>
+        </Button>
+      )}
     </div>
   );
 }

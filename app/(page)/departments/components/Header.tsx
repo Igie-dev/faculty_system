@@ -1,3 +1,4 @@
+"use client";
 import { Input } from "@/app/_components/ui/input";
 import React, { useEffect, useState } from "react";
 import CreateDepartment from "./createDepartment/CreateDepartment";

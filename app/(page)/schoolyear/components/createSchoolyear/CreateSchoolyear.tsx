@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { Button } from "@/app/_components/ui/button";
 
 import {
@@ -21,44 +21,46 @@ import {
 } from "@/app/_components/ui/form";
 import { Input } from "@/app/_components/ui/input";
 import { useForm } from "react-hook-form";
-import { createSchoolyearSchema } from "@/server/db/schema";
-import { useFormState } from "react-dom";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createSchoolYear } from "@/server/actions";
 import { useToast } from "@/app/_components/ui/use-toast";
-
+import { api } from "@/trpc/react";
+import BtnLoader from "@/app/_components/BtnLoader";
+import { useRouter } from "next/navigation";
+import { createSchoolYearSchema } from "@/utils/zodSchema";
 export default function CreateSchoolyear() {
   const formRef = useRef<HTMLFormElement>(null);
   const { toast } = useToast();
-  const [state, formAction] = useFormState(createSchoolYear, {
-    message: "",
-  });
+  const router = useRouter();
 
-  const form = useForm<z.infer<typeof createSchoolyearSchema>>({
-    resolver: zodResolver(createSchoolyearSchema),
-    defaultValues: {
-      schoolyear: "",
-      ...(state?.fields ?? {}),
+  const { mutate, isPending, error } = api.schoolyear.create.useMutation({
+    onSuccess: (context) => {
+      toast({
+        variant: "default",
+        title: "Create schoolyear success!",
+        description: context.message ?? "Create schoolyear cuccess",
+      });
+      router.refresh();
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: "Create schoolyear failed!",
+        description:
+          error.data?.zodError?.formErrors[0] ??
+          error?.message ??
+          "Create schoolyear failed",
+      });
     },
   });
 
-  useEffect(() => {
-    if (state.message || state.error) {
-      toast({
-        variant: state.error ? "destructive" : "default",
-        title: state.message
-          ? "Create school year success!"
-          : state.error
-          ? "Create school year failed!"
-          : "",
-        description: state.message ?? state.error ?? "",
-      });
-      if (state.message) {
-        form.reset();
-      }
-    }
-  }, [state, toast, form]);
+  const form = useForm<z.infer<typeof createSchoolYearSchema>>({
+    resolver: zodResolver(createSchoolYearSchema),
+    defaultValues: {
+      schoolyear: "",
+    },
+  });
+
   return (
     <Drawer direction="right">
       <DrawerTrigger asChild>
@@ -68,14 +70,14 @@ export default function CreateSchoolyear() {
         <Form {...form}>
           <form
             ref={formRef}
-            onSubmit={(evt) => {
+            onSubmit={async (evt) => {
               evt.preventDefault();
               form.handleSubmit(() => {
                 const formData = new FormData(formRef.current!);
-                formAction(formData);
+                const schoolyear = formData.get("schoolyear") as string;
+                mutate({ schoolyear });
               })(evt);
             }}
-            action={formAction}
             className="flex flex-col space-y-4"
           >
             <DrawerHeader>
@@ -87,8 +89,11 @@ export default function CreateSchoolyear() {
               </DrawerDescription>
             </DrawerHeader>
             <span className="text-sm text-destructive h-5 w-fit font-semibold flex">
-              {state?.error ? (
-                <p className="font-normal">Error: {` ${state?.error}`}</p>
+              {error?.message ? (
+                <p className="font-normal">
+                  <strong>Error:</strong>
+                  {` ${error.data?.zodError?.formErrors[0] ?? error?.message}`}
+                </p>
               ) : null}
             </span>
             <div className="flex flex-col gap-3">
@@ -114,13 +119,24 @@ export default function CreateSchoolyear() {
             </div>
             <DrawerFooter className="flex-row gap-4 px-0">
               <DrawerClose asChild className="w-[50%]">
-                <Button type="button" variant="outline">
+                <Button
+                  type="button"
+                  disabled={isPending}
+                  onClick={() => {
+                    form.reset();
+                  }}
+                  variant="outline"
+                >
                   Cancel
                 </Button>
               </DrawerClose>
-              <Button type="submit" className="w-[50%]">
-                Create
-              </Button>
+              {isPending ? (
+                <BtnLoader classNames="flex-1" />
+              ) : (
+                <Button disabled={isPending} type="submit" className="w-[50%]">
+                  Create
+                </Button>
+              )}
             </DrawerFooter>
           </form>
         </Form>

@@ -1,24 +1,19 @@
 import React from "react";
-import Departments from "./components/Departments";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { getAllDepartmentsQuery } from "@/server/actions";
-import { getQueryClient } from "@/app/service/queryClient";
+import DepartmentList from "./components/DepartmentList";
+import Header from "./components/Header";
+import DepartmentLoader from "./components/DepartmentLoader";
+import { api } from "@/trpc/server";
 export default async function page() {
-  const queryClient = getQueryClient();
-  await queryClient.prefetchQuery({
-    queryKey: ["departments"],
-    queryFn: async (): Promise<TDepartmentData[]> => {
-      const res = await getAllDepartmentsQuery();
-      if (res?.error) {
-        throw new Error(res.error);
-      }
-
-      return res?.data as TDepartmentData[];
-    },
-  });
+  const res = await api.department.getAll();
+  if (!res?.data) return <DepartmentLoader />;
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <Departments />
-    </HydrationBoundary>
+    <section className="flex flex-col items-center w-full h-full md:py-2">
+      <div className="w-full flex flex-1 flex-col min-h-0  md:w-[98%] rounded-lg border bg-background">
+        <Header />
+        <div className="w-full flex flex-1 min-h-0 justify-center overflow-y-auto bg-secondary">
+          <DepartmentList departments={res?.data} />
+        </div>
+      </div>
+    </section>
   );
 }

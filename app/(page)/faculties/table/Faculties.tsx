@@ -16,25 +16,15 @@ import Table from "./Table";
 import Header from "./Header";
 import { Button } from "@/app/_components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useSuspenseQuery } from "@tanstack/react-query";
-import { getAllFacultyQuery } from "@/server/actions";
-import FacutiesTableLoader from "./FacutiesTableLoader";
+import { api } from "@/trpc/server";
+type Props = {
+  faculties: any;
+};
 
-export default function Faculties() {
+export default function Faculties({ faculties }: Props) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
-  const { data: faculties, isFetching } = useSuspenseQuery({
-    queryKey: ["faculties"],
-    queryFn: async (): Promise<TFacultyData[]> => {
-      const res = await getAllFacultyQuery();
-      if (res?.error) {
-        throw new Error(res?.error);
-      }
-      return res?.data as TFacultyData[];
-    },
-  });
 
   const col = columns as ColumnDef<unknown, any>[];
   const table = useReactTable({
@@ -60,7 +50,6 @@ export default function Faculties() {
     },
   });
 
-  if (isFetching) return <FacutiesTableLoader />;
   if (faculties)
     return (
       <section className="flex flex-col items-center w-full h-full">

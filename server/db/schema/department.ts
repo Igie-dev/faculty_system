@@ -10,7 +10,6 @@ import {
 } from "drizzle-orm/pg-core";
 import { facultyDepartment } from "./faculty";
 import { announcement } from "./announcement";
-import { z } from "zod";
 export const department = pgTable(
   "department",
   {
@@ -69,17 +68,3 @@ export const departmentRelations = relations(department, ({ many }) => ({
   faculties: many(facultyDepartment),
   announcements: many(departmentAnnouncement),
 }));
-
-///Type schema
-export const createDepartmentSchema = z.object({
-  acronym: z
-    .string({
-      invalid_type_error: "Acronym must string!",
-    })
-    .min(1, { message: "This field must be filled in!" }),
-  name: z
-    .string({
-      invalid_type_error: "Department name must be string!",
-    })
-    .min(1, { message: "This field must be filled in!" }),
-});

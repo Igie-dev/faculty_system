@@ -1,11 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { Button } from "../../ui/button";
-import { ArrowLeft, Menu } from "lucide-react";
+import { ArrowLeft, LoaderCircle, Menu } from "lucide-react";
 import Nav from "./Nav";
-import BtnsLoaderSpinner, {
-  BtnLoaderClassEnum,
-} from "@/app/_components/loader/BtnLoaderSpinner";
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
 export default function DesktopNav() {
@@ -30,7 +27,7 @@ export default function DesktopNav() {
           onClick={() => setIsExpanded((prev) => !prev)}
         >
           {!session ? (
-            <BtnsLoaderSpinner classNames={BtnLoaderClassEnum.BLACK_RING} />
+            <LoaderCircle size={20} className="animate-spin" />
           ) : !isExpanded ? (
             <Menu absoluteStrokeWidth size={20} />
           ) : (
