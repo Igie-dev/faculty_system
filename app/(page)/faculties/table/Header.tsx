@@ -15,7 +15,7 @@ type Props = {
 };
 export default function Header({ table, facultiesLength }: Props) {
   return (
-    <header className="flex flex-col items-start justify-between w-full gap-5 p-2 pb-5 border-b md:p-4 bg-background">
+    <header className="flex flex-col items-start justify-between w-full gap-5 p-2 pb-5 border-b  bg-background">
       <span className="text-xl font-extrabold fancy_font md:text-2xl">
         Faculties
       </span>
