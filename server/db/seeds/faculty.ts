@@ -2,7 +2,7 @@ import { InferSelectModel } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import faculties from "./data/faculties.json";
-import { faculty, facultyDepartment } from "@/server/db/schema";
+import { faculty, faculty_department } from "@/server/db/schema";
 import type { db } from "@/server/db/seed";
 const saltRound = 9;
 export default async function seed(db: db) {
@@ -34,12 +34,12 @@ export default async function seed(db: db) {
     }
 
     const departments = fac.departments as InferSelectModel<
-      typeof facultyDepartment
+      typeof faculty_department
     >[];
 
     if (departments.length >= 0) {
       for (let dep of departments) {
-        await db.insert(facultyDepartment).values({
+        await db.insert(faculty_department).values({
           faculty_id: data.faculty_id,
           dep_id: dep.dep_id,
         });

@@ -8,8 +8,9 @@ import {
   primaryKey,
   uuid,
 } from "drizzle-orm/pg-core";
-import { facultyDepartment } from "./faculty";
+import { faculty_department } from "./faculty";
 import { announcement } from "./announcement";
+
 export const department = pgTable(
   "department",
   {
@@ -31,8 +32,8 @@ export const department = pgTable(
   }
 );
 
-export const departmentAnnouncement = pgTable(
-  "departmentAnnouncement",
+export const department_announcement = pgTable(
+  "department_announcement",
   {
     announcement_id: uuid("announcement_id")
       .references(() => announcement.announcement_id, {
@@ -50,21 +51,21 @@ export const departmentAnnouncement = pgTable(
   }
 );
 
-export const departmentAnnoucementsRelations = relations(
-  departmentAnnouncement,
+export const department_annoucements_relations = relations(
+  department_announcement,
   ({ one }) => ({
     announcement: one(announcement, {
-      fields: [departmentAnnouncement.dep_id],
+      fields: [department_announcement.dep_id],
       references: [announcement.dep_id],
     }),
     department: one(department, {
-      fields: [departmentAnnouncement.dep_id],
+      fields: [department_announcement.dep_id],
       references: [department.dep_id],
     }),
   })
 );
 
-export const departmentRelations = relations(department, ({ many }) => ({
-  faculties: many(facultyDepartment),
-  announcements: many(departmentAnnouncement),
+export const department_relations = relations(department, ({ many }) => ({
+  faculties: many(faculty_department),
+  announcements: many(department_announcement),
 }));

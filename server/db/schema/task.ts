@@ -8,7 +8,8 @@ import {
   text,
   uuid,
 } from "drizzle-orm/pg-core";
-import { faculty } from "./faculty";
+import { faculty, faculty_task } from "./faculty";
+
 export const task = pgTable(
   "task",
   {
@@ -30,14 +31,11 @@ export const task = pgTable(
   },
   (t) => {
     return {
-      taskIndex: uniqueIndex("taskIndex").on(t.task_id),
+      task_index: uniqueIndex("task_index").on(t.task_id),
     };
   }
 );
 
-export const taskRelations = relations(task, ({ one }) => ({
-  faculty: one(faculty, {
-    fields: [task.faculty_id],
-    references: [faculty.faculty_id],
-  }),
+export const task_relations = relations(task, ({ many }) => ({
+  faculty: many(faculty_task),
 }));

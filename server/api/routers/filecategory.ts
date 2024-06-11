@@ -1,6 +1,6 @@
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
-import { fileCategory } from "@/server/db/schema";
+import { file_category } from "@/server/db/schema";
 import { ERole } from "@/@types/enums";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, privateProcedure } from "../trpc";
@@ -19,8 +19,8 @@ export const fileCategoryRouter = createTRPCRouter({
             code: "UNAUTHORIZED",
           });
         }
-        const foundCategoryExist = await db.query.fileCategory.findFirst({
-          where: () => sql`${fileCategory.name} = ${name}`,
+        const foundCategoryExist = await db.query.file_category.findFirst({
+          where: () => sql`${file_category.name} = ${name}`,
           columns: {
             id: true,
           },
@@ -34,13 +34,13 @@ export const fileCategoryRouter = createTRPCRouter({
         }
 
         const save = await db
-          .insert(fileCategory)
+          .insert(file_category)
           .values({
             name: name,
             description: description,
           })
           .returning({
-            id: fileCategory.id,
+            id: file_category.id,
           });
 
         if (!save[0]?.id) {
@@ -68,8 +68,8 @@ export const fileCategoryRouter = createTRPCRouter({
     }),
   getById: publicProcedure.input(z.number()).query(async ({ input }) => {
     try {
-      const found = await db.query.fileCategory.findFirst({
-        where: sql`${fileCategory.id} = ${input}`,
+      const found = await db.query.file_category.findFirst({
+        where: sql`${file_category.id} = ${input}`,
       });
 
       if (!found?.id) {
@@ -97,7 +97,7 @@ export const fileCategoryRouter = createTRPCRouter({
   }),
   getAll: publicProcedure.query(async () => {
     try {
-      const categories = await db.query.fileCategory.findMany();
+      const categories = await db.query.file_category.findMany();
       return {
         data: categories,
       };
@@ -125,8 +125,8 @@ export const fileCategoryRouter = createTRPCRouter({
           });
         }
 
-        const foundFilecategory = await db.query.fileCategory.findFirst({
-          where: () => sql`${fileCategory.id} = ${input}`,
+        const foundFilecategory = await db.query.file_category.findFirst({
+          where: () => sql`${file_category.id} = ${input}`,
           columns: {
             id: true,
           },
@@ -138,7 +138,7 @@ export const fileCategoryRouter = createTRPCRouter({
             message: "Category not found!",
           });
         }
-        await db.delete(fileCategory).where(eq(fileCategory.id, input));
+        await db.delete(file_category).where(eq(file_category.id, input));
 
         return {
           success: true,
@@ -182,8 +182,8 @@ export const fileCategoryRouter = createTRPCRouter({
             code: "UNAUTHORIZED",
           });
         }
-        const foundExistFileCat = await db.query.fileCategory.findFirst({
-          where: () => sql`${fileCategory.id} = ${id}`,
+        const foundExistFileCat = await db.query.file_category.findFirst({
+          where: () => sql`${file_category.id} = ${id}`,
           columns: {
             id: true,
             name: true,
@@ -199,19 +199,19 @@ export const fileCategoryRouter = createTRPCRouter({
         }
 
         if (foundExistFileCat?.name !== name) {
-          const foundExistName = await db.query.fileCategory.findFirst({
-            where: () => sql`${fileCategory.name} = ${name}`,
+          const foundExistName = await db.query.file_category.findFirst({
+            where: () => sql`${file_category.name} = ${name}`,
             columns: {
               id: true,
             },
           });
           if (!foundExistName?.id) {
             await db
-              .update(fileCategory)
+              .update(file_category)
               .set({
                 name: name,
               })
-              .where(eq(fileCategory.id, foundExistFileCat.id));
+              .where(eq(file_category.id, foundExistFileCat.id));
           } else {
             throw new TRPCError({
               code: "CONFLICT",
@@ -221,11 +221,11 @@ export const fileCategoryRouter = createTRPCRouter({
         }
         if (foundExistFileCat?.description !== description) {
           await db
-            .update(fileCategory)
+            .update(file_category)
             .set({
               description: description,
             })
-            .where(eq(fileCategory.id, foundExistFileCat.id));
+            .where(eq(file_category.id, foundExistFileCat.id));
         }
         return {
           success: true,

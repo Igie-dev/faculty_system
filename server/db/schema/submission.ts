@@ -10,11 +10,12 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { faculty } from "./faculty";
-import { fileCategory } from "./filecategory";
+import { file_category } from "./filecategory";
 import { department } from "./department";
 import { semester } from "./semester";
-import { schoolyear } from "./schoolyear";
-export const submissionStatus = pgEnum("submissionStatus", [
+import { school_year } from "./schoolyear";
+
+export const submission_status = pgEnum("submissionStatus", [
   "Pending",
   "Disapproved",
   "Approved",
@@ -28,10 +29,10 @@ export const submission = pgTable(
     title: varchar("title", { length: 255 }).notNull().unique(),
     description: text("description").notNull(),
     remarks: text("remarks"),
-    status: submissionStatus("status").default("Pending"),
+    status: submission_status("status").default("Pending"),
     school_year_id: uuid("school_year_id")
       .notNull()
-      .references(() => schoolyear.school_year_id, { onDelete: "cascade" }),
+      .references(() => school_year.school_year_id, { onDelete: "cascade" }),
     semester_id: uuid("semester_id").references(() => semester.semester_id, {
       onDelete: "cascade",
     }),
@@ -45,16 +46,18 @@ export const submission = pgTable(
       () => faculty.faculty_id,
       { onDelete: "cascade" }
     ),
-    category_id: uuid("category_id").references(() => fileCategory.category_id),
+    category_id: uuid("category_id").references(
+      () => file_category.category_id
+    ),
   },
   (t) => {
     return {
-      submissionIndex: uniqueIndex("submissionIndex").on(t.submission_id),
+      submission_index: uniqueIndex("submission_index").on(t.submission_id),
     };
   }
 );
 
-export const submissionDepartment = pgTable("submissionDepartment", {
+export const submission_department = pgTable("submission_department", {
   submission_id: uuid("submission_id").references(
     () => submission.submission_id,
     { onDelete: "cascade" }
@@ -64,22 +67,22 @@ export const submissionDepartment = pgTable("submissionDepartment", {
     .references(() => department.dep_id, { onDelete: "cascade" }),
 });
 
-export const submissionRelations = relations(submission, ({ one, many }) => ({
+export const submission_relations = relations(submission, ({ one, many }) => ({
   faculty: one(faculty, {
     fields: [submission.faculty_id],
     references: [faculty.faculty_id],
   }),
-  filecategory: one(fileCategory, {
+  filecategory: one(file_category, {
     fields: [submission.category_id],
-    references: [fileCategory.category_id],
+    references: [file_category.category_id],
   }),
-  schoolyear: one(schoolyear, {
+  schoolyear: one(school_year, {
     fields: [submission.school_year_id],
-    references: [schoolyear.school_year_id],
+    references: [school_year.school_year_id],
   }),
   semester: one(semester, {
     fields: [submission.semester_id],
     references: [semester.semester_id],
   }),
-  departments: many(submissionDepartment),
+  departments: many(submission_department),
 }));

@@ -2,7 +2,7 @@ import { createTRPCRouter, publicProcedure, privateProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
-import { schoolyear } from "@/server/db/schema";
+import { school_year } from "@/server/db/schema";
 import { ERole } from "@/@types/enums";
 import { z } from "zod";
 import { createSchoolYearSchema } from "@/utils/zodSchema";
@@ -18,8 +18,8 @@ export const schoolYearRouter = createTRPCRouter({
           });
         }
 
-        const existSchoolyear = await db.query.schoolyear.findFirst({
-          where: sql`${schoolyear.school_year} = ${input.schoolyear}`,
+        const existSchoolyear = await db.query.school_year.findFirst({
+          where: sql`${school_year.school_year} = ${input.schoolyear}`,
           columns: {
             id: true,
           },
@@ -32,12 +32,12 @@ export const schoolYearRouter = createTRPCRouter({
           });
         }
         const save = await db
-          .insert(schoolyear)
+          .insert(school_year)
           .values({
             school_year: input.schoolyear,
           })
           .returning({
-            id: schoolyear.id,
+            id: school_year.id,
           });
 
         if (!save[0]?.id) {
@@ -64,8 +64,8 @@ export const schoolYearRouter = createTRPCRouter({
     }),
   getById: publicProcedure.input(z.number()).query(async ({ input }) => {
     try {
-      const found = await db.query.schoolyear.findFirst({
-        where: sql`${schoolyear.id} = ${input}`,
+      const found = await db.query.school_year.findFirst({
+        where: sql`${school_year.id} = ${input}`,
       });
 
       if (!found?.id) {
@@ -93,7 +93,7 @@ export const schoolYearRouter = createTRPCRouter({
   }),
   getAll: publicProcedure.query(async () => {
     try {
-      const foundSchoolyears = await db.query.schoolyear.findMany();
+      const foundSchoolyears = await db.query.school_year.findMany();
       return {
         success: true,
         data: foundSchoolyears,
@@ -122,8 +122,8 @@ export const schoolYearRouter = createTRPCRouter({
           });
         }
 
-        const foundSchoolyear = await db.query.schoolyear.findFirst({
-          where: () => sql`${schoolyear.id} = ${input}`,
+        const foundSchoolyear = await db.query.school_year.findFirst({
+          where: () => sql`${school_year.id} = ${input}`,
           columns: {
             id: true,
           },
@@ -134,7 +134,7 @@ export const schoolYearRouter = createTRPCRouter({
             error: "School year not found",
           };
         }
-        await db.delete(schoolyear).where(eq(schoolyear.id, input));
+        await db.delete(school_year).where(eq(school_year.id, input));
 
         return {
           success: true,

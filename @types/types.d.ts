@@ -3,23 +3,26 @@ import { InferSelectModel } from "drizzle-orm";
 import {
   announcement,
   department,
-  departmentAnnouncement,
+  department_announcement,
   faculty,
-  facultyArchiveAnnoucement,
-  facultyDepartment,
-  facultyRelations,
-  facultyRole,
+  faculty_archive_annoucement,
+  faculty_department,
+  faculty_role,
   file,
-  fileDepartment,
+  file_department,
   notification,
   submission,
-  submissionDepartment,
+  submission_department,
   task,
-  facultyArchiveAnnouncement,
-  fileCategory,
-  schoolyear,
+  facultyArchive_announcement,
+  file_category,
+  school_year,
   semester,
+  faculty_task,
+  faculty_notification,
 } from "@/server/db/schema";
+import { faculty_task_relations } from "@/server/db/schema/faculty";
+import { announcement } from "../server/db/schema/announcement";
 declare global {
   type TCreateFaculty = {
     faculty_id?: string;
@@ -33,7 +36,7 @@ declare global {
     departments: TCreateFacultyDep[];
   };
 
-  type TCreateFacultyDep = InferSelectModel<typeof facultyDepartment>;
+  type TCreateFacultyDep = InferSelectModel<typeof faculty_department>;
 
   type TFacultyData = {
     faculty_id: string;
@@ -45,25 +48,35 @@ declare global {
     departments?: TFacultyDepartment[];
     announcements?: TAnnouncementData[];
     submissions?: TSubmissionData[];
-    tasks?: TTaskData[];
+    tasks?: TFacultyTask[];
     files?: TFileData[];
     archiveAnnouncements?: TFacultyArchiveAnnouncement[];
-    notifications?: TNotificationData[];
+    notifications?: TFacultyNotification[];
   };
 
-  type TFacultyDepartment = InferSelectModel<typeof facultyDepartment> & {
+  type TFacultyDepartment = InferSelectModel<typeof faculty_department> & {
     department: InferSelectModel<typeof department>;
+  };
+
+  type TFacultyArchiveAnnouncement = InferSelectModel<
+    typeof faculty_archive_annoucement
+  > & {
+    announcement?: InferSelectModel<typeof announcement>;
+  };
+
+  type TFacultyTask = InferSelectModel<typeof faculty_task> & {
+    task?: InferSelectModel<typeof task>;
   };
 
   type TCreateDepartment = {
     acronym: string;
     department: string;
   };
-  type TFacultyArchiveAnnouncement = InferSelectModel<
-    typeof facultyArchiveAnnoucement
-  >;
 
-  type TDepartmentData = InferSelectModel<typeof department>;
+  type TDepartmentData = InferSelectModel<typeof department> & {
+    faculties?: InferSelectModel<typeof faculty>[];
+    announcements?: InferSelectModel<typeof announcement>[];
+  };
 
   type TCreateAnnouncement = {
     id?: number;
@@ -76,13 +89,13 @@ declare global {
 
   type TAnnouncementData = InferSelectModel<typeof announcement> & {
     faculty?: InferSelectModel<typeof faculty>;
-    departments?: InferSelectModel<typeof departmentAnnouncement>[];
+    departments?: InferSelectModel<typeof department_announcement>[];
     files?: InferSelectModel<typeof file>[];
   };
 
   type TFileData = InferSelectModel<typeof file> & {
     faculty?: InferSelectModel<typeof faculty>;
-    departments?: InferSelectModel<typeof fileDepartment>;
+    departments?: InferSelectModel<typeof file_department>[];
   };
 
   type TTaskData = InferSelectModel<typeof task> & {
@@ -91,9 +104,9 @@ declare global {
 
   type TSubmissionData = InferSelectModel<submission> & {
     faculty?: InferSelectModel<typeof faculty>;
-    departments?: InferSelectModel<typeof submissionDepartment>[];
-    filecategory?: InferSelectModel<typeof fileCategory>;
-    schoolyear?: InferSelectModel<typeof schoolyear>;
+    departments?: InferSelectModel<typeof submission_department>[];
+    filecategory?: InferSelectModel<typeof file_category>;
+    schoolyear?: InferSelectModel<typeof school_year>;
     semester?: InferSelectModel<typeof semester>;
   };
 
@@ -101,7 +114,12 @@ declare global {
     faculty?: InferSelectModel<typeof faculty>;
   };
 
-  type TFileCategoryData = InferSelectModel<typeof fileCategory> & {
+  type TFacultyNotification = InferSelectModel<typeof faculty_notification> & {
+    notification?: InferSelectModel<typeof notification>;
+    faculty?: InferSelectModel<typeof faculty>;
+  };
+
+  type TFileCategoryData = InferSelectModel<typeof file_category> & {
     submissions?: InferSelectModel<typeof submission>[];
   };
 
@@ -109,7 +127,7 @@ declare global {
     submissions?: InferSelectModel<typeof submission>[];
   };
 
-  type TSchoolYearData = InferSelectModel<typeof schoolyear> & {
+  type TSchoolYearData = InferSelectModel<typeof school_year> & {
     submissions?: InferSelectModel<typeof submission>[];
   };
 

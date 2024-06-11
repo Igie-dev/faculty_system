@@ -1,6 +1,6 @@
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
-import { faculty, facultyDepartment } from "@/server/db/schema";
+import { faculty, faculty_department } from "@/server/db/schema";
 import { ERole } from "@/@types/enums";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, privateProcedure } from "../trpc";
@@ -114,7 +114,7 @@ export const facultyRouter = createTRPCRouter({
         }
 
         for (const department of departments) {
-          await db.insert(facultyDepartment).values({
+          await db.insert(faculty_department).values({
             faculty_id: save[0]?.faculty_id,
             dep_id: department.dep_id,
           });
@@ -400,8 +400,8 @@ export const facultyRouter = createTRPCRouter({
         }
 
         const deleteFacultyDep = await db
-          .delete(facultyDepartment)
-          .where(sql`${facultyDepartment.faculty_id} = ${faculty_id}`);
+          .delete(faculty_department)
+          .where(sql`${faculty_department.faculty_id} = ${faculty_id}`);
 
         if (!deleteFacultyDep) {
           throw new TRPCError({
@@ -411,16 +411,16 @@ export const facultyRouter = createTRPCRouter({
         }
 
         for (let dep of departments) {
-          const existDep = await db.query.facultyDepartment.findFirst({
+          const existDep = await db.query.faculty_department.findFirst({
             where: () =>
-              sql`${facultyDepartment.dep_id} = ${dep.dep_id} AND ${facultyDepartment.faculty_id} = ${faculty_id}`,
+              sql`${faculty_department.dep_id} = ${dep.dep_id} AND ${faculty_department.faculty_id} = ${faculty_id}`,
             columns: {
               dep_id: true,
             },
           });
 
           if (!existDep?.dep_id) {
-            await db.insert(facultyDepartment).values({
+            await db.insert(faculty_department).values({
               dep_id: dep.dep_id,
               faculty_id: faculty_id,
             });

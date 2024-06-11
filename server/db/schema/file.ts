@@ -11,6 +11,7 @@ import {
 import { faculty } from "./faculty";
 import { announcement } from "./announcement";
 import { department } from "./department";
+
 export const file = pgTable(
   "file",
   {
@@ -42,7 +43,7 @@ export const file = pgTable(
   }
 );
 
-export const fileDepartment = pgTable("filedepartment", {
+export const file_department = pgTable("file_department", {
   file_id: uuid("file_id")
     .references(() => file.file_id, { onDelete: "cascade" })
     .notNull(),
@@ -51,10 +52,10 @@ export const fileDepartment = pgTable("filedepartment", {
     .notNull(),
 });
 
-export const fileRelations = relations(file, ({ one, many }) => ({
+export const file_relations = relations(file, ({ one, many }) => ({
   faculty: one(faculty, {
     fields: [file.faculty_id],
     references: [faculty.faculty_id],
   }),
-  departments: many(fileDepartment),
+  departments: many(file_department),
 }));

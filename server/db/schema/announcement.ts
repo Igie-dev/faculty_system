@@ -9,8 +9,9 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { faculty } from "./faculty";
-import { department, departmentAnnouncement } from "./department";
+import { department, department_announcement } from "./department";
 import { file } from "./file";
+
 export const announcement = pgTable(
   "announcement",
   {
@@ -33,19 +34,21 @@ export const announcement = pgTable(
   },
   (t) => {
     return {
-      announcementIndex: uniqueIndex("announcementIndex").on(t.announcement_id),
+      announcement_index: uniqueIndex("announcement_index").on(
+        t.announcement_id
+      ),
     };
   }
 );
 
-export const annoucementRelations = relations(
+export const annoucement_relations = relations(
   announcement,
   ({ one, many }) => ({
     faculty: one(faculty, {
       fields: [announcement.faculty_id],
       references: [faculty.faculty_id],
     }),
-    departments: many(departmentAnnouncement),
+    departments: many(department_announcement),
     files: many(file),
   })
 );

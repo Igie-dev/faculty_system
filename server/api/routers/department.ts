@@ -1,6 +1,6 @@
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
-import { department, facultyDepartment } from "@/server/db/schema";
+import { department, faculty_department } from "@/server/db/schema";
 import { ERole } from "@/@types/enums";
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, privateProcedure } from "../trpc";
@@ -263,8 +263,8 @@ export const departmentRouter = createTRPCRouter({
     .input(z.string())
     .query(async ({ input }) => {
       try {
-        const foundDepartments = await db.query.facultyDepartment.findMany({
-          where: () => sql`${facultyDepartment.faculty_id} = ${input}`,
+        const foundDepartments = await db.query.faculty_department.findMany({
+          where: () => sql`${faculty_department.faculty_id} = ${input}`,
           with: {
             department: true,
           },

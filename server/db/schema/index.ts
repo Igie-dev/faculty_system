@@ -12,39 +12,41 @@ import * as schoolyearSchema from "./schoolyear";
 export const {
   facultyRole,
   faculty,
-  facultyRelations,
-  facultyDepartment,
-  facultyArchiveAnnoucement,
-  facultyDepartmentlations,
-  facultyArchiveAnnoucementRelations,
-  createFacultySchema,
-  updateFacultySchema,
+  faculty_relations,
+  faculty_department,
+  faculty_department_relations,
+  faculty_archive_annoucement,
+  faculty_archive_annoucement_relations,
+  faculty_task,
+  faculty_task_relations,
+  faculty_notification,
+  faculty_notification_relations,
 } = facultySchema;
 
 export const {
   department,
-  departmentAnnouncement,
-  departmentAnnoucementsRelations,
-  departmentRelations,
+  department_announcement,
+  department_annoucements_relations,
+  department_relations,
 } = departmentSchema;
 
-export const { announcement, annoucementRelations } = announcementSchema;
+export const { announcement, annoucement_relations } = announcementSchema;
 
-export const { file, fileDepartment, fileRelations } = fileSchema;
+export const { file, file_department, file_relations } = fileSchema;
 
 export const {
-  submissionStatus,
+  submission_status,
   submission,
-  submissionDepartment,
-  submissionRelations,
+  submission_department,
+  submission_relations,
 } = submissionSchema;
 
-export const { fileCategory, fileCategoryRelations } = fileCategorySchema;
+export const { file_category, file_category_relations } = fileCategorySchema;
 
-export const { task, taskRelations } = taskSchema;
+export const { task, task_relations } = taskSchema;
 
-export const { schoolyear, schoolyearRelations } = schoolyearSchema;
+export const { school_year, school_year_relations } = schoolyearSchema;
 
-export const { semester, semesterRelations } = semesterSchema;
+export const { semester, semester_relations } = semesterSchema;
 
-export const { notification, notificationRelations } = notificationSchema;
+export const { notification, notification_relations } = notificationSchema;
