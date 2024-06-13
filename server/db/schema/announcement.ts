@@ -9,7 +9,7 @@ import {
   uuid,
 } from "drizzle-orm/pg-core";
 import { faculty } from "./faculty";
-import { department, department_announcement } from "./department";
+import { departmentAnnouncement } from "./department";
 import { file } from "./file";
 
 export const announcement = pgTable(
@@ -27,28 +27,25 @@ export const announcement = pgTable(
     faculty_id: varchar("faculty_id", { length: 255 }).references(
       () => faculty.faculty_id,
       { onDelete: "cascade" }
-    ),
-    dep_id: uuid("dep_id")
-      .references(() => department.dep_id, { onDelete: "cascade" })
-      .notNull(),
+    )
   },
   (t) => {
     return {
-      announcement_index: uniqueIndex("announcement_index").on(
+      announcementIndex: uniqueIndex("announcement_index").on(
         t.announcement_id
       ),
     };
   }
 );
 
-export const annoucement_relations = relations(
+export const annoucementRelations = relations(
   announcement,
   ({ one, many }) => ({
     faculty: one(faculty, {
       fields: [announcement.faculty_id],
       references: [faculty.faculty_id],
     }),
-    departments: many(department_announcement),
+    departments: many(departmentAnnouncement),
     files: many(file),
   })
 );

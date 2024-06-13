@@ -1,5 +1,5 @@
 import React from "react";
-import UpdateDetailsForm from "./components/UpdateDetailsForm";
+import UpdateDetailsForm from "./_components/UpdateDetailsForm";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { api } from "@/trpc/server";

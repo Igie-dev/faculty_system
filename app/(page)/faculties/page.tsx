@@ -1,7 +1,7 @@
 import React from "react";
-import Faculties from "./table/Faculties";
+import Faculties from "./_table/Faculties";
 import { api } from "@/trpc/server";
-import FacutiesTableLoader from "./table/FacutiesTableLoader";
+import FacutiesTableLoader from "./_table/FacutiesTableLoader";
 export default async function page() {
   const res = await api.faculty.getAll();
   if (!res?.data) return <FacutiesTableLoader />;

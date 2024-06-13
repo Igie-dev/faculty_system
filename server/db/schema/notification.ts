@@ -8,7 +8,7 @@ import {
   text,
   uuid,
 } from "drizzle-orm/pg-core";
-import { faculty, faculty_notification } from "./faculty";
+import { faculty, facultyNotification } from "./faculty";
 
 export const notification = pgTable(
   "notification",
@@ -27,11 +27,11 @@ export const notification = pgTable(
   },
   (t) => {
     return {
-      notif_index: uniqueIndex("notif_index").on(t.notif_id),
+      notifIndex: uniqueIndex("notif_index").on(t.notif_id),
     };
   }
 );
 
-export const notification_relations = relations(notification, ({ many }) => ({
-  faculty: many(faculty_notification),
+export const notificationRelations = relations(notification, ({ many }) => ({
+  faculty: many(facultyNotification),
 }));

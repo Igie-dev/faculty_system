@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Faculty System",
+  title: "Tasks",
   description: "Deliverables monitoring system",
 };
 

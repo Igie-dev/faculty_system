@@ -35,9 +35,9 @@ async function resetTable(db: db, table: Table) {
     const tables = [
       schema.faculty,
       schema.department,
-      schema.school_year,
+      schema.schoolYear,
       schema.semester,
-      schema.file_category,
+      schema.fileCategory,
     ];
     for (let table of tables) {
       await resetTable(db, table);

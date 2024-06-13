@@ -40,24 +40,24 @@ export const faculty = pgTable(
   },
   (t) => {
     return {
-      emailIndex: uniqueIndex("emailIndex").on(t.email),
-      contactIndex: uniqueIndex("contactIndex").on(t.email),
+      emailIndex: uniqueIndex("email_index").on(t.email),
+      contactIndex: uniqueIndex("contact_index").on(t.email),
     };
   }
 );
 
-export const faculty_relations = relations(faculty, ({ many }) => ({
-  departments: many(faculty_department),
+export const facultyRelations = relations(faculty, ({ many }) => ({
+  departments: many(facultyDepartment),
   announcements: many(announcement),
   submissions: many(submission),
-  tasks: many(faculty_task),
+  tasks: many(facultyTask),
   files: many(file),
-  archiveAnnouncements: many(faculty_archive_annoucement),
-  notifications: many(faculty_notification),
+  archiveAnnouncements: many(facultyArchiveAnnoucement),
+  notifications: many(facultyNotification),
 }));
 
-export const faculty_department = pgTable(
-  "faculty_department",
+export const facultyDepartment = pgTable(
+  "facultydepartment",
   {
     faculty_id: varchar("faculty_id", { length: 255 })
       .references(() => faculty.faculty_id, { onDelete: "cascade" })
@@ -74,22 +74,22 @@ export const faculty_department = pgTable(
   }
 );
 
-export const faculty_department_relations = relations(
-  faculty_department,
+export const facultyDepartmentRelations = relations(
+  facultyDepartment,
   ({ one }) => ({
     faculty: one(faculty, {
-      fields: [faculty_department.faculty_id],
+      fields: [facultyDepartment.faculty_id],
       references: [faculty.faculty_id],
     }),
     department: one(department, {
-      fields: [faculty_department.dep_id],
+      fields: [facultyDepartment.dep_id],
       references: [department.dep_id],
     }),
   })
 );
 
-export const faculty_archive_annoucement = pgTable(
-  "faculty_archive_announcement",
+export const facultyArchiveAnnoucement = pgTable(
+  "facultyarchiveannouncement",
   {
     announcement_id: uuid("announcement_id").references(
       () => announcement.announcement_id,
@@ -107,22 +107,22 @@ export const faculty_archive_annoucement = pgTable(
   }
 );
 
-export const faculty_archive_annoucement_relations = relations(
-  faculty_archive_annoucement,
+export const facultyArchiveAnnoucementRelations = relations(
+  facultyArchiveAnnoucement,
   ({ one }) => ({
     faculty: one(faculty, {
-      fields: [faculty_archive_annoucement.faculty_id],
+      fields: [facultyArchiveAnnoucement.faculty_id],
       references: [faculty.faculty_id],
     }),
     announcement: one(announcement, {
-      fields: [faculty_archive_annoucement.announcement_id],
+      fields: [facultyArchiveAnnoucement.announcement_id],
       references: [announcement.announcement_id],
     }),
   })
 );
 
-export const faculty_task = pgTable(
-  "faculty_task",
+export const facultyTask = pgTable(
+  "facultytask",
   {
     faculty_id: varchar("faculty_id", { length: 255 }).references(
       () => faculty.faculty_id,
@@ -140,18 +140,18 @@ export const faculty_task = pgTable(
   }
 );
 
-export const faculty_task_relations = relations(faculty_task, ({ one }) => ({
+export const facultyTaskRelations = relations(facultyTask, ({ one }) => ({
   faculty: one(faculty, {
-    fields: [faculty_task.faculty_id],
+    fields: [facultyTask.faculty_id],
     references: [faculty.faculty_id],
   }),
   task: one(task, {
-    fields: [faculty_task.task_id],
+    fields: [facultyTask.task_id],
     references: [task.task_id],
   }),
 }));
 
-export const faculty_notification = pgTable("faculty_notification", {
+export const facultyNotification = pgTable("facultynotification", {
   faculty_id: varchar("faculty_id", { length: 255 }).references(
     () => faculty.faculty_id,
     { onDelete: "cascade" }
@@ -161,15 +161,15 @@ export const faculty_notification = pgTable("faculty_notification", {
   }),
 });
 
-export const faculty_notification_relations = relations(
-  faculty_notification,
+export const facultyNotificationRelations = relations(
+  facultyNotification,
   ({ one }) => ({
     faculty: one(faculty, {
-      fields: [faculty_notification.faculty_id],
+      fields: [facultyNotification.faculty_id],
       references: [faculty.faculty_id],
     }),
     notification: one(notification, {
-      fields: [faculty_notification.notif_id],
+      fields: [facultyNotification.notif_id],
       references: [notification.notif_id],
     }),
   })

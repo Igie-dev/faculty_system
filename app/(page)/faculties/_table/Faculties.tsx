@@ -52,8 +52,8 @@ export default function Faculties({ faculties }: Props) {
 
   if (faculties)
     return (
-      <section className="flex flex-col items-center w-full h-full md:py-2">
-        <div className="w-full flex flex-1 flex-col min-h-0 overflow-hidden md:w-[98%] rounded-lg border">
+      <section className="flex flex-col items-center w-full h-full md:p-2">
+        <div className="w-full flex flex-1 flex-col min-h-0 overflow-hidden  rounded-lg border">
           <Header table={table} facultiesLength={faculties.length} />
           <Table table={table} column={col} />
           {faculties?.length >= 20 ? (

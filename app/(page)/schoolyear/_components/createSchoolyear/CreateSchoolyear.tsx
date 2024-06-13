@@ -33,7 +33,7 @@ export default function CreateSchoolyear() {
   const { toast } = useToast();
   const router = useRouter();
 
-  const { mutate, isPending, error } = api.schoolyear.create.useMutation({
+  const { mutate, isPending, error } = api.schoolYear.create.useMutation({
     onSuccess: (context) => {
       toast({
         variant: "default",

@@ -6,8 +6,8 @@ import { departmentRouter } from "./routers/department";
 import { facultyRouter } from "./routers/faculty";
 export const appRouter = createTRPCRouter({
   semester: semesterRouter,
-  schoolyear: schoolYearRouter,
-  filecategory: fileCategoryRouter,
+  schoolYear: schoolYearRouter,
+  fileCategory: fileCategoryRouter,
   department: departmentRouter,
   faculty: facultyRouter,
 });

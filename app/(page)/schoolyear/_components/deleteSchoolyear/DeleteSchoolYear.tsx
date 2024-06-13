@@ -23,7 +23,7 @@ type Props = {
 export default function DeleteSchoolYear({ id, year }: Props) {
   const router = useRouter();
   const { toast } = useToast();
-  const { mutate, isPending } = api.schoolyear.delete.useMutation({
+  const { mutate, isPending } = api.schoolYear.delete.useMutation({
     onSuccess: (context) => {
       toast({
         variant: "default",

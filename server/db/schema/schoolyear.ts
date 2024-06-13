@@ -9,8 +9,8 @@ import {
 } from "drizzle-orm/pg-core";
 import { submission } from "./submission";
 
-export const school_year = pgTable(
-  "school_year",
+export const schoolYear = pgTable(
+  "schoolyear",
   {
     id: serial("id").primaryKey(),
     school_year_id: uuid("school_year_id").defaultRandom().notNull().unique(),
@@ -24,11 +24,11 @@ export const school_year = pgTable(
   },
   (t) => {
     return {
-      schoolyear_index: uniqueIndex("schoolyear_index").on(t.school_year_id),
+      schoolyearIndex: uniqueIndex("schoolyear_index").on(t.school_year_id),
     };
   }
 );
 
-export const school_year_relations = relations(school_year, ({ many }) => ({
+export const schoolYearRelations = relations(schoolYear, ({ many }) => ({
   submissions: many(submission),
 }));

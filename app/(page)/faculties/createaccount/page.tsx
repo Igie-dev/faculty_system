@@ -1,7 +1,7 @@
 import React from "react";
 import { X } from "lucide-react";
 import Link from "next/link";
-import Form from "./components/Form";
+import Form from "./_components/Form";
 
 export default function page() {
   return (

@@ -38,12 +38,12 @@ export const file = pgTable(
   },
   (t) => {
     return {
-      fileIndex: uniqueIndex("fileIndex").on(t.file_id),
+      fileIndex: uniqueIndex("file_index").on(t.file_id),
     };
   }
 );
 
-export const file_department = pgTable("file_department", {
+export const fileDepartment = pgTable("filedepartment", {
   file_id: uuid("file_id")
     .references(() => file.file_id, { onDelete: "cascade" })
     .notNull(),
@@ -57,5 +57,5 @@ export const file_relations = relations(file, ({ one, many }) => ({
     fields: [file.faculty_id],
     references: [faculty.faculty_id],
   }),
-  departments: many(file_department),
+  departments: many(fileDepartment),
 }));

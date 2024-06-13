@@ -2,8 +2,8 @@ import Loader from "@/app/_components/Loader";
 import React from "react";
 export default function FacutiesTableLoader() {
   return (
-    <section className="flex flex-col items-center w-full h-full md:py-2">
-      <div className="w-full flex flex-1 flex-col min-h-0 overflow-hidden md:w-[98%] rounded-lg border bg-background">
+    <section className="flex flex-col items-center w-full h-full md:p-2">
+      <div className="w-full flex flex-1 flex-col min-h-0 rounded-lg border bg-background">
         <header className="flex flex-col items-start justify-between w-full gap-5 p-2 pb-5 border-b  bg-background">
           <span className="text-xl font-extrabold fancy_font md:text-2xl">
             Faculties

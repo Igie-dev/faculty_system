@@ -24,11 +24,11 @@ export const semester = pgTable(
   },
   (t) => {
     return {
-      semester_index: uniqueIndex("semester_index").on(t.semester_id),
+      semesterIndex: uniqueIndex("semester_index").on(t.semester_id),
     };
   }
 );
 
-export const semester_relations = relations(semester, ({ many }) => ({
+export const semesterRelations = relations(semester, ({ many }) => ({
   submissions: many(submission),
 }));

@@ -7,46 +7,46 @@ import * as fileCategorySchema from "./filecategory";
 import * as taskSchema from "./task";
 import * as notificationSchema from "./notification";
 import * as semesterSchema from "./semester";
-import * as schoolyearSchema from "./schoolyear";
+import * as schoolYearSchema from "./schoolyear";
 
 export const {
   facultyRole,
   faculty,
-  faculty_relations,
-  faculty_department,
-  faculty_department_relations,
-  faculty_archive_annoucement,
-  faculty_archive_annoucement_relations,
-  faculty_task,
-  faculty_task_relations,
-  faculty_notification,
-  faculty_notification_relations,
+  facultyRelations,
+  facultyDepartment,
+  facultyDepartmentRelations,
+  facultyArchiveAnnoucement,
+  facultyArchiveAnnoucementRelations,
+  facultyTask,
+  facultyTaskRelations,
+  facultyNotification,
+  facultyNotificationRelations,
 } = facultySchema;
 
 export const {
   department,
-  department_announcement,
-  department_annoucements_relations,
+  departmentAnnouncement,
+  departmentAnnoucementsRelations,
   department_relations,
 } = departmentSchema;
 
-export const { announcement, annoucement_relations } = announcementSchema;
+export const { announcement, annoucementRelations } = announcementSchema;
 
-export const { file, file_department, file_relations } = fileSchema;
+export const { file, fileDepartment, file_relations } = fileSchema;
 
 export const {
-  submission_status,
+  submissionStatus,
   submission,
-  submission_department,
-  submission_relations,
+  submissionDepartment,
+  submissionRelations,
 } = submissionSchema;
 
-export const { file_category, file_category_relations } = fileCategorySchema;
+export const { fileCategory, fileCategoryRelations } = fileCategorySchema;
 
-export const { task, task_relations } = taskSchema;
+export const { task, taskRelations } = taskSchema;
 
-export const { school_year, school_year_relations } = schoolyearSchema;
+export const { schoolYear, schoolYearRelations } = schoolYearSchema;
 
-export const { semester, semester_relations } = semesterSchema;
+export const { semester, semesterRelations } = semesterSchema;
 
-export const { notification, notification_relations } = notificationSchema;
+export const { notification, notificationRelations } = notificationSchema;

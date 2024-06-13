@@ -2,7 +2,7 @@ import { InferSelectModel } from "drizzle-orm";
 import { v4 as uuid } from "uuid";
 import bcrypt from "bcrypt";
 import faculties from "./data/faculties.json";
-import { faculty, faculty_department } from "@/server/db/schema";
+import { faculty, facultyDepartment } from "@/server/db/schema";
 import type { db } from "@/server/db/seed";
 const saltRound = 9;
 export default async function seed(db: db) {
@@ -11,9 +11,9 @@ export default async function seed(db: db) {
       .toString()
       .replace("-", "")
       .slice(0, 10)}${fac.first_name.slice(0, 2)}${fac.last_name.slice(
-      0,
-      2
-    )}`.toUpperCase();
+        0,
+        2
+      )}`.toUpperCase();
     const hashedPassword = await bcrypt.hash(fac.password as string, saltRound);
 
     const data = {
@@ -34,12 +34,12 @@ export default async function seed(db: db) {
     }
 
     const departments = fac.departments as InferSelectModel<
-      typeof faculty_department
+      typeof facultyDepartment
     >[];
 
     if (departments.length >= 0) {
       for (let dep of departments) {
-        await db.insert(faculty_department).values({
+        await db.insert(facultyDepartment).values({
           faculty_id: data.faculty_id,
           dep_id: dep.dep_id,
         });

@@ -41,7 +41,7 @@ export default function UpdateFileCategory({ id, name, description }: Props) {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const { toast } = useToast();
-  const { mutate, isPending, error } = api.filecategory.update.useMutation({
+  const { mutate, isPending, error } = api.fileCategory.update.useMutation({
     onSuccess: (context) => {
       toast({
         variant: "default",

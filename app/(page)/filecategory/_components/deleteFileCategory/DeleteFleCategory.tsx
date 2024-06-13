@@ -24,7 +24,7 @@ type Props = {
 export default function DeleteFleCategory({ id, name, description }: Props) {
   const router = useRouter();
   const { toast } = useToast();
-  const { mutate, isPending } = api.filecategory.delete.useMutation({
+  const { mutate, isPending } = api.fileCategory.delete.useMutation({
     onSuccess: (context) => {
       toast({
         variant: "default",

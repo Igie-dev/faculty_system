@@ -125,7 +125,6 @@ export const options: NextAuthOptions = {
           session.user.role = token?.role;
           session.user.email = token.email;
           session.user.name = token.name;
-          console.log(token)
           if (!token.picture) {
             const foundImage = await db.query.faculty.findFirst({
               where: () => sql`${faculty.faculty_id} = ${token?.faculty_id}`,

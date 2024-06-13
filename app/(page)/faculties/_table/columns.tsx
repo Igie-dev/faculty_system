@@ -10,7 +10,7 @@ import {
 } from "@/app/_components/ui/dropdown-menu";
 import { Button } from "@/app/_components/ui/button";
 import { ERole } from "@/@types/enums";
-import DeleteFaculty from "../deleteAccount/DeleteFaculty";
+import DeleteFaculty from "../_deleteAccount/DeleteFaculty";
 export const columns: ColumnDef<TFacultyData>[] = [
   {
     accessorKey: "id",

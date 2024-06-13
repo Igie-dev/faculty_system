@@ -34,7 +34,7 @@ export default function CreateFileCategory() {
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
   const { toast } = useToast();
-  const { mutate, isPending, error } = api.filecategory.create.useMutation({
+  const { mutate, isPending, error } = api.fileCategory.create.useMutation({
     onSuccess: (context) => {
       toast({
         variant: "default",
