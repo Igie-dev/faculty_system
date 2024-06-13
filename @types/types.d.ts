@@ -147,7 +147,7 @@ declare global {
     role: string;
     email: string;
     name: string;
-    avatar_url: string;
+    image: string;
   };
   type TFormState = {
     message?: string;
@@ -157,4 +157,4 @@ declare global {
   };
 }
 
-export {};
+export { };

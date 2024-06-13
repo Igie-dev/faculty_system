@@ -26,7 +26,7 @@ export const faculty = pgTable(
     id: serial("id").primaryKey(),
     faculty_id: varchar("faculty_id", { length: 255 }).notNull().unique(),
     name: varchar("name", { length: 255 }).notNull().unique(),
-    avatar_url: text("avatar_url"),
+    image: text("image"),
     email: varchar("email", { length: 255 }).notNull().unique(),
     password: text("password").notNull(),
     contact: varchar("contact", { length: 255 }).notNull(),

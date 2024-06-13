@@ -125,23 +125,26 @@ export const options: NextAuthOptions = {
           session.user.role = token?.role;
           session.user.email = token.email;
           session.user.name = token.name;
-
+          console.log(token)
           if (!token.picture) {
             const foundImage = await db.query.faculty.findFirst({
               where: () => sql`${faculty.faculty_id} = ${token?.faculty_id}`,
               columns: {
-                avatar_url: true,
+                image: true,
               },
             });
 
-            if (foundImage?.avatar_url) {
-              session.user.image = foundImage.avatar_url;
+            if (foundImage?.image) {
+              session.user.image = foundImage.image;
             }
           } else {
+            await db.update(faculty).set({
+              image: token.picture
+            })
             session.user.image = token.picture;
           }
         }
-      } catch (error) {}
+      } catch (error) { }
 
       return session;
     },

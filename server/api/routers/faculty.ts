@@ -88,9 +88,9 @@ export const facultyRouter = createTRPCRouter({
           .toString()
           .replace("-", "")
           .slice(0, 10)}${first_name.slice(0, 2)}${last_name.slice(
-          0,
-          2
-        )}`.toUpperCase();
+            0,
+            2
+          )}`.toUpperCase();
 
         const hashedPassword = await bcrypt.hash(password as string, saltRound);
 
@@ -144,7 +144,7 @@ export const facultyRouter = createTRPCRouter({
           id: true,
           name: true,
           faculty_id: true,
-          avatar_url: true,
+          image: true,
           email: true,
           contact: true,
           createdAt: true,
@@ -196,7 +196,7 @@ export const facultyRouter = createTRPCRouter({
           id: true,
           name: true,
           faculty_id: true,
-          avatar_url: true,
+          image: true,
           email: true,
           contact: true,
           createdAt: true,
