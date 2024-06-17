@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import DepartmentCard from "./DepartmentCard";
 import { useSearchParams } from "next/navigation";
-import EmptyBox from "@/app/_components/EmptyBox";
+import NoData from "@/app/_components/NoData";
 import { debounce } from "lodash";
 type Props = {
   departments: TDepartmentData[];
@@ -30,7 +30,7 @@ export default function DepartmentList({ departments }: Props) {
     }
   }, [departments, filter]);
 
-  if (departments.length <= 0) return <EmptyBox classNames="mt-10" />;
+  if (departments.length <= 0) return <NoData classNames="mt-10" />;
   return filteredDep.length >= 1 ? (
     <ul className="flex flex-wrap w-full h-fit py-1 gap-1 md:p-1">
       {filteredDep?.map((dep) => {

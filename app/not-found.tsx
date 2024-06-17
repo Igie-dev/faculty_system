@@ -5,18 +5,19 @@ import { useRouter } from "next/navigation";
 export default function Notfound() {
   const router = useRouter();
   return (
-    <section className="w-screen h-screen flex items-center justify-center ">
-      <div className="flex flex-col w-full h-fit px-4 py-8  md:max-w-[40rem]  items-center space-y-10">
-        <div className="flex flex-col space-y-4 items-center">
-          <span className="font-extrabold text-destructive text-8xl lg:text-9xl">
+    <section className="w-screen h-screen flex  bg-primary-foreground justify-center pt-20">
+      <div className="flex flex-col w-full h-fit px-4 py-8 space-y-10  items-center ">
+        <div className="flex flex-col space-y-5 items-center">
+          <h1 className="font-extrabold  text-[10rem] md:text-[12rem] 2xl:text-[14rem]">
             404
-          </span>
-          <span className="text-sm font-semibold">This page Not found!</span>
+          </h1>
+          <p className="text-xl md:text-2xl">Page not found!</p>
         </div>
         <Button
           type="button"
+          variant="link"
+          size="lg"
           onClick={() => router.back()}
-          className="min-w-[10rem]"
         >
           Back
         </Button>

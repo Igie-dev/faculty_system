@@ -1,5 +1,5 @@
 "use client";
-import EmptyBox from "@/app/_components/EmptyBox";
+import NoData from "@/app/_components/NoData";
 import React, { useEffect, useState } from "react";
 import SchoolYearCard from "./SchoolYearCard";
 import { useSearchParams } from "next/navigation";
@@ -30,7 +30,7 @@ export default function SchoolYearList({ schoolyear }: Props) {
       debouncedFilterSchoolYear();
     }
   }, [schoolyear, filter]);
-  if (schoolyear.length <= 0) return <EmptyBox classNames="mt-10" />;
+  if (schoolyear.length <= 0) return <NoData classNames="mt-10" />;
   return filteredSchoolYear.length >= 1 ? (
     <ul className="flex flex-wrap w-full h-fit py-1 gap-1 md:p-1">
       {filteredSchoolYear?.map((year) => {
