@@ -2,7 +2,7 @@ import { Skeleton } from "@/app/_components/ui/skeleton";
 export default function DepartmentLoader() {
   const count = [];
 
-  for (let i = 0; i < 10; i++) {
+  for (let i = 0; i < 3; i++) {
     count.push(i);
   }
   return (

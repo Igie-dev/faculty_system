@@ -6,8 +6,8 @@ type Props = {
 };
 export default function ButtonLoading({ classNames }: Props) {
   return (
-    <Button disabled className={`${classNames}`}>
-      <LoaderCircle size={20} className="animate-spin" />
+    <Button disabled variant="secondary" className={`${classNames}`}>
+      <LoaderCircle size={20} className="animate-spin text-primary" />
     </Button>
   );
 }
