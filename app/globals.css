@@ -48,6 +48,9 @@
   body {
     font-family: "Inter", sans-serif;
   }
+  pre {
+    font-family: "Inter", sans-serif;
+  }
   .nav_link::after {
     content: attr(data-title) !important;
   }
