@@ -30,5 +30,5 @@ if (!globalForDb.conn) {
 
 // Initialize the drizzle ORM with the database connection
 export const db = drizzle(conn, { schema, logger: true });
-export type Db = typeof db;
+export type db = typeof db;
 export default db;

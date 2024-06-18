@@ -7,6 +7,7 @@ import department from "./seeds/department";
 import schoolyear from "./seeds/schoolyear";
 import semester from "./seeds/semester";
 import filecategory from "./seeds/filecategory.js";
+import announcement from "./seeds/announdement.js";
 
 import "dotenv/config";
 
@@ -38,18 +39,20 @@ async function resetTable(db: db, table: Table) {
       schema.schoolYear,
       schema.semester,
       schema.fileCategory,
+      schema.announcement
     ];
     for (let table of tables) {
       await resetTable(db, table);
     }
     console.log("Seeding started");
-    await Promise.all([
-      department(db),
-      faculty(db),
-      schoolyear(db),
-      semester(db),
-      filecategory(db),
-    ]);
+
+    await department(db);
+    await faculty(db);
+    await schoolyear(db);
+    await semester(db);
+    await filecategory(db);
+    await announcement(db);
+
     console.log("Seeding done");
   } catch (error) {
     console.log(error);
