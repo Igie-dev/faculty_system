@@ -3,7 +3,7 @@ import { eq, sql } from "drizzle-orm";
 import { fileCategory } from "@/server/db/schema";
 import { ERole } from "@/@types/enums";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, privateProcedure } from "../trpc";
+import { createTRPCRouter, publicProcedure, privateProcedure, handleError } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { createFileCategorySchema } from "@/utils/zodSchema";
 export const fileCategoryRouter = createTRPCRouter({
@@ -55,15 +55,7 @@ export const fileCategoryRouter = createTRPCRouter({
           message: "File category created successfully!",
         };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
   getById: publicProcedure.input(z.number()).query(async ({ input }) => {
@@ -84,15 +76,7 @@ export const fileCategoryRouter = createTRPCRouter({
         data: found,
       };
     } catch (error) {
-      console.log(error);
-      if (error instanceof TRPCError) {
-        throw error; // Rethrow the original TRPCError
-      } else {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Something went wrong!",
-        });
-      }
+      handleError(error)
     }
   }),
   getAll: publicProcedure.query(async () => {
@@ -102,15 +86,7 @@ export const fileCategoryRouter = createTRPCRouter({
         data: categories,
       };
     } catch (error) {
-      console.log(error);
-      if (error instanceof TRPCError) {
-        throw error; // Rethrow the original TRPCError
-      } else {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Something went wrong!",
-        });
-      }
+      handleError(error)
     }
   }),
   delete: privateProcedure
@@ -145,15 +121,7 @@ export const fileCategoryRouter = createTRPCRouter({
           message: "Category deleted!",
         };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
 
@@ -232,15 +200,7 @@ export const fileCategoryRouter = createTRPCRouter({
           message: "Update successful!",
         };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
 });

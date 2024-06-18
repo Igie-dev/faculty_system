@@ -3,7 +3,7 @@ import { eq, sql } from "drizzle-orm";
 import { faculty, facultyDepartment } from "@/server/db/schema";
 import { ERole } from "@/@types/enums";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, privateProcedure } from "../trpc";
+import { createTRPCRouter, publicProcedure, privateProcedure, handleError } from "../trpc";
 import { v4 as uuid } from "uuid";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcrypt";
@@ -125,15 +125,7 @@ export const facultyRouter = createTRPCRouter({
           message: "Create account success!",
         };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
   getByFacultyId: publicProcedure.input(z.string()).query(async ({ input }) => {
@@ -178,15 +170,7 @@ export const facultyRouter = createTRPCRouter({
         data: found,
       };
     } catch (error) {
-      console.log(error);
-      if (error instanceof TRPCError) {
-        throw error; // Rethrow the original TRPCError
-      } else {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Something went wrong!",
-        });
-      }
+      handleError(error)
     }
   }),
   getAll: publicProcedure.query(async () => {
@@ -222,15 +206,7 @@ export const facultyRouter = createTRPCRouter({
         data: faculties,
       };
     } catch (error) {
-      console.log(error);
-      if (error instanceof TRPCError) {
-        throw error; // Rethrow the original TRPCError
-      } else {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Something went wrong!",
-        });
-      }
+      handleError(error)
     }
   }),
 
@@ -275,15 +251,7 @@ export const facultyRouter = createTRPCRouter({
           message: "Faculty account deleted!",
         };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
 
@@ -347,15 +315,7 @@ export const facultyRouter = createTRPCRouter({
           message: "Update faculty account success!",
         };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
   updateFacultyDepartments: privateProcedure
@@ -431,15 +391,7 @@ export const facultyRouter = createTRPCRouter({
           message: "Update success!",
         };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
 });

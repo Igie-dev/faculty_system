@@ -3,7 +3,7 @@ import { eq, sql } from "drizzle-orm";
 import { semester } from "@/server/db/schema";
 import { ERole } from "@/@types/enums";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, privateProcedure } from "../trpc";
+import { createTRPCRouter, publicProcedure, privateProcedure, handleError } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { createSemesterSchema } from "@/utils/zodSchema";
 const ordinalIndicators = ["st", "nd", "rd", "th"];
@@ -60,15 +60,7 @@ export const semesterRouter = createTRPCRouter({
           message: "Create semester success!",
         };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
 
@@ -90,15 +82,7 @@ export const semesterRouter = createTRPCRouter({
         data: found,
       };
     } catch (error) {
-      console.log(error);
-      if (error instanceof TRPCError) {
-        throw error; // Rethrow the original TRPCError
-      } else {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Something went wrong!",
-        });
-      }
+      handleError(error)
     }
   }),
   getAll: publicProcedure.query(async () => {
@@ -108,15 +92,7 @@ export const semesterRouter = createTRPCRouter({
         data: foundSemesters,
       };
     } catch (error) {
-      console.log(error);
-      if (error instanceof TRPCError) {
-        throw error; // Rethrow the original TRPCError
-      } else {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Something went wrong!",
-        });
-      }
+      handleError(error)
     }
   }),
   delete: privateProcedure
@@ -151,15 +127,7 @@ export const semesterRouter = createTRPCRouter({
           message: "Semester deleted!",
         };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
 });

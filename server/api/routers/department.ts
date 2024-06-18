@@ -3,7 +3,7 @@ import { eq, sql } from "drizzle-orm";
 import { department, facultyDepartment } from "@/server/db/schema";
 import { ERole } from "@/@types/enums";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, privateProcedure } from "../trpc";
+import { createTRPCRouter, publicProcedure, privateProcedure, handleError } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { createDepartmentSchema } from "@/utils/zodSchema";
 export const departmentRouter = createTRPCRouter({
@@ -71,15 +71,7 @@ export const departmentRouter = createTRPCRouter({
           message: "Department created successfully!",
         };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
   getById: publicProcedure.input(z.number()).query(async ({ input }) => {
@@ -100,33 +92,18 @@ export const departmentRouter = createTRPCRouter({
         data: found,
       };
     } catch (error) {
-      console.log(error);
-      if (error instanceof TRPCError) {
-        throw error; // Rethrow the original TRPCError
-      } else {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Something went wrong!",
-        });
-      }
+      handleError(error)
     }
   }),
   getAll: publicProcedure.query(async () => {
     try {
       const foundDepartments = await db.query.department.findMany();
       return {
+        success: true,
         data: foundDepartments,
       };
     } catch (error) {
-      console.log(error);
-      if (error instanceof TRPCError) {
-        throw error; // Rethrow the original TRPCError
-      } else {
-        throw new TRPCError({
-          code: "INTERNAL_SERVER_ERROR",
-          message: "Something went wrong!",
-        });
-      }
+      handleError(error)
     }
   }),
   delete: privateProcedure
@@ -161,15 +138,7 @@ export const departmentRouter = createTRPCRouter({
           message: "Department deleted!",
         };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
   update: privateProcedure
@@ -248,15 +217,7 @@ export const departmentRouter = createTRPCRouter({
           message: "Department update success!",
         };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
   getFacultyDepartments: publicProcedure
@@ -271,15 +232,7 @@ export const departmentRouter = createTRPCRouter({
         });
         return { data: foundDepartments };
       } catch (error) {
-        console.log(error);
-        if (error instanceof TRPCError) {
-          throw error; // Rethrow the original TRPCError
-        } else {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Something went wrong!",
-          });
-        }
+        handleError(error)
       }
     }),
 });
