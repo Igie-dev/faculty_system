@@ -1,9 +1,9 @@
 import React from "react";
-
-export default function page() {
-  return (
-    <section className="flex flex-col items-center w-full h-full">
-      <div className="w-full flex flex-1 flex-col min-h-0 "></div>
-    </section>
-  );
+import AnnouncementList from "./_components/AnnouncementList";
+import { api } from "@/trpc/server";
+import AnnouncementsPageLoader from "./_components/AnnouncementsPageLoader";
+export default async function page() {
+  const res = await api.announcement.getAll();
+  if (!res?.data) return <AnnouncementsPageLoader />;
+  return <AnnouncementList announcements={res?.data} />;
 }
