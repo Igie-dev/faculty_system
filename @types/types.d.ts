@@ -42,6 +42,7 @@ declare global {
     faculty_id: string;
     name: string;
     email: string;
+    image?: string;
     password?: string;
     contact: string;
     role: string;
