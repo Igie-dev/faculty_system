@@ -96,19 +96,18 @@ export default function DeleteFaculty({
         </div>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
-          <AlertDialogAction asChild>
-            {isPending ? (
-              <BtnLoader classNames="px-8" />
-            ) : (
-              <Button
-                size="default"
-                disabled={isPending}
-                onClick={handleDelete}
-              >
-                Continue
-              </Button>
-            )}
-          </AlertDialogAction>
+          {isPending ? (
+            <BtnLoader classNames="px-7" />
+          ) : (
+            <Button
+              size="default"
+              variant="destructive"
+              disabled={isPending}
+              onClick={handleDelete}
+            >
+              Delete
+            </Button>
+          )}
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
