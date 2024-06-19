@@ -7,7 +7,6 @@ export const announcementRouter = createTRPCRouter({
     getAll: publicProcedure.query(async () => {
         try {
             const announcements = await db.query.announcement.findMany();
-            console.log(announcements[0])
             return {
                 success: true,
                 data: announcements

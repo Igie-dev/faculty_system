@@ -17,7 +17,6 @@ export default function NavLinkWrapper({
   children,
 }: Props) {
   const pathname = usePathname();
-
   return (
     <Button
       variant="ghost"
@@ -29,7 +28,7 @@ export default function NavLinkWrapper({
           ? "px-4 rounded-md justify-start"
           : "justify-center rounded-md px-0"
       } ${
-        pathname.startsWith(`${path}`)
+        pathname.startsWith(`${path}`) || pathname.startsWith(`/search${path}`)
           ? "bg-primary text-background hover:bg-primary hover:text-background transition-none"
           : "bg-background text-muted-foreground"
       }  after:absolute after:hidden after:z-50 after:pointer-events-none after:items-center after:justify-center after:text-xs after:left-[103%] after:border after:border-muted  after:px-4 after:py-2 after:bg-primary after:rounded-md after:text-background 
