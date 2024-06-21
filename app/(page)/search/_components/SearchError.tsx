@@ -3,7 +3,7 @@ import React from "react";
 import SearchHeader from "./SearchHeader";
 import ServerCrashError from "@/app/_components/ServerCrashError";
 
-export default function ErrorUI({
+export default function SearchError({
   error,
   reset,
 }: {

@@ -1,6 +1,6 @@
 "use client"; // Error components must be Client Components
 import { useEffect } from "react";
-import ErrorUI from "@/app/(page)/search/announcements/_components/ErrorUI";
+import SearchError from "../_components/SearchError";
 export default function Error({
   error,
   reset,
@@ -13,5 +13,5 @@ export default function Error({
     console.log(error);
   }, [error]);
 
-  return <ErrorUI error={error} reset={reset} />;
+  return <SearchError error={error} reset={reset} />;
 }

@@ -1,10 +1,10 @@
 "use client";
 import { Button } from "@/app/_components/ui/button";
 import { Input } from "@/app/_components/ui/input";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { ChangeEvent, useEffect, useRef } from "react";
 
-export default function SeachHeader() {
+export default function SearchHeader() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
