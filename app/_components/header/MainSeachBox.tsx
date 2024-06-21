@@ -15,7 +15,7 @@ import {
 
 const categorySearch = [
   { title: "Announcements", value: "announcements" },
-  { title: "Submussions", value: "submissions" },
+  { title: "Submissions", value: "submissions" },
   { title: "Faculty", value: "faculty" },
 ];
 export default function MainSeachBox() {
