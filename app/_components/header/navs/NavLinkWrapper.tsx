@@ -34,7 +34,7 @@ export default function NavLinkWrapper({
       }  after:absolute after:hidden after:z-50 after:pointer-events-none after:items-center after:justify-center after:text-xs after:left-[103%] after:border after:border-muted  after:px-4 after:py-2 after:bg-primary after:rounded-md after:text-background 
       ${!isExpanded ? "hover:after:flex" : ""}`}
     >
-      <Link href={`${path}`}>{children}</Link>
+      <Link href={`${path}`} scroll={false}>{children}</Link>
     </Button>
   );
 }
