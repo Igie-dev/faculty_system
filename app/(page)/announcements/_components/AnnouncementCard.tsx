@@ -8,17 +8,23 @@ import useFormatDateStr from "@/app/hooks/useFormatDateStr";
 type Props = {
   children?: React.ReactNode;
   announcement: TAnnouncementData;
+  classNames?: string;
 };
 const AnnouncementContext = createContext<TAnnouncementData | null>(null);
-export function AnnouncementCard({ children, announcement }: Props) {
+export function AnnouncementCard({
+  children,
+  classNames,
+  announcement,
+}: Props) {
   return (
     <AnnouncementContext.Provider value={announcement}>
-      <div className="w-full flex flex-col h-fit p-4 bg-background border rounded-sm">
-        <FacultyProfile />
-        <DescriptionWrapper>
-          <AnnouncementDates />
-          <Description />
-        </DescriptionWrapper>
+      <div
+        className={cn(
+          "w-full flex flex-col h-fit p-4 bg-background border rounded-sm  transition-all",
+          classNames
+        )}
+      >
+        {children}
       </div>
     </AnnouncementContext.Provider>
   );
@@ -38,10 +44,9 @@ export function DescriptionWrapper({
   );
 }
 export function FacultyProfile({ classNames }: { classNames?: string }) {
-  const { faculty_id } = useContext(AnnouncementContext)!;
-  const { data, isLoading } = api.faculty.getByFacultyId.useQuery(faculty_id!);
+  const { faculty } = useContext(AnnouncementContext)!;
 
-  if (!data?.data || isLoading)
+  if (!faculty?.faculty_id)
     return (
       <div className={cn("flex items-center gap-3 h-fit", classNames)}>
         <Skeleton className="w-9 h-9 rounded-full" />
@@ -51,8 +56,6 @@ export function FacultyProfile({ classNames }: { classNames?: string }) {
         </div>
       </div>
     );
-
-  const faculty = data?.data as TFacultyData;
   return (
     <div className={cn("flex items-center gap-3 h-fit", classNames)}>
       <div className="w-9 h-9 rounded-full">
