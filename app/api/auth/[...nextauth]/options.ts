@@ -71,6 +71,7 @@ export const options: NextAuthOptions = {
             columns: {
               faculty_id: true,
               role: true,
+              image: true
             },
           });
 
@@ -81,6 +82,14 @@ export const options: NextAuthOptions = {
             error.statusCode = 401; // Unauthorized
             throw error;
           }
+
+          if (!foundFaculty?.image) {
+            await db.update(faculty).set({
+              image: user.picture
+            })
+
+          }
+
           return user;
         } catch (error: any) {
           // If the error does not have a status code already, set a default one
@@ -113,37 +122,21 @@ export const options: NextAuthOptions = {
           token.email = user.email;
           token.name = user.name;
         }
+
+
       } catch (error) {
         throw Error("Unauthorized user!");
       }
       return token;
     },
     async session({ session, token }: { session: any; token: any }) {
-      try {
-        if (session.user) {
-          session.user.faculty_id = token?.faculty_id;
-          session.user.role = token?.role;
-          session.user.email = token.email;
-          session.user.name = token.name;
-          if (!token.picture) {
-            const foundImage = await db.query.faculty.findFirst({
-              where: () => sql`${faculty.faculty_id} = ${token?.faculty_id}`,
-              columns: {
-                image: true,
-              },
-            });
 
-            if (foundImage?.image) {
-              session.user.image = foundImage.image;
-            }
-          } else {
-            await db.update(faculty).set({
-              image: token.picture
-            })
-            session.user.image = token.picture;
-          }
-        }
-      } catch (error) { }
+      if (session.user) {
+        session.user.faculty_id = token?.faculty_id;
+        session.user.role = token?.role;
+        session.user.email = token.email;
+        session.user.name = token.name;
+      }
 
       return session;
     },
