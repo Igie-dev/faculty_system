@@ -16,13 +16,21 @@ const privatePath = [
   "downloadables",
   "mytask",
 ];
-const adminPath = [
+const adminOnlyPath = [
   "faculties",
   "departments",
   "filecategory",
   "schoolyear",
   "semesters",
 ];
+
+
+const deanAndTeacherOnlyPath = [
+  "announcements",
+  "submissions",
+  "downloadables",
+  "mytask",
+]
 
 const apiEndpoint = ["faculty", "department"];
 
@@ -53,13 +61,24 @@ export async function middleware(req: NextRequest) {
 
   //Block non admin to route admin pages
   if (token?.role !== ERole.IS_ADMIN) {
-    const goingToAdminPath = adminPath.some((path) =>
+    const goingToAdminOnlyPath = adminOnlyPath.some((path) =>
       splitedPath.startsWith(path)
     );
-    if (goingToAdminPath) {
+    if (goingToAdminOnlyPath) {
       return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
     }
   }
+
+  // Block non dean or teacher to route admin pages
+  if (token?.role === ERole.IS_ADMIN) {
+    const goingToDeanAndTeacherPath = deanAndTeacherOnlyPath.some((path) =>
+      splitedPath.startsWith(path)
+    );
+    if (goingToDeanAndTeacherPath) {
+      return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+    }
+  }
+
 
   //Redirect home if no token and navigating private page
   const isPrivatePath = privatePath.some((privatePath) =>
