@@ -14,10 +14,11 @@ import {
 } from "../ui/select";
 
 const categorySearch = [
-  { title: "Announcements", value: "announcements" },
-  { title: "Submissions", value: "submissions" },
-  { title: "Faculty", value: "faculty" },
+  { title: "Announcements", value: "announcements", adminOnly: false },
+  { title: "Submissions", value: "submissions", adminOnly: false },
+  { title: "Faculty", value: "faculties", adminOnly: false },
 ];
+
 export default function MainSeachBox() {
   const [searchCategory, setSearchCategory] = useState("");
   const router = useRouter();
@@ -32,11 +33,7 @@ export default function MainSeachBox() {
         }
       }
     }
-    if (startpath === "faculty") {
-      router.push(`/search/${startpath}`, { scroll: false });
-      return;
-    }
-    router.push(`/search/${startpath}/all`, { scroll: false });
+    router.push(`/search/${startpath}`, { scroll: false });
   };
   return (
     <div className="flex w-fit mr-2 border-r pr-2">
@@ -48,6 +45,9 @@ export default function MainSeachBox() {
           <SelectContent>
             <SelectGroup>
               {categorySearch.map((cat) => {
+                if (cat.adminOnly) {
+                  return null;
+                }
                 return (
                   <SelectItem key={cat.value} value={cat.value}>
                     {cat.title}
@@ -60,7 +60,7 @@ export default function MainSeachBox() {
         <Input
           type="text"
           placeholder="Search"
-          className="border-0 hidden md:flex transition-all md:w-[14rem] lg:w-[20rem]"
+          className="border-0 hidden md:flex transition-all md:w-[14rem] lg:w-[20rem] focus:border-0 rounded-none"
           readOnly
           onFocus={handleSearchNavigate}
         />

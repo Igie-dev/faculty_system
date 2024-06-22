@@ -9,7 +9,7 @@ export default function Notifications() {
       <Button
         onClick={() => setIsOpen((prev) => !prev)}
         size="icon"
-        variant="outline"
+        variant="ghost"
         className={` ${
           isOpen
             ? "bg-primary text-background hover:text-background hover:bg-primary"

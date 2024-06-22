@@ -16,11 +16,7 @@ export default function MainHeader() {
       <div className="h-full flex items-center space-x-5 w-fit">
         <div className="flex items-center space-x-2">
           <MainSeachBox />
-          <Button
-            size="icon"
-            variant="outline"
-            className="text-muted-foreground"
-          >
+          <Button size="icon" variant="ghost" className="text-muted-foreground">
             <Settings absoluteStrokeWidth size={20} />
           </Button>
           <Notifications />

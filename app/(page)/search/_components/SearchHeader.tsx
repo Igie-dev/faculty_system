@@ -16,8 +16,10 @@ export default function SearchHeader() {
     router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
-  const handleClear = () => {
-    router.back();
+  const handleBack = () => {
+    const arrpathname = pathname.split("/");
+    const prevPath = arrpathname[2];
+    router.push(`/${prevPath}`, { scroll: false });
   };
 
   useEffect(() => {
@@ -36,8 +38,8 @@ export default function SearchHeader() {
           onChange={hanleSearch}
           className="border-0"
         />
-        <Button size="sm" variant="secondary" onClick={handleClear}>
-          <p>{q ? "Clear" : "Back"}</p>
+        <Button size="sm" variant="secondary" onClick={handleBack}>
+          <p>Back</p>
           {/* <X absoluteStrokeWidth size={22} /> */}
         </Button>
       </div>

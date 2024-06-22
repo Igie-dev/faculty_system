@@ -9,13 +9,8 @@ import React from "react";
 export default function Header() {
   const router = useRouter();
   const pathname = usePathname();
-
   const handleNavigateSearch = () => {
-    if (pathname === "/announcements") {
-      router.push(`/search/announcements/all`, { scroll: false });
-    } else {
-      router.push(`/search/${pathname}`, { scroll: false });
-    }
+    router.push(`/search/announcements`, { scroll: false });
   };
   return (
     <header className="w-full flex h-fit items-center justify-center border-b">

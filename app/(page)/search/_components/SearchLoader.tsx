@@ -1,6 +1,7 @@
 import ButtonLoading from "@/app/_components/BtnLoader";
 import React from "react";
 import SearchModal from "./SearchModal";
+import Loader from "@/app/_components/Loader";
 export default function SearchLoader() {
   return (
     <SearchModal>
@@ -13,7 +14,9 @@ export default function SearchLoader() {
             <ButtonLoading />
           </div>
         </div>
-        <div className="w-full min-h-full  h-fit ">Loader ui</div>
+        <div className="w-full flex-1 min-h-0  h-fit relative">
+          <Loader />
+        </div>
       </div>
     </SearchModal>
   );
