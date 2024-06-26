@@ -84,9 +84,12 @@ export const options: NextAuthOptions = {
           }
 
           if (!foundFaculty?.image) {
-            await db.update(faculty).set({
-              image: user.picture
-            })
+            if (user?.picture) {
+              await db.update(faculty).set({
+                image: user.picture
+              })
+            }
+
 
           }
 

@@ -5,7 +5,7 @@ export enum ESubmussitionStatus {
 }
 
 export enum ERole {
-  IS_ADMIN = "Admin",
-  IS_DEAN = "Dean",
-  IS_TEACHER = "Teacher",
+  ADMIN = "Admin",
+  DEAN = "Dean",
+  TEACHER = "Teacher",
 }

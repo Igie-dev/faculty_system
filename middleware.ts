@@ -60,7 +60,7 @@ export async function middleware(req: NextRequest) {
   }
 
   //Block non admin to route admin pages
-  if (token?.role !== ERole.IS_ADMIN) {
+  if (token?.role !== ERole.ADMIN) {
     const goingToAdminOnlyPath = adminOnlyPath.some((path) =>
       splitedPath.startsWith(path)
     );
@@ -70,7 +70,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // Block non dean or teacher to route admin pages
-  if (token?.role === ERole.IS_ADMIN) {
+  if (token?.role === ERole.ADMIN) {
     const goingToDeanAndTeacherPath = deanAndTeacherOnlyPath.some((path) =>
       splitedPath.startsWith(path)
     );

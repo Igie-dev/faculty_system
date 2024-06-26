@@ -15,7 +15,7 @@ export const semesterRouter = createTRPCRouter({
       try {
         const { role } = ctx;
 
-        if (role !== ERole.IS_ADMIN) {
+        if (role !== ERole.ADMIN) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
           });
@@ -101,7 +101,7 @@ export const semesterRouter = createTRPCRouter({
       try {
         const { role } = ctx;
 
-        if (role !== ERole.IS_ADMIN) {
+        if (role !== ERole.ADMIN) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
           });

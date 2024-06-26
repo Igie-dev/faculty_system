@@ -35,7 +35,7 @@ export const facultyRouter = createTRPCRouter({
           departments,
         } = input;
 
-        if (currentRole !== ERole.IS_ADMIN) {
+        if (currentRole !== ERole.ADMIN) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
           });
@@ -216,7 +216,7 @@ export const facultyRouter = createTRPCRouter({
       try {
         const { role } = ctx;
 
-        if (role !== ERole.IS_ADMIN) {
+        if (role !== ERole.ADMIN) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
           });
@@ -273,7 +273,7 @@ export const facultyRouter = createTRPCRouter({
         const { role: currentRole } = ctx;
         const { facultyId, name, email, contact, role } = input;
 
-        if (currentRole !== ERole.IS_ADMIN) {
+        if (currentRole !== ERole.ADMIN) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
           });
@@ -334,7 +334,7 @@ export const facultyRouter = createTRPCRouter({
       try {
         const { role } = ctx;
         const { faculty_id, departments } = input;
-        if (role !== ERole.IS_ADMIN) {
+        if (role !== ERole.ADMIN) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
           });

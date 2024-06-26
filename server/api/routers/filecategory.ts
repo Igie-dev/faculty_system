@@ -14,7 +14,7 @@ export const fileCategoryRouter = createTRPCRouter({
         const { role } = ctx;
         const { name, description } = input;
 
-        if (role !== ERole.IS_ADMIN) {
+        if (role !== ERole.ADMIN) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
           });
@@ -95,7 +95,7 @@ export const fileCategoryRouter = createTRPCRouter({
       try {
         const { role } = ctx;
 
-        if (role !== ERole.IS_ADMIN) {
+        if (role !== ERole.ADMIN) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
           });
@@ -145,7 +145,7 @@ export const fileCategoryRouter = createTRPCRouter({
       try {
         const { role } = ctx;
         const { id, name, description } = input;
-        if (role !== ERole.IS_ADMIN) {
+        if (role !== ERole.ADMIN) {
           throw new TRPCError({
             code: "UNAUTHORIZED",
           });
