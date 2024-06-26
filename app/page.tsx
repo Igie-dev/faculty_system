@@ -7,7 +7,9 @@ export default function Home() {
       <header className="w-full h-16 border-b flex items-end pb-2 justify-between md:px-4">
         <Logo />
         <Button asChild size="sm" variant="ghost">
-          <Link href="/signin">Login</Link>
+          <Link href="/signin" scroll={false}>
+            Login
+          </Link>
         </Button>
       </header>
     </main>
