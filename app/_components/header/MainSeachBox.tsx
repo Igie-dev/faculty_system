@@ -12,47 +12,95 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useSession } from "next-auth/react";
+import { ERole } from "@/@types/enums";
 
 const categorySearch = [
-  { title: "Announcements", value: "announcements", adminOnly: false },
-  { title: "Submissions", value: "submissions", adminOnly: false },
-  { title: "Faculty", value: "faculties", adminOnly: false },
+  {
+    title: "Announcements",
+    value: "announcements",
+    allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
+  },
+  {
+    title: "Submissions",
+    value: "submissions",
+    allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
+  },
+  {
+    title: "Faculty",
+    value: "faculties",
+    allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`, , `${ERole.ADMIN}`],
+  },
+  {
+    title: "MyTask",
+    value: "mytask",
+    allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
+  },
+  {
+    title: "Downloadables",
+    value: "downloadables",
+    allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
+  },
+  {
+    title: "Departments",
+    value: "departments",
+    allowed: [`${ERole.ADMIN}`],
+  },
+  {
+    title: "FileCategory",
+    value: "filecategory",
+    allowed: [`${ERole.ADMIN}`],
+  },
+  { title: "SchoolYear", value: "schoolyear", allowed: [`${ERole.ADMIN}`] },
+  { title: "Semester", value: "semesters", allowed: [`${ERole.ADMIN}`] },
 ];
 
 export default function MainSeachBox() {
   const [searchCategory, setSearchCategory] = useState("");
+  const { data: session, status } = useSession();
+
   const router = useRouter();
   const pathname = usePathname();
 
   const handleSearchNavigate = () => {
     let startpath = searchCategory ?? "";
     if (!startpath) {
+      if (pathname.startsWith("/dashboard")) {
+        router.push(pathname, { scroll: false });
+        return;
+      }
       for (let cat of categorySearch) {
         if (pathname.startsWith(`/${cat.value}`)) {
-          startpath = cat.value;
+          router.push(`/search/${cat.value}`, { scroll: false });
+          return;
         }
       }
     }
     router.push(`/search/${startpath}`, { scroll: false });
   };
+
   return (
     <div className="flex w-fit mr-2 border-r pr-2">
       <div className="flex items-center justify-center border rounded-md  gap-1">
-        <Select onValueChange={(e) => setSearchCategory(e)}>
+        <Select
+          onValueChange={(e) => setSearchCategory(e)}
+          disabled={
+            status === "loading" || status === "unauthenticated" || !session
+          }
+        >
           <SelectTrigger className="w-fit border-0 bg-secondary focus:outline-0 focus:ring-0 rounded-none focus:ring-offset-0 gap-2 hidden md:flex">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
               {categorySearch.map((cat) => {
-                if (cat.adminOnly) {
-                  return null;
+                if (cat.allowed.includes(session?.user.role as string)) {
+                  return (
+                    <SelectItem key={cat.value} value={cat.value}>
+                      {cat.title}
+                    </SelectItem>
+                  );
                 }
-                return (
-                  <SelectItem key={cat.value} value={cat.value}>
-                    {cat.title}
-                  </SelectItem>
-                );
               })}
             </SelectGroup>
           </SelectContent>
