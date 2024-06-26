@@ -1,12 +1,13 @@
 import React from "react";
+import NoData from "@/app/_components/NoData";
 import {
   AnnouncementCard,
   Description,
   DescriptionWrapper,
   FacultyProfile,
   AnnouncementDates,
+  BtnsWrapper,
 } from "./AnnouncementCard";
-import NoData from "@/app/_components/NoData";
 
 type Props = {
   announcements: TAnnouncementData[];
@@ -21,8 +22,9 @@ export default function AnnouncementList({ announcements }: Props) {
           <AnnouncementCard
             key={a.id}
             announcement={a}
-            classNames="hover:border-primary/50 cursor-pointer"
+            className="hover:border-primary/50"
           >
+            <BtnsWrapper />
             <FacultyProfile />
             <DescriptionWrapper>
               <AnnouncementDates />
