@@ -2,6 +2,7 @@ import ButtonLoading from "@/app/_components/BtnLoader";
 import React from "react";
 import SearchModal from "./SearchModal";
 import Loader from "@/app/_components/Loader";
+import { LoaderCircle } from "lucide-react";
 export default function SearchLoader() {
   return (
     <SearchModal>
@@ -14,8 +15,11 @@ export default function SearchLoader() {
             <ButtonLoading />
           </div>
         </div>
-        <div className="w-full flex-1 min-h-0  h-fit relative">
-          <Loader />
+        <div className="w-full h-32  flex justify-center items-center">
+          <LoaderCircle
+            size={30}
+            className="animate-spin text-muted-foreground"
+          />
         </div>
       </div>
     </SearchModal>

@@ -8,13 +8,17 @@ export const metadata: Metadata = {
 
 export default function layout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+  modal,
+}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
     <main className="w-screen h-screen flex overflow-hidden relative">
       <DesktopNav />
       <section className="h-full w-full lg:flex-1 lg:min-w-0 flex flex-col border bg-secondary">
         <MainHeader />
-        <main className="w-full h-[93%]">{children}</main>
+        <main className="w-full h-[93%]">
+          {children}
+          {modal}
+        </main>
       </section>
     </main>
   );
