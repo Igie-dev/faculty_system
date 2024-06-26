@@ -14,7 +14,10 @@ export default function Header() {
   };
   return (
     <header className="w-full flex h-fit items-center justify-center border-b">
-      <div className="w-full h-fit flex-col  flex items-center gap-4 md:mt-2">
+      <div className="w-full h-fit flex-col  flex items-start">
+        <h1 className="text-xl px-2 py-3 font-extrabold fancy_font  md:text-2xl">
+          Announcements
+        </h1>
         <div className="w-full bg-background flex items-center gap-2 py-4 px-4  border shadow-md md:rounded-lg">
           <div className="flex-1 border rounded-lg flex items-center h-fit px-2">
             <Search
