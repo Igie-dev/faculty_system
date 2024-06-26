@@ -19,9 +19,17 @@ export const options: NextAuthOptions = {
         try {
           const foundFaculty = await db.query.faculty.findFirst({
             where: () => sql`${faculty.email} = ${email}`,
+            columns: {
+              id: true,
+              faculty_id: true,
+              password: true,
+              role: true,
+              email: true,
+              name: true,
+              image: true,
+            }
           });
-
-          if (!foundFaculty || !foundFaculty?.id) {
+          if (!foundFaculty?.id) {
             const error: any = new Error(
               "Invalid credentials! Please check your email or password!"
             );
@@ -71,7 +79,9 @@ export const options: NextAuthOptions = {
             columns: {
               faculty_id: true,
               role: true,
-              image: true
+              image: true,
+              name: true,
+              email: true,
             },
           });
 
@@ -83,16 +93,18 @@ export const options: NextAuthOptions = {
             throw error;
           }
 
+
           if (!foundFaculty?.image) {
-            if (user?.picture) {
+            if (user?.image) {
               await db.update(faculty).set({
-                image: user.picture
+                image: user.image
               })
             }
 
 
           }
-
+          user.name = foundFaculty?.name;
+          user.role = foundFaculty?.role;
           return user;
         } catch (error: any) {
           // If the error does not have a status code already, set a default one
@@ -135,8 +147,8 @@ export const options: NextAuthOptions = {
     async session({ session, token }: { session: any; token: any }) {
 
       if (session.user) {
-        session.user.faculty_id = token?.faculty_id;
-        session.user.role = token?.role;
+        session.user.faculty_id = token.faculty_id;
+        session.user.role = token.role;
         session.user.email = token.email;
         session.user.name = token.name;
       }
