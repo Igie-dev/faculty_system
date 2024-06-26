@@ -80,7 +80,7 @@ export const columns: ColumnDef<TFacultyData>[] = [
     cell: ({ row }) => {
       const faculty = row.original as TFacultyData;
 
-      return faculty.role === ERole.IS_ADMIN ? (
+      return faculty.role === ERole.ADMIN ? (
         <div className="w-8 h-8"></div>
       ) : (
         <DropdownMenu>

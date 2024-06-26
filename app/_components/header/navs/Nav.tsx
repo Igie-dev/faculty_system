@@ -33,9 +33,9 @@ export default function Nav({ isExpanded, session }: Props) {
   useLayoutEffect(() => {
     const role = session?.user?.role;
     if (role) {
-      setIsAdmin(role === ERole.IS_ADMIN);
-      setIsDean(role === ERole.IS_DEAN);
-      setIsTeacher(role === ERole.IS_TEACHER);
+      setIsAdmin(role === ERole.ADMIN);
+      setIsDean(role === ERole.DEAN);
+      setIsTeacher(role === ERole.TEACHER);
     }
   }, [session]);
   return !session ? (
