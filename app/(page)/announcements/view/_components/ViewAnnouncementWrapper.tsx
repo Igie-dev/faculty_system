@@ -25,10 +25,10 @@ export default function ViewAnnouncementWrapper({
     api.announcement.getBytAnnouncementId.useQuery(announcementId);
   return (
     <Modal>
-      <div className="h-fit min-h-32 py-10 w-full flex px-2  flex-col items-center gap-5  lg:max-w-[50rem] ">
+      <div className="h-fit min-h-32 py-10 w-full flex px-2  flex-col items-center gap-2  lg:max-w-[50rem] ">
         <div className="w-full flex items-center">
           <Button size="sm" variant="outline" onClick={() => router.back()}>
-            <ChevronLeft absoluteStrokeWidth size={22} className="mr-2" />
+            <ChevronLeft absoluteStrokeWidth size={20} className="mr-2" />
             <span>Back</span>
           </Button>
         </div>
