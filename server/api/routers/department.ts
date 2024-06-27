@@ -3,7 +3,7 @@ import { eq, sql } from "drizzle-orm";
 import { department, facultyDepartment } from "@/server/db/schema";
 import { ERole } from "@/@types/enums";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, privateProcedure, handleError } from "../trpc";
+import { createTRPCRouter, publicProcedure, privateProcedure, handleTRPCResError } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { createDepartmentSchema } from "@/utils/zodSchema";
 export const departmentRouter = createTRPCRouter({
@@ -71,7 +71,7 @@ export const departmentRouter = createTRPCRouter({
           message: "Department created successfully!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
   getById: publicProcedure.input(z.number()).query(async ({ input }) => {
@@ -92,7 +92,7 @@ export const departmentRouter = createTRPCRouter({
         data: found,
       };
     } catch (error) {
-      handleError(error)
+      handleTRPCResError(error)
     }
   }),
   getAll: publicProcedure.query(async () => {
@@ -103,7 +103,7 @@ export const departmentRouter = createTRPCRouter({
         data: foundDepartments,
       };
     } catch (error) {
-      handleError(error)
+      handleTRPCResError(error)
     }
   }),
   delete: privateProcedure
@@ -138,7 +138,7 @@ export const departmentRouter = createTRPCRouter({
           message: "Department deleted!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
   update: privateProcedure
@@ -217,7 +217,7 @@ export const departmentRouter = createTRPCRouter({
           message: "Department update success!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
   getFacultyDepartments: publicProcedure
@@ -230,9 +230,9 @@ export const departmentRouter = createTRPCRouter({
             department: true,
           },
         });
-        return { data: foundDepartments };
+        return { success: true, data: foundDepartments };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
 });

@@ -45,7 +45,7 @@ export const isAuth = middleware(async (opts) => {
 });
 
 
-export function handleError(error: unknown) {
+export function handleTRPCResError(error: unknown) {
   console.log(error);
   if (error instanceof TRPCError) {
     throw error; // Rethrow the original TRPCError

@@ -3,7 +3,7 @@ import { eq, sql } from "drizzle-orm";
 import { fileCategory } from "@/server/db/schema";
 import { ERole } from "@/@types/enums";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, privateProcedure, handleError } from "../trpc";
+import { createTRPCRouter, publicProcedure, privateProcedure, handleTRPCResError } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { createFileCategorySchema } from "@/utils/zodSchema";
 export const fileCategoryRouter = createTRPCRouter({
@@ -55,7 +55,7 @@ export const fileCategoryRouter = createTRPCRouter({
           message: "File category created successfully!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
   getById: publicProcedure.input(z.number()).query(async ({ input }) => {
@@ -76,7 +76,7 @@ export const fileCategoryRouter = createTRPCRouter({
         data: found,
       };
     } catch (error) {
-      handleError(error)
+      handleTRPCResError(error)
     }
   }),
   getAll: publicProcedure.query(async () => {
@@ -86,7 +86,7 @@ export const fileCategoryRouter = createTRPCRouter({
         data: categories,
       };
     } catch (error) {
-      handleError(error)
+      handleTRPCResError(error)
     }
   }),
   delete: privateProcedure
@@ -121,7 +121,7 @@ export const fileCategoryRouter = createTRPCRouter({
           message: "Category deleted!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
 
@@ -200,7 +200,7 @@ export const fileCategoryRouter = createTRPCRouter({
           message: "Update successful!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
 });

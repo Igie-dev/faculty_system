@@ -3,7 +3,7 @@ import { eq, sql } from "drizzle-orm";
 import { semester } from "@/server/db/schema";
 import { ERole } from "@/@types/enums";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, privateProcedure, handleError } from "../trpc";
+import { createTRPCRouter, publicProcedure, privateProcedure, handleTRPCResError } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { createSemesterSchema } from "@/utils/zodSchema";
 const ordinalIndicators = ["st", "nd", "rd", "th"];
@@ -60,7 +60,7 @@ export const semesterRouter = createTRPCRouter({
           message: "Create semester success!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
 
@@ -82,17 +82,18 @@ export const semesterRouter = createTRPCRouter({
         data: found,
       };
     } catch (error) {
-      handleError(error)
+      handleTRPCResError(error)
     }
   }),
   getAll: publicProcedure.query(async () => {
     try {
       const foundSemesters = await db.query.semester.findMany();
       return {
+        success: true,
         data: foundSemesters,
       };
     } catch (error) {
-      handleError(error)
+      handleTRPCResError(error)
     }
   }),
   delete: privateProcedure
@@ -127,7 +128,7 @@ export const semesterRouter = createTRPCRouter({
           message: "Semester deleted!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
 });

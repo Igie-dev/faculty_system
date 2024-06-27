@@ -3,7 +3,7 @@ import { eq, sql } from "drizzle-orm";
 import { faculty, facultyDepartment } from "@/server/db/schema";
 import { ERole } from "@/@types/enums";
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure, privateProcedure, handleError } from "../trpc";
+import { createTRPCRouter, publicProcedure, privateProcedure, handleTRPCResError } from "../trpc";
 import { v4 as uuid } from "uuid";
 import { TRPCError } from "@trpc/server";
 import bcrypt from "bcrypt";
@@ -125,7 +125,7 @@ export const facultyRouter = createTRPCRouter({
           message: "Create account success!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
   getByFacultyId: publicProcedure.input(z.string()).query(async ({ input }) => {
@@ -143,19 +143,19 @@ export const facultyRouter = createTRPCRouter({
           updatedAt: true,
           role: true,
         },
-        with: {
-          departments: {
-            with: {
-              department: true,
-            },
-          },
-          announcements: true,
-          submissions: true,
-          tasks: true,
-          files: true,
-          archiveAnnouncements: true,
-          notifications: true,
-        },
+        // with: {
+        //   departments: {
+        //     with: {
+        //       department: true,
+        //     },
+        //   },
+        //   announcements: true,
+        //   submissions: true,
+        //   tasks: true,
+        //   files: true,
+        //   archiveAnnouncements: true,
+        //   notifications: true,
+        // },
       });
 
       if (!found?.id) {
@@ -170,7 +170,7 @@ export const facultyRouter = createTRPCRouter({
         data: found,
       };
     } catch (error) {
-      handleError(error)
+      handleTRPCResError(error)
     }
   }),
   getAll: publicProcedure.query(async () => {
@@ -206,7 +206,7 @@ export const facultyRouter = createTRPCRouter({
         data: faculties,
       };
     } catch (error) {
-      handleError(error)
+      handleTRPCResError(error)
     }
   }),
 
@@ -251,7 +251,7 @@ export const facultyRouter = createTRPCRouter({
           message: "Faculty account deleted!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
 
@@ -315,7 +315,7 @@ export const facultyRouter = createTRPCRouter({
           message: "Update faculty account success!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
   updateFacultyDepartments: privateProcedure
@@ -391,7 +391,7 @@ export const facultyRouter = createTRPCRouter({
           message: "Update success!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
 });

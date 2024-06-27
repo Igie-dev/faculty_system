@@ -1,4 +1,4 @@
-import { createTRPCRouter, publicProcedure, privateProcedure, handleError } from "../trpc";
+import { createTRPCRouter, publicProcedure, privateProcedure, handleTRPCResError } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { db } from "@/server/db";
 import { eq, sql } from "drizzle-orm";
@@ -48,10 +48,11 @@ export const schoolYearRouter = createTRPCRouter({
         }
 
         return {
+          success: true,
           message: "Create school year success!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
   getById: publicProcedure.input(z.number()).query(async ({ input }) => {
@@ -72,7 +73,7 @@ export const schoolYearRouter = createTRPCRouter({
         data: found,
       };
     } catch (error) {
-      handleError(error)
+      handleTRPCResError(error)
     }
   }),
   getAll: publicProcedure.query(async () => {
@@ -83,7 +84,7 @@ export const schoolYearRouter = createTRPCRouter({
         data: foundSchoolyears,
       };
     } catch (error) {
-      handleError(error)
+      handleTRPCResError(error)
     }
   }),
   delete: privateProcedure
@@ -117,7 +118,7 @@ export const schoolYearRouter = createTRPCRouter({
           message: "Delete success!",
         };
       } catch (error) {
-        handleError(error)
+        handleTRPCResError(error)
       }
     }),
 });
