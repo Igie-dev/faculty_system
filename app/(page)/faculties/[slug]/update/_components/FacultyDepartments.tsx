@@ -1,8 +1,9 @@
 import React from "react";
-import UpdateDepartments from "./UpdateDepartments";
 import { Skeleton } from "@/app/_components/ui/skeleton";
 import { api } from "@/trpc/react";
+import dynamic from "next/dynamic";
 
+const UpdateDepartments = dynamic(() => import("./UpdateDepartments"));
 type Props = {
   faculty_id: string;
 };

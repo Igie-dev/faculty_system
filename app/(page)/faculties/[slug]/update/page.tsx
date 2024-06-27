@@ -1,9 +1,12 @@
 import React from "react";
-import UpdateDetailsForm from "./_components/UpdateDetailsForm";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { api } from "@/trpc/server";
 import Loader from "@/app/_components/Loader";
+import dynamic from "next/dynamic";
+const UpdateDetailsForm = dynamic(
+  () => import("./_components/UpdateDetailsForm")
+);
 export default async function page({ params }: { params: { slug: string } }) {
   const res = await api.faculty.getByFacultyId(params.slug);
   if (!res?.data)
@@ -21,7 +24,6 @@ export default async function page({ params }: { params: { slug: string } }) {
         >
           <X absoluteStrokeWidth size={22} />
         </Link>
-
         <UpdateDetailsForm faculty={res?.data} />
       </main>
     </section>

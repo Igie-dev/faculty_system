@@ -17,7 +17,6 @@ import {
   FormMessage,
 } from "@/app/_components/ui/form";
 import { Input } from "@/app/_components/ui/input";
-import DepartmentsList from "./DepartmentsList";
 import { Checkbox } from "@/app/_components/ui/checkbox";
 import { useToast } from "@/app/_components/ui/use-toast";
 import { useForm } from "react-hook-form";
@@ -28,7 +27,8 @@ import BtnLoader from "@/app/_components/BtnLoader";
 import { useRouter } from "next/navigation";
 import { Button } from "@/app/_components/ui/button";
 import { createFacultySchema } from "@/utils/zodSchema";
-
+import dynamic from "next/dynamic";
+const DepartmentList = dynamic(() => import("./DepartmentList"));
 const schema = createFacultySchema.refine(
   (data) => data.password === data.confirmPassword,
   {
@@ -47,7 +47,7 @@ export default function CreateForm() {
       toast({
         variant: "default",
         title: "Create faculty account success!",
-        description: context.message ?? "Create faculty account cuccess",
+        description: context?.message ?? "Create faculty account cuccess",
       });
       router.push("/faculties");
     },
@@ -299,7 +299,7 @@ export default function CreateForm() {
                 ) : null}
               </span>
             </div>
-            <DepartmentsList
+            <DepartmentList
               setFacultyDep={setFacultyDep}
               facultyDep={facultyDep}
             />

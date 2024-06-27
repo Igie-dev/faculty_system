@@ -19,13 +19,15 @@ import { Input } from "@/app/_components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import FacultyDepartments from "./FacultyDepartments";
 import { useToast } from "@/app/_components/ui/use-toast";
 import { api } from "@/trpc/react";
 import BtnLoader from "@/app/_components/BtnLoader";
 import { useRouter } from "next/navigation";
 import { Button } from "@/app/_components/ui/button";
 import { createFacultySchema } from "@/utils/zodSchema";
+import dynamic from "next/dynamic";
+
+const FacultyDepartments = dynamic(() => import("./FacultyDepartments"));
 
 const updateSchema = createFacultySchema
   .pick({
@@ -48,7 +50,7 @@ export default function UpdateDetailsForm({ faculty }: Props) {
       toast({
         variant: "default",
         title: "Update faculty account success!",
-        description: context.message ?? "Update faculty account cuccess",
+        description: context?.message ?? "Update faculty account cuccess",
       });
     },
     onError: (error) => {
