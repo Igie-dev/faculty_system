@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import { Button } from "@/app/_components/ui/button";
-
 import {
   Drawer,
   DrawerClose,
@@ -38,7 +37,7 @@ export default function CreateSchoolyear() {
       toast({
         variant: "default",
         title: "Create schoolyear success!",
-        description: context.message ?? "Create schoolyear cuccess",
+        description: context?.message ?? "Create schoolyear cuccess",
       });
       router.refresh();
     },

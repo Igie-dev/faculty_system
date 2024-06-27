@@ -1,7 +1,6 @@
 import React from "react";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -29,7 +28,7 @@ export default function DeleteSemester({ id, semester }: Props) {
       toast({
         variant: "default",
         title: "Delete semester success!",
-        description: context.message ?? "Delete semester cuccess",
+        description: context?.message ?? "Delete semester cuccess",
       });
       router.refresh();
     },

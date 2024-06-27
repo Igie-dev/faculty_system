@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import { Button } from "@/app/_components/ui/button";
-
 import {
   Drawer,
   DrawerClose,
@@ -40,7 +39,7 @@ export default function CreateSemester() {
       toast({
         variant: "default",
         title: "Create semester success!",
-        description: context.message ?? "Create semester cuccess",
+        description: context?.message ?? "Create semester cuccess",
       });
       router.refresh();
     },

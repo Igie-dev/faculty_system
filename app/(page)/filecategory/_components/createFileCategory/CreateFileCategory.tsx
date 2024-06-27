@@ -1,6 +1,5 @@
 import React, { useRef } from "react";
 import { Button } from "@/app/_components/ui/button";
-
 import {
   Drawer,
   DrawerClose,
@@ -39,7 +38,7 @@ export default function CreateFileCategory() {
       toast({
         variant: "default",
         title: "Create file category success!",
-        description: context.message ?? "Create file category cuccess",
+        description: context?.message ?? "Create file category cuccess",
       });
       router.refresh();
     },

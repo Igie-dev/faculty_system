@@ -46,7 +46,7 @@ export default function UpdateFileCategory({ id, name, description }: Props) {
       toast({
         variant: "default",
         title: "Update file category success!",
-        description: context.message ?? "Update file category cuccess",
+        description: context?.message ?? "Update file category cuccess",
       });
       router.refresh();
     },

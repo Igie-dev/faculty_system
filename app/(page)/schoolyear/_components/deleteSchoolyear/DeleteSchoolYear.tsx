@@ -28,7 +28,7 @@ export default function DeleteSchoolYear({ id, year }: Props) {
       toast({
         variant: "default",
         title: "Delete school year success!",
-        description: context.message ?? "Delete school year cuccess",
+        description: context?.message ?? "Delete school year cuccess",
       });
       router.refresh();
     },

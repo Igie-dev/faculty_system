@@ -1,7 +1,6 @@
 import React from "react";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -29,7 +28,7 @@ export default function DeleteFleCategory({ id, name, description }: Props) {
       toast({
         variant: "default",
         title: "Delete file category success!",
-        description: context.message ?? "Delete file category cuccess",
+        description: context?.message ?? "Delete file category cuccess",
       });
       router.refresh();
     },
