@@ -11,6 +11,7 @@ import {
 import { faculty } from "./faculty";
 import { departmentAnnouncement } from "./department";
 import { file } from "./file";
+import { facultyArchiveAnnoucement } from ".";
 
 export const announcement = pgTable(
   "announcement",
@@ -47,5 +48,6 @@ export const annoucementRelations = relations(
     }),
     departments: many(departmentAnnouncement),
     files: many(file),
+    facultyArchive: many(facultyArchiveAnnoucement)
   })
 );

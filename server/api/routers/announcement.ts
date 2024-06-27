@@ -1,9 +1,10 @@
-import { announcement, departmentAnnouncement } from "@/server/db/schema"
+import { announcement } from "@/server/db/schema"
 import { db } from "@/server/db"
-import { createTRPCRouter, handleError, privateProcedure, publicProcedure } from '../trpc';
+import { createTRPCRouter, handleTRPCResError, publicProcedure } from '../trpc';
 import { z } from "zod";
-import { eq, sql } from "drizzle-orm";
+import { sql, between } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
+import { dateNow } from "@/utils/dateUtil";
 
 export const announcementRouter = createTRPCRouter({
     getAll: publicProcedure.query(async () => {
@@ -17,7 +18,8 @@ export const announcementRouter = createTRPCRouter({
                             role: true,
                             image: true
                         }
-                    }
+                    },
+                    facultyArchive: true
                 }
             });
             return {
@@ -25,7 +27,7 @@ export const announcementRouter = createTRPCRouter({
                 data: announcements
             }
         } catch (error) {
-            handleError(error)
+            handleTRPCResError(error)
         }
     }),
     getBytAnnouncementId: publicProcedure.input(z.string()).query(async ({ input }) => {
@@ -41,7 +43,8 @@ export const announcementRouter = createTRPCRouter({
                             role: true,
                             image: true
                         }
-                    }
+                    },
+                    facultyArchive: true
                 }
             });
 
@@ -57,7 +60,20 @@ export const announcementRouter = createTRPCRouter({
                 data: foundAnnouncement
             }
         } catch (error) {
-            handleError(error)
+            handleTRPCResError(error)
         }
-    })
+    }),
+    getLatest: publicProcedure.query(async () => {
+        try {
+            const startDate = dateNow().toISOString()
+            const endDate = startDate;
+            const foundLatestAnnouncements = await db.select().from(announcement).where(between(announcement.createdAt, startDate, endDate));
+            return {
+                success: true,
+                data: foundLatestAnnouncements
+            }
+        } catch (error) {
+            handleTRPCResError(error)
+        }
+    }),
 })
