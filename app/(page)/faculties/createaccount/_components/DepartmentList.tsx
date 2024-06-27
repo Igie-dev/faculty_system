@@ -6,7 +6,7 @@ type Props = {
   facultyDep: TCreateFacultyDep[];
   setFacultyDep: Dispatch<SetStateAction<TCreateFacultyDep[]>>;
 };
-export default function DepartmentsList({ facultyDep, setFacultyDep }: Props) {
+export default function DepartmentList({ facultyDep, setFacultyDep }: Props) {
   const { data, isFetching } = api.department.getAll.useQuery();
   const departments = data?.data as TDepartmentData[];
   const handleCleck = (id: string, checked: boolean) => {
