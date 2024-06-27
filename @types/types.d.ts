@@ -75,7 +75,7 @@ declare global {
   };
 
   type TDepartmentData = InferSelectModel<typeof department> & {
-    faculties?: InferSelectModel<typeof faculty>[];
+    faculties?: Partial<InferSelectModel<typeof faculty>>[];
     announcements?: InferSelectModel<typeof announcement>[];
   };
 
@@ -89,22 +89,23 @@ declare global {
   };
 
   type TAnnouncementData = InferSelectModel<typeof announcement> & {
-    faculty?: InferSelectModel<typeof faculty>;
+    faculty?: Partial<InferSelectModel<typeof faculty>>;
     departments?: InferSelectModel<typeof departmentAnnouncement>[];
     files?: InferSelectModel<typeof file>[];
+    facultyArchive?: InferSelectModel<typeof facultyArchiveAnnoucement>[];
   };
 
   type TFileData = InferSelectModel<typeof file> & {
-    faculty?: InferSelectModel<typeof faculty>;
+    faculty?: Partial<InferSelectModel<typeof faculty>>;
     departments?: InferSelectModel<typeof fileDepartment>[];
   };
 
   type TTaskData = InferSelectModel<typeof task> & {
-    faculty?: InferSelectModel<typeof faculty>;
+    faculty?: Partial<InferSelectModel<typeof faculty>>;
   };
 
   type TSubmissionData = InferSelectModel<submission> & {
-    faculty?: InferSelectModel<typeof faculty>;
+    faculty?: Partial<InferSelectModel<typeof faculty>>;
     departments?: InferSelectModel<typeof submissionDepartment>[];
     filecategory?: InferSelectModel<typeof fileCategory>;
     schoolyear?: InferSelectModel<typeof schoolYear>;
@@ -112,12 +113,12 @@ declare global {
   };
 
   type TNotificationData = InferSelectModel<typeof notification> & {
-    faculty?: InferSelectModel<typeof faculty>;
+    faculty?: Partial<InferSelectModel<typeof faculty>>;
   };
 
   type TFacultyNotification = InferSelectModel<typeof facultyNotification> & {
     notification?: InferSelectModel<typeof notification>;
-    faculty?: InferSelectModel<typeof faculty>;
+    faculty?: Partial<InferSelectModel<typeof faculty>>;
   };
 
   type TFileCategoryData = InferSelectModel<typeof fileCategory> & {
