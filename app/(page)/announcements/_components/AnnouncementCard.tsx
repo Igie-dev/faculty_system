@@ -5,7 +5,7 @@ import Avatar from "@/app/_components/Avatar";
 import { cn } from "@/lib/utils";
 import useFormatDateStr from "@/app/hooks/useFormatDateStr";
 import { Button } from "@/app/_components/ui/button";
-import { Archive, Ellipsis, Eye, Pencil, Trash } from "lucide-react";
+import { Ellipsis, Eye, Pencil, Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
 import {
   DropdownMenu,
@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/app/_components/ui/dropdown-menu";
 import Link from "next/link";
+import ArchiveAnnouncementBtn from "./ArchiveAnnouncementBtn";
 
 type Props = {
   children?: React.ReactNode;
@@ -136,19 +137,19 @@ export function BtnsWrapper({
   isShowUpdate = true,
   isShowDelete = true,
 }: CardBtnProps) {
-  const { announcement_id, faculty_id } = useContext(AnnouncementContext)!;
+  const { announcement_id, faculty_id, facultyArchive } =
+    useContext(AnnouncementContext)!;
   const session = useSession();
   const userId = session?.data?.user?.faculty_id;
+  const existUserFacultyArchive = facultyArchive?.filter(
+    (faculty) => faculty.faculty_id === userId
+  );
   return (
     <div className={cn("absolute top-4 right-4 w-fit h-fit", className)}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button
-            size="icon"
-            variant="secondary"
-            className="text-muted-foreground"
-          >
-            <Ellipsis absoluteStrokeWidth size={22} />
+          <Button size="icon" variant="secondary">
+            <Ellipsis absoluteStrokeWidth size={20} />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-56">
@@ -157,39 +158,66 @@ export function BtnsWrapper({
           <DropdownMenuGroup>
             {isShowAddArchive ? (
               <DropdownMenuItem>
-                <Archive
-                  absoluteStrokeWidth
-                  size={22}
-                  className="mr-2 h-4 w-4"
+                <ArchiveAnnouncementBtn
+                  announcementId={announcement_id}
+                  isSavedArchive={!!existUserFacultyArchive?.length}
                 />
-                <span>Archive</span>
               </DropdownMenuItem>
             ) : null}
+            <DropdownMenuSeparator />
             {isShowView ? (
-              <DropdownMenuItem asChild>
-                <Link
-                  href={`/announcements/view/${announcement_id}`}
-                  scroll={false}
+              <DropdownMenuItem>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="w-full justify-start font-normal h-7 px-1 text-muted-foreground"
+                  asChild
                 >
-                  <Eye absoluteStrokeWidth size={22} className="mr-2 h-4 w-4" />
-                  <span>View</span>
-                </Link>
+                  <Link
+                    href={`/announcements/view/${announcement_id}`}
+                    scroll={false}
+                  >
+                    <Eye
+                      absoluteStrokeWidth
+                      size={20}
+                      className="mr-3 h-4 w-4"
+                    />
+                    <span>View</span>
+                  </Link>
+                </Button>
               </DropdownMenuItem>
             ) : null}
             {isShowUpdate && userId === faculty_id?.toString() ? (
               <DropdownMenuItem>
-                <Pencil
-                  absoluteStrokeWidth
-                  size={22}
-                  className="mr-2 h-4 w-4"
-                />
-                <span>Update</span>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="w-full justify-start font-normal h-7 px-1 text-muted-foreground"
+                >
+                  <Pencil
+                    absoluteStrokeWidth
+                    size={20}
+                    className="mr-3 h-4 w-4"
+                  />
+                  <span>Update</span>
+                </Button>
               </DropdownMenuItem>
             ) : null}
+            <DropdownMenuSeparator />
             {isShowDelete && userId === faculty_id?.toString() ? (
               <DropdownMenuItem>
-                <Trash absoluteStrokeWidth size={22} className="mr-2 h-4 w-4" />
-                <span>Delete</span>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  className="w-full justify-start font-normal h-7 px-1 text-muted-foreground hover:text-destructive"
+                >
+                  <Trash
+                    absoluteStrokeWidth
+                    size={20}
+                    className="mr-3 h-4 w-4"
+                  />
+                  <span>Delete</span>
+                </Button>
               </DropdownMenuItem>
             ) : null}
           </DropdownMenuGroup>
