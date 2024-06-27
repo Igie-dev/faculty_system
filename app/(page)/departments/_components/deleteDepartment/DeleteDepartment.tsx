@@ -29,7 +29,7 @@ export default function DeleteDepartment({ id, acronym, name }: Props) {
       toast({
         variant: "default",
         title: "Delete department success!",
-        description: context.message ?? "Delete department cuccess",
+        description: context?.message ?? "Delete department cuccess",
       });
       router.refresh();
     },

@@ -45,7 +45,7 @@ export default function UpdateDepartment({ id, acronym, name }: Props) {
       toast({
         variant: "default",
         title: "Update department success!",
-        description: context.message ?? "Update department cuccess",
+        description: context?.message ?? "Update department cuccess",
       });
       router.refresh();
     },

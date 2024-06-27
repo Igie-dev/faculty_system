@@ -38,7 +38,7 @@ export default function CreateDepartment() {
       toast({
         variant: "default",
         title: "Create department success!",
-        description: context.message ?? "Create department cuccess",
+        description: context?.message ?? "Create department cuccess",
       });
       router.refresh();
     },

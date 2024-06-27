@@ -1,7 +1,6 @@
 import React from "react";
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -37,7 +36,7 @@ export default function DeleteFaculty({
       toast({
         variant: "default",
         title: "Delete account success!",
-        description: context.message ?? "Delete account cuccess",
+        description: context?.message ?? "Delete account cuccess",
       });
       router.refresh();
     },
