@@ -5,13 +5,15 @@ import { fileCategoryRouter } from "./routers/filecategory";
 import { departmentRouter } from "./routers/department";
 import { facultyRouter } from "./routers/faculty";
 import { announcementRouter } from "./routers/announcement";
+import { archiveAnnouncementRouter } from "./routers/archiveAnnouncement";
 export const appRouter = createTRPCRouter({
   semester: semesterRouter,
   schoolYear: schoolYearRouter,
   fileCategory: fileCategoryRouter,
   department: departmentRouter,
   faculty: facultyRouter,
-  announcement: announcementRouter
+  announcement: announcementRouter,
+  archiveAnnouncement: archiveAnnouncementRouter
 });
 
 // export type definition of API
