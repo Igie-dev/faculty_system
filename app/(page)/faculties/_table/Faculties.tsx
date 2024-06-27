@@ -16,7 +16,6 @@ import Table from "./Table";
 import Header from "./Header";
 import { Button } from "@/app/_components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { api } from "@/trpc/server";
 type Props = {
   faculties: any;
 };

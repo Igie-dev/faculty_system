@@ -12,8 +12,6 @@ import { Button } from "@/app/_components/ui/button";
 import { Checkbox } from "@/app/_components/ui/checkbox";
 import { useToast } from "@/app/_components/ui/use-toast";
 import { api } from "@/trpc/react";
-import { useRouter } from "next/navigation";
-
 type Props = {
   faculty_id: string;
   facultyCurrentDepartments: TFacultyDepartment[];
@@ -36,7 +34,7 @@ export default function UpdateDepartments({
         toast({
           variant: "default",
           title: "Update department success!",
-          description: context.message ?? "Update department cuccess",
+          description: context?.message ?? "Update department cuccess",
         });
         utl.department.getFacultyDepartments.refetch(faculty_id);
         setOpen(false);
