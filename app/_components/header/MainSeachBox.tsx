@@ -27,9 +27,9 @@ const categorySearch = [
     allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
   },
   {
-    title: "Faculty",
-    value: "faculties",
-    allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`, , `${ERole.ADMIN}`],
+    title: "Downloadables",
+    value: "downloadables",
+    allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
   },
   {
     title: "MyTask",
@@ -37,10 +37,11 @@ const categorySearch = [
     allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
   },
   {
-    title: "Downloadables",
-    value: "downloadables",
-    allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
+    title: "Faculty",
+    value: "faculties",
+    allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`, , `${ERole.ADMIN}`],
   },
+
   {
     title: "Departments",
     value: "departments",
@@ -108,7 +109,7 @@ export default function MainSeachBox() {
         <Input
           type="text"
           placeholder="Search"
-          className="border-0 hidden md:flex transition-all md:w-[14rem] lg:w-[20rem] focus:border-0 rounded-none"
+          className="border-0 hidden md:flex transition-all md:w-[14rem] lg:w-[20rem] focus-visible:border-0 focus-visible:outline-0 rounded-none"
           readOnly
           onFocus={handleSearchNavigate}
         />
