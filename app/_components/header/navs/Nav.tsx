@@ -167,21 +167,6 @@ export default function Nav({ isExpanded, session }: Props) {
             </>
           </NavLinkWrapper>
         ) : null}
-
-        {isDean || isTeacher ? (
-          <NavLinkWrapper
-            isExpanded={isExpanded}
-            path="/downloadables"
-            title="Downloadables"
-          >
-            <>
-              <Download absoluteStrokeWidth size={22} />
-              <span className={` ${isExpanded ? "flex" : "hidden"}`}>
-                Downloadables
-              </span>
-            </>
-          </NavLinkWrapper>
-        ) : null}
         <NavLinkWrapper isExpanded={isExpanded} path="/profile" title="Profile">
           <>
             <CircleUserRound absoluteStrokeWidth size={22} />
