@@ -21,10 +21,6 @@ const searchParamsRoutes = [
     allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
   },
   {
-    key: "downloadables",
-    allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
-  },
-  {
     key: "departments",
     allowed: [`${ERole.ADMIN}`],
   },
