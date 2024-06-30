@@ -10,11 +10,11 @@ export const archiveAnnouncementRouter = createTRPCRouter({
         try {
 
             const foundFaculty = await db.select({ id: faculty.id }).from(faculty).where(eq(faculty.faculty_id, input));
-
             if (!foundFaculty[0]?.id) {
-                throw new TRPCError({
-                    code: "NOT_FOUND",
-                })
+                return {
+                    success: true,
+                    data: [],
+                }
             }
 
             const foundArchiveAnnouncements = await db.query.facultyArchiveAnnoucement.findMany({
