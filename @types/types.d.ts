@@ -7,7 +7,6 @@ import {
   faculty,
   facultyArchiveAnnoucement,
   facultyDepartment,
-  facultyRole,
   file,
   fileDepartment,
   notification,
@@ -20,7 +19,6 @@ import {
   semester,
   facultyTask,
   facultyNotification,
-  facultyTaskRelations
 } from "@/server/db/schema";
 
 declare global {
