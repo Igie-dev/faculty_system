@@ -6,7 +6,7 @@ type Props = {
 };
 export default function ServerCrashError({ error, reset }: Props) {
   return (
-    <div className="w-full h-full flex justify-center pt-10">
+    <div className="w-full h-full flex justify-center">
       <div className="h-fit flex flex-col items-center  px-10 py-10 w-[90%] lg:max-w-[40rem] ">
         <h2 className="mt-5 text-lg md:text-xl">Error: {error.message}</h2>
         <Button
