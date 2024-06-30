@@ -65,7 +65,7 @@ export const departmentAnnoucementsRelations = relations(
   })
 );
 
-export const department_relations = relations(department, ({ many }) => ({
+export const departmentRelations = relations(department, ({ many }) => ({
   faculties: many(facultyDepartment),
   announcements: many(departmentAnnouncement),
 }));
