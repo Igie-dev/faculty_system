@@ -13,7 +13,6 @@ const privatePath = [
   "announcements",
   "profile",
   "submissions",
-  "downloadables",
   "mytask",
 ];
 const adminOnlyPath = [
@@ -28,7 +27,6 @@ const adminOnlyPath = [
 const deanAndTeacherOnlyPath = [
   "announcements",
   "submissions",
-  "downloadables",
   "mytask",
 ]
 
