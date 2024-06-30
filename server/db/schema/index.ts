@@ -27,7 +27,7 @@ export const {
   department,
   departmentAnnouncement,
   departmentAnnoucementsRelations,
-  department_relations,
+  departmentRelations,
 } = departmentSchema;
 
 export const { announcement, annoucementRelations } = announcementSchema;
