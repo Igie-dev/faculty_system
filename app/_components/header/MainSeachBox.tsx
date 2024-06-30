@@ -27,11 +27,6 @@ const categorySearch = [
     allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
   },
   {
-    title: "Downloadables",
-    value: "downloadables",
-    allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
-  },
-  {
     title: "MyTask",
     value: "mytask",
     allowed: [`${ERole.DEAN}`, `${ERole.TEACHER}`],
