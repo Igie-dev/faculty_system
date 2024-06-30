@@ -11,7 +11,7 @@ import {
 import { faculty } from "./faculty";
 import { departmentAnnouncement } from "./department";
 import { file } from "./file";
-import { facultyArchiveAnnoucement } from ".";
+import { facultyArchiveAnnoucement } from "./faculty";
 
 export const announcement = pgTable(
   "announcement",
